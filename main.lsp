@@ -2,12 +2,12 @@
 
 ; Load LoopCAD LISP module files
 (load "load-safely.lsp")
-(load-safely "request-data.lsp")
-(load-safely "submit-data.lsp")
-(load-safely "insert-head.lsp")
-(load-safely "insert-head-user.lsp")
-(load-safely "insert-head-coverage.lsp")
-(load-safely "set-head-data.lsp")
+(load-safely "data-request.lsp")
+(load-safely "data-submit.lsp")
+(load-safely "head-insert.lsp")
+(load-safely "head-insert-user.lsp")
+(load-safely "head-insert-coverage.lsp")
+(load-safely "head-data-set.lsp")
 (load-safely "pipe-size-color.lsp")
 (load-safely "pipe-draw.lsp")
 (load-safely "commands.lsp")
@@ -15,7 +15,7 @@
 ; Tests
 (load-safely "request-data-test.lsp")
 
-(submit-data "DefaultHeadModel" "NEW")
+(data-submit "DefaultHeadModel" "NEW")
 
 ; Show error if any modules failed to load
 (if (> failed-to-load 0)

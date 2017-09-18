@@ -1,5 +1,5 @@
-(defun insert-head-user () 
-    (insert-head 
+(defun head-insert-user () 
+    (head-insert
 	    (getstring "\nHead Model:")
 		(getstring "\nHead Coverage (ft):")
 		(getstring "\nHead Slope:")

@@ -2,7 +2,7 @@
 ; to request data from the LoopCAD.vbi module which passes the request to the 
 ; LoopCAD.dll module.  
 
-(defun request-data (key)
+(defun data-request (key)
     (setvar "USERS1" "RequestData")
 	(setvar "USERS2" key)
 	(vl-vbarun "Controller.RequestData")

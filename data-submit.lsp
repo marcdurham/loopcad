@@ -1,8 +1,8 @@
-; The submit-data function uses two global system variables USERS1, and USERS2
+; The data-submit function uses two global system variables USERS1, and USERS2
 ; to request data from the LoopCAD.vbi module which passes the submission to the 
 ; LoopCAD.dll module.  
 
-(defun submit-data (key val)
+(defun data-submit (key val)
     (setvar "USERS1" key)
 	(setvar "USERS2" val)
 	(vl-vbarun "Controller.SubmitData")
