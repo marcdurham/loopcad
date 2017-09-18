@@ -13,7 +13,7 @@
 (load-safely "commands.lsp")
 
 ; Tests
-(load-safely "request-data-test.lsp")
+(load-safely "data-request-test.lsp")
 
 (data-submit "DefaultHeadModel" "NEW")
 
