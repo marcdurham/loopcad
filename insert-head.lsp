@@ -6,7 +6,7 @@
 	  (princ)
     (setvar "OSMODE" old-osmode)
 	  (command "-LAYER" "OFF" "HeadCoverage" "")
-    (setvar "LWDISPLAY" "ON")
+    (setvar "LWDISPLAY" 1)
   )
   (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having a different scale, being 12 time bigger than they should be
   (setvar "OSMODE" 0)
@@ -15,7 +15,7 @@
   (command "-LAYER" "COLOR" "Red" "Heads" "")
   (command "-LAYER" "COLOR" "Yellow" "HeadCoverage" "")
   (command "-LAYER" "ON" "HeadCoverage" "")
-  (setvar "LWDISPLAY" "OFF")
+  (setvar "LWDISPLAY" 0)
   (command "-LAYER" "SET" "Heads" "")
   (while T
     (setq model-code (strcat model coverage "-" slope "-" temperature))
