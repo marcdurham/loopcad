@@ -1,0 +1,44 @@
+***MENUGROUP=LoopCAD
+***TOOLBARS
+**LoopCADMain
+TBAR_LoopCADMain [_Toolbar("LoopCAD Main", _Floating, _Show, 350, 150, 0)]
+ID_Load_LoopCAD [_Button("Load LoopCAD modules", .\Icons\LoadLoopCAD.bmp, .\Icons\LoadLoopCAD.bmp)]^C^C(load "main.lsp")
+ID_Insert_Head [_Button("Insert head", .\Icons\InsertHead.bmp, .\Icons\InsertHead.bmp)]^C^CHEAD
+ID_Draw_Pipe [_Button("Draw pipe", .\Icons\DrawPipe.bmp, .\Icons\DrawPipe.bmp)]^C^CPIPE
+ID_Draw_Elevation_Box [_Button("Insert elevation box", .\Icons\DrawElevationBox.bmp,.\Icons\DrawElevationBox.bmp)]^C^CELEVATION-BOX
+ID_Insert_Floor_Connector [_Button("Insert floor connector", .\Icons\FloorConnector.bmp, .\Icons\FloorConnector.bmp)]^C^CFLOOR-CONNECTOR
+ID_Insert_Tee [_Button("Insert tee", .\Icons\InsertTee.bmp, .\Icons\InsertTee.bmp)]^C^CTEE
+
+ID_Join_Head_Pair [_Button("Join head pair", .\Icons\JoinHeadPair.bmp, .\Icons\JoinHeadPair.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
+ID_Change_Node_Label [_Button("Change node label", .\Icons\ChangeNodeLabel.bmp, .\Icons\ChangeNodeLabel.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
+ID_Find_Head [_Button("Find head", .\Icons\FindHead.bmp, .\Icons\FindHead.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
+ID_Find_Tee [_Button("Find tee", .\Icons\FindTee.bmp, .\Icons\FindTee.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
+ID_Find_Node [_Button("Find node", .\Icons\FindNode.bmp, .\Icons\FindNode.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
+ID_Label_Nodes [_Button("Label nodes", .\Icons\LabelNodes.bmp, .\Icons\LabelNodes.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
+ID_Label_Pipes [_Button("Label pipes", .\Icons\LabelPipes.bmp, .\Icons\LabelPipes.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
+ID_Scan_To_FSDX [_Button("Scan to FSDX File", .\Icons\ScanToFSDX.bmp, .\Icons\ScanToFSDX.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
+
+**LoopCADHeads
+TBAR_LoopCADHeads [_Toolbar("LoopCAD Heads", _Floating, _Show, 350, 200, 0)]
+ID_Set_Head_Data [_Button("Set all default head data", .\Icons\HeadData.bmp,.\Icons\HeadData.bmp)]^C^CSET-HEAD-DATA
+ID_Set_Head_Model [_Button("Set default head model", .\Icons\M.bmp,.\Icons\M.bmp)]^C^CSET-HEAD-MODEL
+ID_Set_Head_Coverage [_Button("Set default head coverage (ft)", .\Icons\Coverage.bmp,.\Icons\Coverage.bmp)]^C^CSET-HEAD-COVERAGE
+ID_Set_Head_Slope [_Button("ISet default head slope", .\Icons\Slope.bmp,.\Icons\Slope.bmp)]^C^CSET-HEAD-SLOPE
+ID_Set_Head_Temperature [_Button("Insert 12 x 12 head", .\Icons\Temperature.bmp,.\Icons\Temperature.bmp)]^C^CSET-HEAD-TEMP
+ID_Insert_Head_12 [_Button("Insert 12 x 12 head", .\Icons\12.bmp,.\Icons\12.bmp)]^C^CHEAD-12
+ID_Insert_Head_14 [_Button("Insert 14 x 14 head", .\Icons\14.bmp,.\Icons\14.bmp)]^C^CHEAD-14
+ID_Insert_Head_16 [_Button("Insert 16 x 16 head", .\Icons\16.bmp,.\Icons\16.bmp)]^C^CHEAD-16
+ID_Insert_Head_18 [_Button("Insert 18 x 18 head", .\Icons\18.bmp,.\Icons\18.bmp)]^C^CHEAD-18
+ID_Insert_Head_20 [_Button("Insert 20 x 20 head", .\Icons\20.bmp,.\Icons\20.bmp)]^C^CHEAD-20
+
+**LoopCADPipe
+TBAR_LoopCADHeads [_Toolbar("LoopCAD Pipe", _Floating, _Show, 350, 250, 0)]
+ID_Draw_Pipe_1_2 [_Button("Draw 1/2 inch pipe", .\Icons\1_2inch.bmp,.\Icons\1_2inch.bmp)]^C^CPIPE-12
+ID_Draw_Pipe_3_4 [_Button("Draw 3/4 inch pipe", .\Icons\3_4inch.bmp,.\Icons\3_4inch.bmp)]^C^CPIPE-34
+ID_Draw_Pipe_1 [_Button("Draw 1 inch pipe", .\Icons\1inch.bmp,.\Icons\1inch.bmp)]^C^CPIPE-1
+ID_Draw_Pipe_1_1_4 [_Button("Draw 1-1/4 inch pipe", .\Icons\1_1_4inch.bmp,.\Icons\1_1_4inch.bmp)]^C^CPIPE-114
+
+***HELPSTRINGS
+TBAR_LoopCADMain [LoopCADMain]
+ID_Draw_Elevation_Box [Insert new elevation box]
+ID_Insert_Floor_Connector [Insert floor connector to indicate connections between floors, risers]
