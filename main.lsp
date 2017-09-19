@@ -14,22 +14,13 @@
 (load-safely "pipe-draw.lsp")
 (load-safely "tee-insert.lsp")
 (load-safely "commands.lsp")
+(load-safely "load-safely-check.lsp")
 
 ; Tests
 (load-safely "data-request-test.lsp")
+(load-safely-check)
 
+; Default
 (data-submit "DefaultHeadModel" "NEW")
 
-; Show error if any modules failed to load
-(if (> *failed-to-load* 0)
-	(progn
-		(setq message (strcat "ERROR: " (itoa *failed-to-load*) " LoopCAD LISP module files failed to load! Check command box for the names of the specific files."))
-		(alert message)
-		(prompt (strcat "\n" message "\n"))
-	)
-	(progn
-		(prompt "\nAll LoopCAD LISP module files were loaded successfully.\n")
-	)
-)
-
-(princ) ; Exit quietly
+(princ) ; exit quietly
