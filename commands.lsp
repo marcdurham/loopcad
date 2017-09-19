@@ -15,4 +15,5 @@
 (defun C:PIPE-1 () (pipe-draw "1"))
 (defun C:PIPE-114 () (pipe-draw "1-1/4"))
 (defun C:ELEVATION-BOX () (vl-vbarun "Controller.ElevationBox"))
+(defun C:TEE () (tee-insert))
 

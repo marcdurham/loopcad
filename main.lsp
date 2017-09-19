@@ -10,6 +10,7 @@
 (load-safely "head-data-set.lsp")
 (load-safely "pipe-size-color.lsp")
 (load-safely "pipe-draw.lsp")
+(load-safely "tee-insert.lsp")
 (load-safely "commands.lsp")
 
 ; Tests
