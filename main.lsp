@@ -6,6 +6,7 @@
 (load "load-safely.lsp")
 (load-safely "data-request.lsp")
 (load-safely "data-submit.lsp")
+(load-safely "data-change-default.lsp")
 (load-safely "head-insert.lsp")
 (load-safely "head-insert-user.lsp")
 (load-safely "head-insert-coverage.lsp")
@@ -18,9 +19,8 @@
 
 ; Tests
 (load-safely "data-request-test.lsp")
-(load-safely-check)
 
-; Default
-(data-submit "DefaultHeadModel" "NEW")
+; Check
+(load-safely-check)
 
 (princ) ; exit quietly
