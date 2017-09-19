@@ -1,2 +1,4 @@
-/Archive
-Thumbs.db
+Archive/
+**/Thumbs.db
+*.dll
+*.tlb
