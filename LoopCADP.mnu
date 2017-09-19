@@ -19,7 +19,7 @@ ID_Label_Pipes [_Button("Label pipes", .\Icons\LabelPipes.bmp, .\Icons\LabelPipe
 ID_Scan_To_FSDX [_Button("Scan to FSDX File", .\Icons\ScanToFSDX.bmp, .\Icons\ScanToFSDX.bmp)]^C^C^C_-VBARUN Scanner.Nothing^C
 
 **LoopCADHeads
-TBAR_LoopCADHeads [_Toolbar("LoopCAD Heads", _Floating, _Show, 350, 200, 0)]
+TBAR_LoopCADHeads [_Toolbar("LoopCAD Heads", _Floating, _Show, 700, 150, 0)]
 ID_Set_Head_Data [_Button("Set all default head data", .\Icons\HeadData.bmp,.\Icons\HeadData.bmp)]^C^CSET-HEAD-DATA
 ID_Set_Head_Model [_Button("Set default head model", .\Icons\M.bmp,.\Icons\M.bmp)]^C^CSET-HEAD-MODEL
 ID_Set_Head_Coverage [_Button("Set default head coverage (ft)", .\Icons\Coverage.bmp,.\Icons\Coverage.bmp)]^C^CSET-HEAD-COVERAGE
@@ -32,7 +32,7 @@ ID_Insert_Head_18 [_Button("Insert 18 x 18 head", .\Icons\18.bmp,.\Icons\18.bmp)
 ID_Insert_Head_20 [_Button("Insert 20 x 20 head", .\Icons\20.bmp,.\Icons\20.bmp)]^C^CHEAD-20
 
 **LoopCADPipe
-TBAR_LoopCADHeads [_Toolbar("LoopCAD Pipe", _Floating, _Show, 350, 250, 0)]
+TBAR_LoopCADHeads [_Toolbar("LoopCAD Pipe", _Floating, _Show, 950, 150, 0)]
 ID_Draw_Pipe_1_2 [_Button("Draw 1/2 inch pipe", .\Icons\1_2inch.bmp,.\Icons\1_2inch.bmp)]^C^CPIPE-12
 ID_Draw_Pipe_3_4 [_Button("Draw 3/4 inch pipe", .\Icons\3_4inch.bmp,.\Icons\3_4inch.bmp)]^C^CPIPE-34
 ID_Draw_Pipe_1 [_Button("Draw 1 inch pipe", .\Icons\1inch.bmp,.\Icons\1inch.bmp)]^C^CPIPE-1
