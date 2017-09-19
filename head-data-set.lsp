@@ -17,6 +17,6 @@
 (defun head-data-set () 
 	(head-model-set)
 	(head-coverage-set)
-	(head-slope)
+	(head-slope-set)
 	(head-temperature-set)
 )
