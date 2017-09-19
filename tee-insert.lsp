@@ -1,4 +1,4 @@
-(defun tee-insert ()
+(defun tee-insert ( / old-osmode)
     (setq old-osmode (getvar "OSMODE"))
     (defun *error* (message)
         (princ)

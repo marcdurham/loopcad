@@ -1,4 +1,4 @@
-(defun head-insert (model coverage slope temperature)
+(defun head-insert (model coverage slope temperature / model-code)
   (setq old-osmode (getvar "OSMODE"))
   (defun *error* (message)
 	  (princ)

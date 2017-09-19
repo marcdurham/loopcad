@@ -1,4 +1,4 @@
-(defun pipe-draw (size)
+(defun pipe-draw (size / old-osmode old-orthomode)
 	(setq old-osmode (getvar "OSMODE"))
 	(setq old-orthomode (getvar "ORTHOMODE"))
 	(defun *error* (message)
