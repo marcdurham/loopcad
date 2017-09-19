@@ -1,4 +1,6 @@
 (prompt "\nLoading LoopCAD LISP modules...\n")
+; Global Variables
+(setq *failed-to-load* 0)
 
 ; Load LoopCAD LISP module files
 (load "load-safely.lsp")
@@ -19,9 +21,9 @@
 (data-submit "DefaultHeadModel" "NEW")
 
 ; Show error if any modules failed to load
-(if (> failed-to-load 0)
+(if (> *failed-to-load* 0)
 	(progn
-		(setq message (strcat "ERROR: " (itoa failed-to-load) " LoopCAD LISP module files failed to load! Check command box for the names of the specific files."))
+		(setq message (strcat "ERROR: " (itoa *failed-to-load*) " LoopCAD LISP module files failed to load! Check command box for the names of the specific files."))
 		(alert message)
 		(prompt (strcat "\n" message "\n"))
 	)

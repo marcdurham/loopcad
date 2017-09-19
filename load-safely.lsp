@@ -1,4 +1,3 @@
-(setq failed-to-load 0)
 (defun load-safely (file-name)
     (setq file-was-found (findfile file-name))
 	(if file-was-found
