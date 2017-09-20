@@ -1,4 +1,4 @@
-; Load head defaults
+; Submit head defaults
 ;(data-submit "DefaultHeadCoverage" "12")
 (data-submit "DefaultHeadModel" "TEST")
 ;(data-submit "DefaultHeadSlope" "1")

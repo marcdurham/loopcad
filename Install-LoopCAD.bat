@@ -1,0 +1,1 @@
+run-elevated Register-LoopCAD.bat
