@@ -17,3 +17,4 @@
 (defun C:ELEVATION-BOX () (vl-vbarun "Controller.ElevationBox"))
 (defun C:TEE () (tee-insert))
 
+(princ) ; exit quietly
