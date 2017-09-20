@@ -2,7 +2,7 @@
 ***TOOLBARS
 **LoopCADMain
 TBAR_LoopCADMain [_Toolbar("LoopCAD Main", _Floating, _Show, 350, 150, 0)]
-ID_Load_LoopCAD [_Button("Load LoopCAD modules", .\Icons\LoadLoopCAD.bmp, .\Icons\LoadLoopCAD.bmp)]^C^C_-VBALOAD LoopCADP.vbi;(load "main.lsp")
+ID_Load_LoopCAD [_Button("Load LoopCAD modules", .\Icons\LoadLoopCAD.bmp, .\Icons\LoadLoopCAD.bmp)]^C^C_-VBALOAD LoopCAD.vbi;(load "LoopCAD.lsp")
 ID_Insert_Head [_Button("Insert head", .\Icons\InsertHead.bmp, .\Icons\InsertHead.bmp)]^C^CHEAD
 ID_Draw_Pipe [_Button("Draw pipe", .\Icons\DrawPipe.bmp, .\Icons\DrawPipe.bmp)]^C^CPIPE
 ID_Draw_Elevation_Box [_Button("Insert elevation box", .\Icons\DrawElevationBox.bmp,.\Icons\DrawElevationBox.bmp)]^C^CELEVATION-BOX
