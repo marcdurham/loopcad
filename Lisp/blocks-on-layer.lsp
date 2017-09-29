@@ -6,16 +6,7 @@
         blocks
     )
     (foreach entity (entities-all)
-        (progn
-            (princ "\nLoop.Type:")
-            (princ (type entity))
-            (princ "\nLBlock.Type:")
-            (princ (entity-type entity))
-            (princ "\nBlock.Layer:")
-            (princ (entity-layer entity))
-            (princ "\nBlock.Name:")
-            (princ (entity-name entity))
-            ;(setq blocks (append blocks (list entity)))     
+        (progn  
             (if     
                 (and 
                     (contains (entity-layer entity) layers)
