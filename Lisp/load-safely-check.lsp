@@ -4,7 +4,7 @@
         (progn
             (setq message (strcat "ERROR: " (itoa *failed-to-load*) " LoopCAD LISP module files failed to load! Check command box for the names of the specific files."))
             (alert message)
-            (prompt "\n**** ERROR ****\n"S)
+            (prompt "\n**** ERROR ****\n")
             (prompt (strcat "\n" message "\n"))
         )
         (progn

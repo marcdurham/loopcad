@@ -8,4 +8,4 @@
 			(prompt (strcat "\nERROR: LoopCAD LISP module file failed to load: \"" file-name "\"\n"))
 		)
 	)
-)S
+)

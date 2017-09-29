@@ -4,6 +4,7 @@
 
 ; Load LoopCAD LISP module files (*.lsp)
 (load "Lisp\\load-safely.lsp")
+(load-safely "Lisp\\contains.lsp")
 (load-safely "Lisp\\data-request.lsp")
 (load-safely "Lisp\\data-submit.lsp")
 (load-safely "Lisp\\data-change-default.lsp")
@@ -13,7 +14,7 @@
 (load-safely "Lisp\\head-data-set.lsp")
 (load-safely "Lisp\\pipe-size-color.lsp")
 (load-safely "Lisp\\pipe-draw.lsp")
-(load-safely "Lisp\\pipe-break.lsp")
+;;;;;;;(load-safely "Lisp\\pipe-break.lsp")
 (load-safely "Lisp\\tee-insert.lsp")
 (load-safely "Lisp\\commands.lsp")
 (load-safely "Lisp\\load-safely-check.lsp")
