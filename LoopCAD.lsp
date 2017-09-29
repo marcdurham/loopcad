@@ -16,6 +16,7 @@
 (load-safely "Lisp\\pipe-draw.lsp")
 ;;;;;;;(load-safely "Lisp\\pipe-break.lsp")
 (load-safely "Lisp\\tee-insert.lsp")
+(load-safely "Lisp\\nodes-label.lsp")
 (load-safely "Lisp\\commands.lsp")
 (load-safely "Lisp\\load-safely-check.lsp")
 
