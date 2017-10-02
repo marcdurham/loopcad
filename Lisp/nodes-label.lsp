@@ -32,45 +32,14 @@
         )
     )
     (setq head-number 1)
+    (command "-LAYER" "SET" "HeadLabels" "")            
     (foreach p points
         (progn
-            ;(setq props '((0 . "CIRCLE") (40 . 50.0) (62 . 5) (8 . "Heads")))
-            (setq props 
-                '(
-                    (0 . "INSERT") 
-                    (2 . "HeadLabel") 
-                    (8 . "HeadLabels")
-                    (40 . 50.0) 
-                    (41 . 1)
-                    (42 . 1) 
-                    (43 . 1) 
-                    (44 . 0) 
-                    (45 . 0)
-                    (50 . 0) 
-                    (62 . 5) 
-                    (66 . 1) 
-                    (67 . 0)
-                    (70 . 1)
-                    (71 . 1) 
-                    (210 0 0 1)
-                )
-            )
-            ; followed by attributes ATTRIB
-            ; followed by a SEQEND
             (setq proplist (append props (list p)))
-            ;(setq make-result (entmake proplist))
             (setq block-point (cdr p))
             (setq head-label (strcat "H." (itoa head-number)))
-            (princ (strcat "Head-Label:" head-label))
-            (command "-LAYER" "SET" "HeadLabels" "")            
             (command "-INSERT" "HeadLabel" block-point "1" "1" "0" head-label)
             (setq head-number (+ 1 head-number))
-            (princ "\nInserted:")
-            (princ proplist)
-            (if make-result
-                (princ "\nWorked.")
-                (princ "\nNope.")
-            )
         )
     )
     points
