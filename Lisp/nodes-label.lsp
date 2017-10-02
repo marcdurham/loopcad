@@ -18,7 +18,7 @@
 ; Version 2?
 ; Check the T.number of existing tees & nodes
 
-(defun nodes-label ( / block blocks point points props p proplist)
+(defun nodes-label ( / block blocks point points props p proplist head-number block-point)
     (setq blocks 
         (blocks-on-layer 
             (list "Heads" "Tees") 
@@ -31,6 +31,7 @@
             (setq points (append points (list point)))
         )
     )
+    (setq head-number 1)
     (foreach p points
         (progn
             ;(setq props '((0 . "CIRCLE") (40 . 50.0) (62 . 5) (8 . "Heads")))
@@ -58,7 +59,12 @@
             ; followed by a SEQEND
             (setq proplist (append props (list p)))
             ;(setq make-result (entmake proplist))
-            (command "-INSERT" "HeadLabel" "(146 146)" "1" "1" "1" "0")
+            (setq block-point (cdr p))
+            (setq head-label (strcat "H." (itoa head-number)))
+            (princ (strcat "Head-Label:" head-label))
+            (command "-LAYER" "SET" "HeadLabels" "")            
+            (command "-INSERT" "HeadLabel" block-point "1" "1" "0" head-label)
+            (setq head-number (+ 1 head-number))
             (princ "\nInserted:")
             (princ proplist)
             (if make-result
