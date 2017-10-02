@@ -17,32 +17,48 @@
 ; Check to see if a TeeLabel is already there
 ; Version 2?
 ; Check the T.number of existing tees & nodes
-
-(defun nodes-label ( / block blocks point points props p proplist head-number block-point)
+(defun nodes-label-all ()
+    (tees-label (heads-label 1))
+)
+(defun heads-label (node-number-start)
+    (nodes-label  
+        (list "Heads") 
+        (list "Head12" "Head14" "Head16" "Head18" "Head20")
+        "HeadLabel"
+        "H."
+        node-number-start
+    )
+)
+(defun tees-label (node-number-start)
+    (nodes-label  
+        (list "Tees") 
+        (list "Tee")
+        "TeeLabels"
+        "T."
+        node-number-start
+    )
+)
+(defun nodes-label ( layers block-names label-layer label-prefix node-number / block blocks point points props p proplist head-number block-point)
     (setq blocks 
-        (blocks-on-layer 
-            (list "Heads" "Tees") 
-            (list "Head12" "Head14" "Head16" "Head18" "Head20" "Tee")
-        )
+        (blocks-on-layer layers block-names)
     )
     (foreach block blocks
         (progn
             (setq point (assoc 10 block))
             (setq points (append points (list point)))
         )
-    )
-    (setq head-number 1)
-    (command "-LAYER" "SET" "HeadLabels" "")            
+    )    
+    (command "-LAYER" "SET" label-layer "")            
     (foreach p points
         (progn
             (setq proplist (append props (list p)))
             (setq block-point (cdr p))
-            (setq head-label (strcat "H." (itoa head-number)))
+            (setq head-label (strcat label-prefix (itoa node-number)))
             (command "-INSERT" "HeadLabel" block-point "1" "1" "0" head-label)
-            (setq head-number (+ 1 head-number))
+            (setq node-number (+ 1 node-number))
         )
     )
-    points
+    node-number
 )
 
 ; DXF Data Examples 
