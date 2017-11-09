@@ -21,6 +21,7 @@
     (tees-label (heads-label 1))
 )
 (defun heads-label (node-number-start)
+    (blocks-delete "HeadLabels" "HeadLabel")
     (nodes-label  
         (list "Heads") 
         (list "Head12" "Head14" "Head16" "Head18" "Head20")
@@ -30,6 +31,7 @@
     )
 )
 (defun tees-label (node-number-start)
+    (blocks-delete "TeeLabels" "TeeLabel")
     (nodes-label  
         (list "Tees") 
         (list "Tee")
@@ -54,7 +56,7 @@
             (setq proplist (append props (list p)))
             (setq block-point (cdr p))
             (setq head-label (strcat label-prefix (itoa node-number)))
-            (command "-INSERT" "HeadLabel" block-point "1" "1" "0" head-label)
+            (command "-INSERT" label-layer block-point "1" "1" "0" head-label)
             (setq node-number (+ 1 node-number))
         )
     )

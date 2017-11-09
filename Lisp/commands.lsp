@@ -16,6 +16,6 @@
 (defun C:PIPE-114 () (pipe-draw "1-1/4"))
 (defun C:ELEVATION-BOX () (vl-vbarun "Controller.ElevationBox"))
 (defun C:TEE () (tee-insert))
-;(defun C:LABEL-NODES () (nodes-label))
+(defun C:LABEL-NODES () (nodes-label-all))
 
 (princ) ; exit quietly

@@ -14,7 +14,7 @@ ID_Change_Node_Label [_Button("Change node label", .\Icons\ChangeNodeLabel.bmp, 
 ID_Find_Head [_Button("Find head", .\Icons\FindHead.bmp, .\Icons\FindHead.bmp)]^C^C^C(alert "This feature is not yet implemented.")
 ID_Find_Tee [_Button("Find tee", .\Icons\FindTee.bmp, .\Icons\FindTee.bmp)]^C^C^C(alert "This feature is not yet implemented.")
 ID_Find_Node [_Button("Find node", .\Icons\FindNode.bmp, .\Icons\FindNode.bmp)]^C^C^C(alert "This feature is not yet implemented.")
-ID_Label_Nodes [_Button("Label nodes", .\Icons\LabelNodes.bmp, .\Icons\LabelNodes.bmp)]^C^C^C(alert "This feature is not yet implemented.")
+ID_Label_Nodes [_Button("Label nodes", .\Icons\LabelNodes.bmp, .\Icons\LabelNodes.bmp)]^C^CLABEL-NODES
 ID_Label_Pipes [_Button("Label pipes", .\Icons\LabelPipes.bmp, .\Icons\LabelPipes.bmp)]^C^C^C(alert "This feature is not yet implemented.")
 
 ID_Scan_To_CDS [_Button("Scan to CDS File", .\Icons\ScanToFSDX.bmp, .\Icons\ScanToFSDX.bmp)]^C^C^C_-VBARUN DrawingScanner.Scan^C
