@@ -16,3 +16,7 @@
 		(alert (strcat "Error submitting data to LoopCAD.dll: Key: " key " Value: " val))
 	)	
 )
+
+(defun send-controller-command (command)
+    (data-submit "ControllerCommand" command)
+)

@@ -14,11 +14,9 @@
 (load-safely "Lisp\\head-data-set.lsp")
 (load-safely "Lisp\\pipe-size-color.lsp")
 (load-safely "Lisp\\pipe-draw.lsp")
-;;;;;;;(load-safely "Lisp\\pipe-break.lsp")
 (load-safely "Lisp\\tee-insert.lsp")
-(load-safely "Lisp\\blocks-on-layer.lsp")
-(load-safely "Lisp\\blocks-delete.lsp")
-(load-safely "Lisp\\nodes-label.lsp")
+(load-safely "Lisp\\head-join.lsp")
+(load-safely "Lisp\\job-data-insert.lsp")
 (load-safely "Lisp\\commands.lsp")
 (load-safely "Lisp\\load-safely-check.lsp")
 

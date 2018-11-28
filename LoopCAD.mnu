@@ -9,14 +9,11 @@ ID_Draw_Elevation_Box [_Button("Insert elevation box", .\Icons\DrawElevationBox.
 ID_Insert_Tee [_Button("Insert tee", .\Icons\InsertTee.bmp, .\Icons\InsertTee.bmp)]^C^CTEE
 ID_Insert_Floor_Connector [_Button("Insert floor connector", .\Icons\FloorConnector.bmp, .\Icons\FloorConnector.bmp)]^C^CFLOOR-CONNECTOR
 
-ID_Join_Head_Pair [_Button("Join head pair", .\Icons\JoinHeadPair.bmp, .\Icons\JoinHeadPair.bmp)]^C^C^C(alert "This feature is not yet implemented.")
-ID_Change_Node_Label [_Button("Change node label", .\Icons\ChangeNodeLabel.bmp, .\Icons\ChangeNodeLabel.bmp)]^C^C^C(alert "This feature is not yet implemented.")
-ID_Find_Head [_Button("Find head", .\Icons\FindHead.bmp, .\Icons\FindHead.bmp)]^C^C^C(alert "This feature is not yet implemented.")
-ID_Find_Tee [_Button("Find tee", .\Icons\FindTee.bmp, .\Icons\FindTee.bmp)]^C^C^C(alert "This feature is not yet implemented.")
-ID_Find_Node [_Button("Find node", .\Icons\FindNode.bmp, .\Icons\FindNode.bmp)]^C^C^C(alert "This feature is not yet implemented.")
+ID_Join_Head_Pair [_Button("Join head pair", .\Icons\JoinHeadPair.bmp, .\Icons\JoinHeadPair.bmp)]^C^CJOIN-HEADS
 ID_Label_Nodes [_Button("Label nodes", .\Icons\LabelNodes.bmp, .\Icons\LabelNodes.bmp)]^C^CLABEL-NODES
-ID_Label_Pipes [_Button("Label pipes", .\Icons\LabelPipes.bmp, .\Icons\LabelPipes.bmp)]^C^C^C(alert "This feature is not yet implemented.")
-
+ID_Label_Pipes [_Button("Label pipes", .\Icons\LabelPipes.bmp, .\Icons\LabelPipes.bmp)]^C^CLABEL-PIPES
+ID_Break_Pipes [_Button("Break pipes", .\Icons\BreakPipes.bmp, .\Icons\BreakPipes.bmp)]^C^CBREAK-PIPES
+ID_Insert_Job_Data [_Button("Insert job data", .\Icons\InsertJobData.bmp, .\Icons\InsertJobData.bmp)]^C^CINSERT-JOB-DATA
 ID_Scan_To_CDS [_Button("Scan to CDS File", .\Icons\ScanToFSDX.bmp, .\Icons\ScanToFSDX.bmp)]^C^C^C_-VBARUN DrawingScanner.Scan^C
 
 **LoopCADHeads

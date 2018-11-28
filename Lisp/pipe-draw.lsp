@@ -10,10 +10,16 @@
 	  (command "-COLOR" "BYLAYER")
 	  (command "-LAYER" "SET" "0" "")
 	)
+	(if (= size "?")
+	    (progn
+		    (princ "Pipe Sizes Available: 1/2, 3/4, 1, 1-1/4")
+			(setq size (getstring "Enter Pipe Size:"))
+		)
+	)
 	(setvar "OSMODE" 64) ; 64 = Snap to insertion points
 	(setvar "ORTHOMODE" 1)
 	(command "-LAYER" "NEW" "Pipe" "")
-	(command "-LAYER" "COLOR" "Blue" "Pipe" "")
+	(command "-LAYER" "COLOR" "White" "Pipe" "")
 	(command "-LAYER" "SET" "Pipe" "")
 	(command "-COLOR" (pipe-size-color size))
 	(while T
