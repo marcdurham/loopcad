@@ -14,12 +14,13 @@
 (defun C:PIPE-34 () (pipe-draw "3/4"))
 (defun C:PIPE-1 () (pipe-draw "1"))
 (defun C:PIPE-114 () (pipe-draw "1-1/4"))
-(defun C:ELEVATION-BOX () (send-controller-command "ElevationBox"))
+(defun C:ELEVATION-BOX () (elevation-box-draw))
 (defun C:TEE () (tee-insert))
 (defun C:LABEL-NODES () (send-controller-command "LabelNodes"))
 (defun C:LABEL-PIPES () (send-controller-command "LabelPipes"))
 (defun C:BREAK-PIPES () (send-controller-command "BreakPipes"))
 (defun C:JOIN-HEADS () (head-join))
+(defun C:FLOOR-CONNECTOR () (floor-connector-insert))
 (defun C:INSERT-JOB-DATA () (send-controller-command "EditJobData"))
 
 (princ) ; exit quietly

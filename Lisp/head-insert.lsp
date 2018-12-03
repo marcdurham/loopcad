@@ -1,14 +1,18 @@
+; TODO: Maybe have two parameters: model-code and filename, use a separate function to determine them.
 (defun head-insert (model coverage slope temperature / model-code)
   (setq old-osmode (getvar "OSMODE"))
+  (setq temperror *error*)
   (defun *error* (message)
 	  (princ)
 	  (princ message)
 	  (princ)
     (setvar "OSMODE" old-osmode)
-	  (command "-LAYER" "OFF" "HeadCoverage" "")
+	(command "-LAYER" "OFF" "HeadCoverage" "")
     (setvar "LWDISPLAY" 1)
+	(setq *error* temperror)
   )
-  (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having a different scale, being 12 time bigger than they should be
+  (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having a
+                        ;different scale, being 12 times bigger than they should be.
   (setvar "OSMODE" 0)
   (command "-LAYER" "NEW" "Heads" "")
   (command "-LAYER" "NEW" "HeadCoverage" "")

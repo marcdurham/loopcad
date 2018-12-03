@@ -7,6 +7,6 @@
     )
     (alert "Cannot load LoopCAD files.\nPlease add the LoopCAD folder to the Menu path and the LoopCAD Blocks folder to the Blocks path.\nTools->Options->Paths/Files")
 )
--VBALOAD "LoopCAD.vbi"
+;;;;-VBALOAD "LoopCAD.vbi"
 (load "LoopCAD.lsp")
 -MENULOAD "LoopCAD.mnu"

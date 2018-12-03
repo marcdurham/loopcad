@@ -13,7 +13,7 @@
 	(if (= size "?")
 	    (progn
 		    (princ "Pipe Sizes Available: 1/2, 3/4, 1, 1-1/4")
-			(setq size (getstring "Enter Pipe Size:"))
+			(setq size (getstring "\nEnter Pipe Size:"))
 		)
 	)
 	(setvar "OSMODE" 64) ; 64 = Snap to insertion points
@@ -22,9 +22,7 @@
 	(command "-LAYER" "COLOR" "White" "Pipe" "")
 	(command "-LAYER" "SET" "Pipe" "")
 	(command "-COLOR" (pipe-size-color size))
-	(while T
-		(prompt (strcat "\nPipe Size: " size "\n"))
-		(prompt "\nDraw pipe to each head.\n")
-		(command "-PLINE" pause "Width" "2\"" "2\"" pause)
-	)
+	(prompt (strcat "\nPipe Size: " size "\n"))
+	(prompt "\nDraw pipe to each head.\n")
+	(command "-PLINE" pause "Width" "2\"" "2\"" pause)
 )
