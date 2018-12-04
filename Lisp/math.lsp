@@ -17,7 +17,7 @@
 	(setq pipes '())
     (while en
 	    (setq ent (entget en))
-		(if (and (str= (get-layer en) "PIPES")
+		(if (and (strstartswith "PIPES" (get-layer en))
 		         (str= (get-etype en) "LWPOLYLINE")
 			)
 			(setq pipes (cons ent pipes))
@@ -62,6 +62,19 @@
 (defun str= (left right)
    (= (strcase left) (strcase right))
 )
+
+(defun strindexof (substring string)
+   (vl-string-search (strcase substring) (strcase string))
+)
+
+(defun strcontains (substring string)
+   (strindexof substring string)
+)
+
+(defun strstartswith (substring string)
+   (= 0(strindexof substring string))
+)
+
 
 
 
