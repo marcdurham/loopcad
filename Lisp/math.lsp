@@ -6,17 +6,63 @@
   (if (< a b) a b)
 )
 
-(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
+;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
-(defun get-pipes ()
-	(prompt "Getting pipes...")
-	(entget (tblobjname "LAYER" "Pipe"))
-	(princ)
+
+(defun get-all-pipes () 
+    (get-pipes (entnext))
 )
 
-(defun get-all-pipes ( key lst / item )
-    (if (setq item (assoc key lst))
-        (cons (cdr item) (get-all-pipes key (cdr (member item list))))
-    )
+(defun get-pipes (en / ent pipes layer) 
+	(setq pipes '())
+    (while en
+	    (setq ent (entget en))
+		(if (and (str= (get-layer en) "PIPES")
+		         (str= (get-etype en) "LWPOLYLINE")
+			)
+			(setq pipes (cons ent pipes))
+		)
+		(setq en (entnext en))
+	)
+	pipes
 )
+
+(defun get-layer (entity-name)
+	(cdr (assoc 8 (entget entity-name)))
+)
+
+(defun get-etype (entity-name)
+	(cdr (assoc 0 (entget entity-name)))
+)
+
+(defun get-ins-point (entity-name)
+	(cdr (assoc 10 (entget entity-name)))
+)
+
+(defun get-x-scale (entity-name)
+	(cdr (assoc 41 (entget entity-name)))
+)
+
+(defun get-x-scale (entity-name)
+	(cdr (assoc 42 (entget entity-name)))
+)
+
+(defun get-z-scale (entity-name)
+	(cdr (assoc 43 (entget entity-name)))
+)
+
+(defun get-block-name (entity-name)
+	(cdr (assoc 2 (entget entity-name)))
+)
+
+(defun get-rotation-angle (entity-name)
+	(cdr (assoc 50 (entget entity-name)))
+)
+
+(defun str= (left right)
+   (= (strcase left) (strcase right))
+)
+
+
+
 
