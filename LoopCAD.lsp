@@ -23,6 +23,7 @@
 (load-safely "Lisp\\job-data-insert.lsp")
 (load-safely "Lisp\\commands.lsp")
 (load-safely "Lisp\\load-safely-check.lsp")
+(load-safely "job_data.lsp")
 
 ; Tests
 ;;;;(load-safely "Lisp\\data-request-test.lsp")

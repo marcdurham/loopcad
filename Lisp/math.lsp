@@ -13,3 +13,10 @@
 	(entget (tblobjname "LAYER" "Pipe"))
 	(princ)
 )
+
+(defun get-all-pipes ( key lst / item )
+    (if (setq item (assoc key lst))
+        (cons (cdr item) (get-all-pipes key (cdr (member item list))))
+    )
+)
+
