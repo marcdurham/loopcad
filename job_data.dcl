@@ -34,7 +34,7 @@ label = "Test Dialog No 1";
 	
 	: button
 	{
-	//key = "accept";
+	key = "what";
 	label = "What";
 	//is_default = true;
 	//fixed_width = true;

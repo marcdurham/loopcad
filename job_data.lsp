@@ -12,7 +12,9 @@
 (action_tile "accept"
     "(done_dialog)"
 );action_tile
- 
+(action_tile "what"
+)
+
 (start_dialog)
 (unload_dialog dcl_id)
  
