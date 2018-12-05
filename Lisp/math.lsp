@@ -8,6 +8,17 @@
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
+(defun get-vertices (polyline / vertex remaining)
+	(setq vertices '())
+	(setq remaining polyline)
+	(setq vertex (assoc 10 polyline))
+	(while vertex
+		(setq remaining (cdr remaining))
+		(setq vertices (cons vertex vertices))
+		(setq vertex (assoc 10 remaining))	
+	)
+	vertices
+)
 
 (defun get-all-pipes () 
     (get-pipes (entnext))
@@ -57,6 +68,11 @@
 
 (defun get-rotation-angle (entity-name)
 	(cdr (assoc 50 (entget entity-name)))
+)
+
+; Not tested yet, I think 62 is the color
+(defun get-color (entity-name)
+	(cdr (assoc 62 (entget entity-name)))
 )
 
 (defun str= (left right)
