@@ -10,14 +10,17 @@
 
 (defun dxf-point () 10)
 
+; Draw pipes from vertices 
+; (foreach pipe (get-all-pipes) (command "-PLINE" (get-vertices pipe) ""))
+
+; Test with
+;  (command "-PLINE" (get-vertices (car (get-all-pipes))) "")
 (defun get-vertices (polyline / vertex remaining)
-	(setq vertices '())
-	(setq remaining polyline)
-	(setq vertex (cdr (assoc 10 polyline)))
-	(while vertex
-		(setq remaining (cdr remaining))
-		(setq vertices (cons vertex vertices))
-		(setq vertex  (cdr (assoc 10 remaining)))
+	(setq vertices '())))
+	(foreach property polyline
+	    (if (= 10 (car property)) 
+		    (setq vertices (cons (cdr property) vertices))
+		)
 	)
 	vertices
 )
