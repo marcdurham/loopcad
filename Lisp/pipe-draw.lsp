@@ -1,4 +1,4 @@
-(defun pipe-draw (size / old-osmode old-orthomode)
+(defun pipe-draw (size vertices / old-osmode old-orthomode line-width)
 	(setq old-osmode (getvar "OSMODE"))
 	(setq old-orthomode (getvar "ORTHOMODE"))
 	(defun *error* (message)
@@ -10,19 +10,26 @@
 	  (command "-COLOR" "BYLAYER")
 	  (command "-LAYER" "SET" "0" "")
 	)
-	(if (= size "?")
+	(if (or (not size) (= size "?"))
 	    (progn
 		    (princ "Pipe Sizes Available: 1/2, 3/4, 1, 1-1/4")
 			(setq size (getstring "\nEnter Pipe Size:"))
 		)
 	)
-	(setvar "OSMODE" 64) ; 64 = Snap to insertion points
+	(setvar "OSMODE" osmode-snap-ins-pts)
 	(setvar "ORTHOMODE" 1)
 	(command "-LAYER" "NEW" "Pipe" "")
 	(command "-LAYER" "COLOR" "White" "Pipe" "")
 	(command "-LAYER" "SET" "Pipe" "")
 	(command "-COLOR" (pipe-size-color size))
+	(setq line-width "2\"")
 	(prompt (strcat "\nPipe Size: " size "\n"))
 	(prompt "\nDraw pipe to each head.\n")
-	(command "-PLINE" pause "Width" "2\"" "2\"" pause)
+	(if vertices
+	    (command "-PLINE" vertices "Width" line-width line-width "")
+	    (command "-PLINE" pause "Width" line-width line-width pause)
+	)
 )
+
+; 64 = OSMODE: Snap to insertion points
+(setq osmode-snap-ins-pts 64)

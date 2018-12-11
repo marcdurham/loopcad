@@ -8,15 +8,59 @@
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
-(defun dxf-point () 10)
+(defun getx (point)
+    (car point)
+)
+
+(defun gety (point)
+    (car (cdr point))
+)
+
+(defun slope (a b)
+    ;(setq ax (car a))
+	;(setq ay (car (cdr a)))
+	;(setq bx (car b))
+	;(setq by (car (cdr b)))
+	(setq ax (getx a))
+	(setq ay (gety a))
+	(setq bx (getx b))
+	(setq by (gety b))
+	;(princ (strcat "\nax: " (rtos ax)))
+	;(princ (strcat "\nay: " (rtos ay)))
+	;(princ (strcat "\nbx: " (rtos bx)))
+	;(princ (strcat "\nby: " (rtos by)))
+	;(princ (strcat "\nx: " (rtos (- ax bx))))
+	;(princ (strcat "\ny: " (rtos (- ay by)) "\n"))
+	
+	(setq xd (- ax bx))
+	(setq yd (- ay by))
+	(if (= xd 0)
+	    "Infinity"
+		(if (= yd 0)
+		    0
+		    (/ (- ax bx) (- ay by))
+		)
+	)
+	
+	;(/ (- (getx a) (getx b)) (- (gety a) (gety b)))
+	;(/ (- ax bx) (- ay by))
+)
+
+(setq dxf-point 10)
 
 ; Draw pipes from vertices 
 ; (foreach pipe (get-all-pipes) (command "-PLINE" (get-vertices pipe) ""))
 
+; (foreach pipe (get-all-pipes) (pipe-draw "1/2" (get-vertices pipe)))
+; Temp function
+(defun test-pipe-draw ()
+(foreach pipe (get-all-pipes) (pipe-draw "1/2" (get-vertices pipe)))
+)
+
 ; Test with
 ;  (command "-PLINE" (get-vertices (car (get-all-pipes))) "")
 (defun get-vertices (polyline / vertex remaining)
-	(setq vertices '())))
+	(setq vertices '())
 	(foreach property polyline
 	    (if (= 10 (car property)) 
 		    (setq vertices (cons (cdr property) vertices))
