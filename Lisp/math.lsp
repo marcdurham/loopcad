@@ -8,14 +8,16 @@
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
+(defun dxf-point () 10)
+
 (defun get-vertices (polyline / vertex remaining)
 	(setq vertices '())
 	(setq remaining polyline)
-	(setq vertex (assoc 10 polyline))
+	(setq vertex (cdr (assoc 10 polyline)))
 	(while vertex
 		(setq remaining (cdr remaining))
 		(setq vertices (cons vertex vertices))
-		(setq vertex (assoc 10 remaining))	
+		(setq vertex  (cdr (assoc 10 remaining)))
 	)
 	vertices
 )
