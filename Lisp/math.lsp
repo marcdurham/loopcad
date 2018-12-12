@@ -34,12 +34,13 @@
 	(setq sl (slope (car line) (cadr line)))
 	(princ (strcat "\nslope: " (rtos sl 5 4)))
     (setq perp-slope (negative-reciprocal sl))
+	;(if (=
 	(princ (strcat "\nperp-slope: " (rtos perp-slope 5 4)))
 	(setq newX (* perp-slope (+ 1 y)))
 	(princ (strcat "\nnewX: " (rtos newX 5 4)))
 	(princ (strcat "\ny: " (rtos y 5 4)))
 	;(list (+ 1 x) newY)
-	(list (+ (* 100 perp-slope) x) (+ 100 y))
+	(list  (+ 100 x) (+ (* 100 perp-slope) y))
 )
 
 (defun print-point (label point)
@@ -71,7 +72,7 @@
 	    "Infinity"
 		(if (= ydiff 0)
 		    0
-		    (/ xdiff ydiff)
+		    (/ ydiff xdiff)
 		)
 	)
 )
