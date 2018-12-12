@@ -8,17 +8,21 @@
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
-(defun test-thing ( / a b h)
+(defun test-near-line ( / a b h)
 	(setq a (getpoint))
 	(setq b (getpoint))
-	(setq h (getpoint))
-	
+
 	(print-point "a" a)
 	(print-point "b" b)
-	(print-point "h" h)
+	(while T
+	    (setq h (getpoint))
+		(print-point "h" h)
 
-	(if (near-line h a b)
-	    (command "-CIRCLE" h 5.0)
+		(if (near-line h a b)
+			(command "-COLOR" "green")
+			(command "-COLOR" "red")
+		)
+		(command "-CIRCLE" h 1.0)
 	)
 )
 
