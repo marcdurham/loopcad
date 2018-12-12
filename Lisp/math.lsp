@@ -7,7 +7,7 @@
 )
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
-(defun test-thing ( / a b h pp)
+(defun test-thing ( / a b h pp int)
     ;(setq a (car (get-vertices (car (get-all-pipes)))))
     ;(setq b (car (cdr (get-vertices (car (get-all-pipes))))))
 	(setq a (getpoint))
@@ -21,8 +21,20 @@
 	;(list a b)
 	;(princ (strcat "\nPP: " h))
 	(command "-PLINE" a b "")
-	(command "-PLINE" a h "")
-	(command "-PLINE" pp h "")
+	(command "-PLINE" b h "")
+	(command "-PLINE" h pp "")
+	(setq int (inters a b pp h nil))
+	(if int
+	    (progn
+	        (princ "\nIntersect: Yes\n")
+		    (command "-PLINE" h int "")
+	        (command "-CIRCLE" int 10.0) 
+			(command "-CIRCLE" h 10.0) 
+			(princ "\nDistance: ")
+			(distance h int)
+	    )
+	    (princ "\nIntersect: No\n")
+	)
 )
 
 ; Perpendicular line from point through line 
