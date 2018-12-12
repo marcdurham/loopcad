@@ -7,9 +7,8 @@
 )
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
+
 (defun test-thing ( / a b h)
-    ;(setq a (car (get-vertices (car (get-all-pipes)))))
-    ;(setq b (car (cdr (get-vertices (car (get-all-pipes))))))
 	(setq a (getpoint))
 	(setq b (getpoint))
 	(setq h (getpoint))
@@ -18,43 +17,36 @@
 	(print-point "b" b)
 	(print-point "h" h)
 
-
 	(if (near-line h a b)
 	    (command "-CIRCLE" h 5.0)
-		;(command "-TEXT h 5.0 "NO" "")
 	)
 )
 
-(defun near-line (h a b / int pp)
-    (setq pp (perp-point (list a b) h))
-	(if (in-box h a b)
+; Is h near or on the line segment between a and b?
+(defun near-line (p a b / int pp)
+    ; Draw an imaginary line from p perpendicular to a-b
+    (setq pp (perp-point (list a b) p))
+	(if (in-box p a b)
 	    (progn
-		    (princ "\nIn the box\n")
-			(setq int (inters a b pp h nil))
+		    ; Find the intersection between the imaginary perpendicular
+			; line and a-b.
+			(setq int (inters a b pp p nil))
 			(if int
-                (progn
-				    (princ "\ndistance: ")
-					(princ (rtos (distance h int) 2 4))
-					(princ "\n")
-					(if (< (distance h int) 5.0)
-						T ; near the line
-						nil
-					)
+				(if (< (distance p int) 5.0)
+					T ; near the line
+					nil
 				)
-				(if (same-point h pp) 
+				(if (are-same-point p pp) 
 					T ; on the line
 					nil
 				)
 			)
 		)
-		(progn
-			(princ "\nOut of the box\n")
-			nil
-		)
+		nil
 	)
 )
 
-(defun same-point (a b)
+(defun are-same-point (a b)
     (and (= (getx a) (getx b)) (= (gety a) (gety b)))
 )
 
@@ -68,6 +60,7 @@
 	)
 )
 
+; Is point 'p' in the box between the corners defined by 'a' and 'b'
 (defun in-box (p a b / x y maxx maxy minx miny margin)
     (setq margin 5.0)
     (setq maxx (+ (max (getx a) (getx b)) margin))
@@ -91,37 +84,21 @@
 	; should return '(1000 100)
 )
 
-; Perpendicular line from point through line 
-(defun perp-point (line point / x y perp-slope)
-    (setq x (getx point))
-	(setq y (gety point))
-	(princ "\n")
-	(princ line)
-	(setq sl (slope (car line) (cadr line)))
-	
-	(cond ((= 0 sl)
-		    (princ "\nZERO Slope\n")
-			;(command "-CIRCLE" point 10.0)
-            ;(command "-CIRCLE" point 11.0) 	
-            ;(command "-CIRCLE" point 12.0) 				
+; Perpendicular line from 'point' through 'line'
+; If the line has a zero or infinite slope return 'point'
+(defun perp-point (line point / x y s perp-slope)
+	(setq s (slope (car line) (cadr line)))
+	(cond ((= 0 s) ; Zero slope				
 			(list (getx point) (gety point))
 		)
-		((= "Infinity" sl)
-		    (princ "\nINFINITY Slope\n")
-			;(command "-CIRCLE" point 9.0)
-            ;(command "-CIRCLE" point 10.0) 			
+		((= "Infinity" s) ; Infinite slope			
 			(list (getx point) (gety point))
 		)
-		(T 
-		    (princ "\nNORMAL Slope\n")
-		    (princ (strcat "\nslope: " (rtos sl 5 4)))
-			(setq perp-slope (negative-reciprocal sl))
-			(princ (strcat "\nperp-slope: " (rtos perp-slope 5 4)))
-			(setq newX (* perp-slope (+ 1 y)))
-			(princ (strcat "\nnewX: " (rtos newX 5 4)))
-			(princ (strcat "\ny: " (rtos y 5 4)))
-			;(list (+ 1 x) newY)
-			(list  (+ 100 x) (+ (* 100 perp-slope) y))
+		(T ; Normal slope
+			(list  
+			    (+ 100 (getx point)) 
+				(+ (* 100 (negative-reciprocal s)) (gety point))
+			)
 		)
 	)
 )
