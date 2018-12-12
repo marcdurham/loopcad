@@ -1,4 +1,4 @@
-; These exist, replace them
+; Thse exist, replace them
 (defun greatest (a b)
   (if (> a b) a b)
 )
@@ -7,6 +7,38 @@
 )
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
+(defun test-thing ( / a b pp)
+    (setq a (car (get-vertices (car (get-all-pipes)))))
+    (setq b (car (cdr (get-vertices (car (get-all-pipes))))))
+	(setq h (getpoint))
+	(setq pp (perp-point (list a b) h))
+	(print-point a)
+	(print-point b)
+	(print-point h)
+	(print-point pp)
+	;(list a b)
+	;(princ (strcat "\nPP: " h))
+	(command "-PLINE" pp h "")
+)
+
+; Perpendicular line from point through line 
+(defun perp-point (line point / x y perp-slope)
+    (setq x (getx point))
+	(setq y (gety point))
+    (setq perp-slope (negative-reciprocal (slope (car line) (cadr line))))
+	(setq newY (* perp-slope (+ 1 x)))
+	(list (+ 1 x) newY)
+	
+)
+
+(defun print-point (point)
+    (princ "\n")
+    (princ (car point))
+    (princ (cadr point))
+	(princ)
+)
+
+(defun negative-reciprocal (x) (- 0 (/ 1 x)))
 
 (defun getx (point)
     (car point)
