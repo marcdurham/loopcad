@@ -26,7 +26,10 @@
 	)
 )
 
-; Is h near or on the line segment between a and b?
+; How close a point has to be to a line to be considered near it.
+(setq near-line-margin 5.0)
+
+; Is 'h' near or on the line segment between 'a' and 'b'?
 (defun near-line (p a b / int pp)
     ; Draw an imaginary line from p perpendicular to a-b
     (setq pp (perp-point (list a b) p))
@@ -36,7 +39,7 @@
 			; line and a-b.
 			(setq int (inters a b pp p nil))
 			(if int
-				(if (< (distance p int) 5.0)
+				(if (< (distance p int) near-line-margin)
 					T ; near the line
 					nil
 				)
@@ -50,6 +53,7 @@
 	)
 )
 
+; Compares only X and Y but not Z of a point's coordinates
 (defun are-same-point (a b)
     (and (= (getx a) (getx b)) (= (gety a) (gety b)))
 )
@@ -65,12 +69,11 @@
 )
 
 ; Is point 'p' in the box between the corners defined by 'a' and 'b'
-(defun in-box (p a b / x y maxx maxy minx miny margin)
-    (setq margin 5.0)
-    (setq maxx (+ (max (getx a) (getx b)) margin))
-	(setq maxy (+ (max (gety a) (gety b)) margin))
-	(setq minx (- (min (getx a) (getx b)) margin))
-	(setq miny (- (min (gety a) (gety b)) margin))
+(defun in-box (p a b / x y maxx maxy minx miny)
+    (setq maxx (+ (max (getx a) (getx b)) near-line-margin))
+	(setq maxy (+ (max (gety a) (gety b)) near-line-margin))
+	(setq minx (- (min (getx a) (getx b)) near-line-margin))
+	(setq miny (- (min (gety a) (gety b)) near-line-margin))
 	(setq x (getx p))
 	(setq y (gety p))
 	(if (and (< x maxx)
