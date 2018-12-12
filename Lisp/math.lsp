@@ -7,55 +7,50 @@
 )
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
-(defun test-thing ( / a b h pp int)
+(defun test-thing ( / a b h)
     ;(setq a (car (get-vertices (car (get-all-pipes)))))
     ;(setq b (car (cdr (get-vertices (car (get-all-pipes))))))
 	(setq a (getpoint))
 	(setq b (getpoint))
 	(setq h (getpoint))
-	(setq pp (perp-point (list a b) h))
+	
 	(print-point "a" a)
 	(print-point "b" b)
 	(print-point "h" h)
-	(print-point "pp" pp)
-	;(list a b)
-	;(princ (strcat "\nPP: " h))
-	(command "-PLINE" a b "")
-	(command "-PLINE" b h "")
-	(command "-PLINE" h pp "")
+
+
+	(if (near-line h a b)
+	    (command "-CIRCLE" h 5.0)
+		;(command "-TEXT h 5.0 "NO" "")
+	)
+)
+
+(defun near-line (h a b / int pp)
+    (setq pp (perp-point (list a b) h))
 	(if (in-box h a b)
 	    (progn
 		    (princ "\nIn the box\n")
 			(setq int (inters a b pp h nil))
 			(if int
-				(progn
-					(princ "\nIntersect: Yes\n")
-					(command "-PLINE" h int "")
-					(command "-CIRCLE" int 10.0) 
-					(command "-CIRCLE" h 10.0) 
-					(princ "\nDistance: ")
-					(distance h int)
-				)
-				(progn
-				    (princ "\nIntersect: No\n")
-					;(princ "H: ")
-					;(princ h)
-					;(princ "\nPP: ")
-					;(princ pp)
-					;(princ "\n")
-					(if (same-point h pp)
-					    (progn
-							(princ "\nPP is equal to H=n")
-							(command "-CIRCLE" h 5.0)
-							(command "-CIRCLE" h 7.0) 	
-							(command "-CIRCLE" h 9.0) 	
-							(command "-CIRCLE" h 11.0)
-						)
+                (progn
+				    (princ "\ndistance: ")
+					(princ (rtos (distance h int) 2 4))
+					(princ "\n")
+					(if (< (distance h int) 5.0)
+						T ; near the line
+						nil
 					)
+				)
+				(if (same-point h pp) 
+					T ; on the line
+					nil
 				)
 			)
 		)
-		(princ "\nNot in the box\n")
+		(progn
+			(princ "\nOut of the box\n")
+			nil
+		)
 	)
 )
 
@@ -74,7 +69,7 @@
 )
 
 (defun in-box (p a b / x y maxx maxy minx miny margin)
-    (setq margin 4.0)
+    (setq margin 5.0)
     (setq maxx (+ (max (getx a) (getx b)) margin))
 	(setq maxy (+ (max (gety a) (gety b)) margin))
 	(setq minx (- (min (getx a) (getx b)) margin))
