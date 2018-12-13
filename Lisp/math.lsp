@@ -8,6 +8,35 @@
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
+(defun segments (polyline / i z output)
+    (setq output '())
+    (setq z (1- (length polyline)))
+	(setq i 0)
+	(princ "\nz: ")
+	(princ (itoa z))
+	(while (< i z)
+	    (princ "\ni: ")
+		(princ (itoa i))
+	    (setq segment '())
+	    (setq next (1+ i))    		
+	    (setq segment (cons (nth next polyline) segment))
+		(setq segment (cons (nth i polyline) segment))
+		(princ " ")
+		(princ (nth i polyline))
+		(princ " next: ")
+		(princ (itoa next))
+		(princ " ")
+		(princ (nth next polyline))
+		(princ "\nLenght of segment: ")
+		(princ (itoa (length segment)))
+		(setq output (cons segment output))
+	    (setq i (1+ i))
+	)
+	(princ "\nOutput: ")
+	(reverse output)
+)
+
+
 ; Manual test, click the ends of the line, then click points near
 ; the line. Small red circles appear if they are not near the line
 ; and green circles appear that are near the line.
