@@ -8,21 +8,24 @@
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
-(defun test-near-line ( / a b h)
+; Manual test, click the ends of the line, then click points near
+; the line. Small red circles appear if they are not near the line
+; and green circles appear that are near the line.
+(defun test-near-line ( / a b p)
 	(setq a (getpoint))
 	(setq b (getpoint))
 
 	(print-point "a" a)
 	(print-point "b" b)
 	(while T
-	    (setq h (getpoint))
-		(print-point "h" h)
+	    (setq p (getpoint))
+		(print-point "p" p)
 
-		(if (near-line h a b)
+		(if (near-line p a b)
 			(command "-COLOR" "green")
 			(command "-COLOR" "red")
 		)
-		(command "-CIRCLE" h 1.0)
+		(command "-CIRCLE" p 1.0)
 	)
 )
 
@@ -53,19 +56,27 @@
 	)
 )
 
-; Compares only X and Y but not Z of a point's coordinates
+; Compares only x and y but not z of 'a' and 'b' coordinates
 (defun are-same-point (a b)
     (and (= (getx a) (getx b)) (= (gety a) (gety b)))
 )
 
-(defun test-in-box ( / )
-    (and
-		(not (in-box (list 1001 0 0) (list -500 -400 0) (list 1000 2000 0)))
-		(not (in-box (list -401 0 0) (list -500 -400 0) (list 1000 2000 0)))
-		(not (in-box (list 0 -401 0) (list -500 -400 0) (list 1000 2000 0)))
-		(not (in-box (list 0 2001 0) (list -500 -400 0) (list 1000 2000 0)))
-		(in-box (list 0 0 0) (list -500 -400 0) (list 1000 2000 0))
+; Auto test 'in-box' function
+(defun test-auto-in-box ( / a b)
+    (princ "\ntest-auto-in-box: ")
+	(setq a (list -500 -400 0) )
+	(setq b (list 1000 2000 0))
+    (if (and
+			(not (in-box (list 1001 0 0) a b))
+			(not (in-box (list -401 0 0) a b))
+			(not (in-box (list 0 -401 0) a b))
+			(not (in-box (list 0 2001 0) a b))
+			(in-box (list 0 0 0) a b) ; This one should be in the box
+		)
+		(princ "PASS\n")
+		(princ "FAIL\n")
 	)
+	(princ)
 )
 
 ; Is point 'p' in the box between the corners defined by 'a' and 'b'
