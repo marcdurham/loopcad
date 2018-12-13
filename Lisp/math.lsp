@@ -8,15 +8,23 @@
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
-(defun segments (polyline / i z output)
+(defun test-segments ( / pipe)
+    (foreach pipe (get-all-pipes)
+	    (princ "\nPipe\n")
+	    (princ (segments pipe))
+	)
+)
+
+(defun segments (polyline / i next z segment vertices output)
     (setq output '())
-    (setq z (1- (length polyline)))
+	(setq vertices (get-vertices polyline))
+    (setq z (- (length vertices) 2)) ; grabbing pairs, so don't grab the last one
 	(setq i 0)
-	(while (< i z)
+	(while (<= i z)
 	    (setq segment '())
 	    (setq next (1+ i))    			
-	    (setq segment (cons (nth next polyline) segment))
-		(setq segment (cons (nth i polyline) segment))
+	    (setq segment (cons (nth next vertices) segment))
+		(setq segment (cons (nth i vertices) segment))
 		(setq output (cons segment output))
 	    (setq i (1+ i))
 	)
@@ -178,8 +186,12 @@
 
 ; (foreach pipe (get-all-pipes) (pipe-draw "1/2" (get-vertices pipe)))
 ; Temp function
-(defun test-pipe-draw ()
-(foreach pipe (get-all-pipes) (pipe-draw "1/2" (get-vertices pipe)))
+(defun test-pipe-draw ( / pipes vertices vertex pipe)
+	;(setq pipes (get-all-pipes))
+	;(setq vertices '())
+	;(foreach pipe pipes (setq vertices (cons (get-vertices pipe) vertices)))
+	;(foreach vertex vertices (pipe-draw "1/2" vertex))
+    (foreach pipe pipes (pipe-draw "1/2" (get-vertices pipe)))
 )
 
 ; Test with
@@ -194,12 +206,20 @@
 	vertices
 )
 
-(defun get-all-pipes () 
-    (get-pipes (entnext))
-)
+; Get insertion point of an entity
+;(defun get-ins-point (entity / points)
+	;(setq points '())
+	;(foreach property entity
+	;    (if (= 10 (car property))
+	;	    (setq points (cons (cdr property) points))
+	;	)
+	;)
+	;(car points)
+;)
 
-(defun get-pipes (en / ent pipes layer) 
+(defun get-all-pipes ( / en ent pipes layer) 
 	(setq pipes '())
+	(setq en (entnext))
     (while en
 	    (setq ent (entget en))
 		(if (and (strstartswith "PIPES" (get-layer en))
@@ -212,6 +232,22 @@
 	pipes
 )
 
+(defun get-all-nodes ( / en ent nodes layer) 
+	(setq nodes '())
+	(setq en (entnext))
+    (while en
+	    (setq ent (entget en))
+		(if  (and (or (= "HEADS" (get-layer en))
+		            (= "TEES" (get-layer en)))
+		         (str= (get-etype en) "INSERT")
+			)
+			(setq nodes (cons ent nodes))
+		)
+		(setq en (entnext en))
+	)
+	nodes
+)
+
 (defun get-layer (entity-name)
 	(cdr (assoc 8 (entget entity-name)))
 )
@@ -220,8 +256,11 @@
 	(cdr (assoc 0 (entget entity-name)))
 )
 
-(defun get-ins-point (entity-name)
-	(cdr (assoc 10 (entget entity-name)))
+(defun get-ins-point (entity)
+    (if (= (type entity) "ENAME") 
+	    (setq entity (entget entity))
+	)
+	(cdr (assoc 10 entity))
 )
 
 (defun get-x-scale (entity-name)
