@@ -8,6 +8,23 @@
 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
+(defun test-break-pipes ( / pipe segment nodept)
+    (foreach pipe (get-all-pipes)
+	    (princ "\nPipe\n")
+	    (foreach segment (segments pipe)
+		    (princ "\n    Segment\n") ; Looks pretty good
+			(princ  (car segment))
+			(setq nodept (get-ins-point (car get-all-nodes)))
+			(princ "\n")
+			(princ nodept)
+			(princ "\n")
+			(if (near-line nodept (car segment) (cadr segment))
+			    (princ "\n      Near line\n")
+			)
+		)
+	)
+)
+
 (defun test-segments ( / pipe)
     (foreach pipe (get-all-pipes)
 	    (princ "\nPipe\n")
