@@ -7,33 +7,36 @@
 )
 
 (defun test-Polyline ()
-    (Polyline '( (10410.5 15273.4 0.000000) 
+    (Polyline '((10410.5 15273.4 0.000000) 
 		(10386.9 15294.1 0.000000)
 		(10797.7 15181.8 0.000000)
 		(10856.8 15409.3 0.000000))
 	)
 )
 
+(defun make-pipe (vertices)
+    (make-polyline vertices 150 "Pipes")
+)
+
 (defun make-vertex (p)
 	(entmake 
 		(list 
 			(cons 0 "VERTEX") 
-			(cons 10 p)
+			(cons 10 p)c
 		)
 	)			
 )
 
-(defun Polyline (lst)
+(defun make-polyline (vertices color layer)
 	(entmakex 
 		(list 
 			(cons 0 "POLYLINE")
-			(cons 62 5)
+			(cons 8 layer) ; Layer 
+			(cons 62 color) ; Color
 			(cons 10 '(0 0 0))
 		)
 	)
-	(mapcar
-		'make-vertex
-		lst
+	(mapcar 'make-vertex vertices
 	)
 	(entmakex (list (cons 0 "SEQEND")))
 )
