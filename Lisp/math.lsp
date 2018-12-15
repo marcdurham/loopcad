@@ -6,6 +6,38 @@
   (if (< a b) a b)
 )
 
+(defun test-Polyline ()
+    (Polyline '( (10410.5 15273.4 0.000000) 
+		(10386.9 15294.1 0.000000)
+		(10797.7 15181.8 0.000000)
+		(10856.8 15409.3 0.000000))
+	)
+)
+
+(defun make-vertex (p)
+	(entmake 
+		(list 
+			(cons 0 "VERTEX") 
+			(cons 10 p)
+		)
+	)			
+)
+
+(defun Polyline (lst)
+	(entmakex 
+		(list 
+			(cons 0 "POLYLINE")
+			(cons 62 5)
+			(cons 10 '(0 0 0))
+		)
+	)
+	(mapcar
+		'make-vertex
+		lst
+	)
+	(entmakex (list (cons 0 "SEQEND")))
+)
+ 
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
 
 ;(defun test-break-pipes ( / pipe segment nodept)
@@ -32,12 +64,12 @@
 	)
 )
 
-(defun segments (polyline / i next z seg vertices output)
+(defun segments (polyline / i next last-i seg vertices output)
     (setq output '())
 	(setq vertices (get-vertices polyline))
-    (setq z (- (length vertices) 2)) ; grabbing pairs, so don't grab the last one
+    (setq last-i (- (length vertices) 2)) ; grabbing pairs, so don't grab the last one
 	(setq i 0)
-	(while (<= i z)
+	(while (<= i last-i)
 	    (setq seg (segment i vertices))
 		(setq output (cons seg output))
 	    (setq i (1+ i))
@@ -45,7 +77,7 @@
 	(reverse output)
 )
 
-(defun segment (index vertices / next last-index output)
+(defun segment (index vertices / next output)
     (setq output '())
 	(setq next (1+ index))    			
 	(setq output (cons (nth next vertices) output))
@@ -207,7 +239,7 @@
 ; (foreach pipe (get-all-pipes) (pipe-draw "1/2" (get-vertices pipe)))
 ; Temp function
 (defun test-pipe-draw ( / pipes vertices vertex pipe)
-	;(setq pipes (get-all-pipes))
+	(setq pipes (get-all-pipes))
 	;(setq vertices '())
 	;(foreach pipe pipes (setq vertices (cons (get-vertices pipe) vertices)))
 	;(foreach vertex vertices (pipe-draw "1/2" vertex))
@@ -225,6 +257,10 @@
 	)
 	vertices
 )
+
+; p is a point
+;(entmake (list (cons 0 "CIRCLE") (cons 62 5) (cons 10 p) (cons 40 5.6)))
+
 
 ; Get insertion point of an entity
 ;(defun get-ins-point (entity / points)
