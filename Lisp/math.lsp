@@ -6,26 +6,58 @@
   (if (< a b) a b)
 )
 
-(defun test-Polyline ()
-    (Polyline '((10410.5 15273.4 0.000000) 
+;(foreach p (get-all-pipes) (make-pipe "1-1/4" (get-vertices p)))
+
+(defun test-make-pipe ()
+    (make-pipe "1-1/4" '(
+	    (10410.5 15273.4 0.000000) 
 		(10386.9 15294.1 0.000000)
 		(10797.7 15181.8 0.000000)
 		(10856.8 15409.3 0.000000))
 	)
 )
 
-(defun make-pipe (vertices)
-    (make-polyline vertices 150 "Pipes")
+(defun get-pipe-size (polyline / vertex remaining)
+	(setq vertices '())
+	(foreach property polyline
+	    (if (= 10 (car property)) 
+		    (setq vertices (cons (cdr property) vertices))
+		)
+	)
+	vertices
+)
+
+(defun make-pipe (size vertices)
+    (make-polyline vertices  (pipe-size-color size) "Pipes2")
 )
 
 (defun make-vertex (p)
 	(entmake 
 		(list 
 			(cons 0 "VERTEX") 
-			(cons 10 p)c
+			(cons 10 p)
 		)
 	)			
 )
+
+;(defun make-lwpolyline (vertices color layer);
+;	(entmakex 
+;		(append 
+;			(list 
+;				(cons 0 "LWPOLYLINE");
+;				(cons 100 "AcDbEntity")
+;				(cons 100 "AcDbPolyline")
+;				(cons 8 layer) ; Layer
+;				(cons 62 color) ; Color
+;				(cons 43 10.0) ; Constant width, default = 0			
+;				(cons 90 (length vertices)) ; Number of vertices
+;				(cons 70 0) ; Default = 0 closed 
+;			)
+ ;           ;(mapcar (function (lambda (p) (cons 10 p))) vertices)
+;		)
+;	)
+;)
+
 
 (defun make-polyline (vertices color layer)
 	(entmakex 
@@ -33,10 +65,14 @@
 			(cons 0 "POLYLINE")
 			(cons 8 layer) ; Layer 
 			(cons 62 color) ; Color
-			(cons 10 '(0 0 0))
+			(cons 40 5.0)
+			(cons 41 5.0)
+			(cons 10 '(0 0 0)) ; Always zero 'Dummy pont'
 		)
 	)
-	(mapcar 'make-vertex vertices
+	(mapcar 
+	    'make-vertex 
+	    vertices
 	)
 	(entmakex (list (cons 0 "SEQEND")))
 )
