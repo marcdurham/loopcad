@@ -7,7 +7,33 @@
 )
 
 ;(foreach p (get-all-pipes) (make-pipe "1-1/4" (get-vertices p)))
+(defun test-break-all-pipes ( / new-vertices new-pipes old-pipes pt start end vertex i vertices)
+	(setq new-pipes '())
+	(setq new-vertices '())
+	(setq old-pipes (get-all-pipes))
+	(foreach pipe old-pipes
+		(setq i 0)
+		(setq vertices (get-vertices pipe))
+		;(foreach vertex (get-vertices pipe)
+		(while (< i (length vertices))
+			(setq vertex (nth i vertices))
+			(princ "\nVertex:")
+			(princ vertex)
+			(setq new-vertices (cons vertex new-vertices))
+			;(if (near-line pt start end)
+			;	(setq new-pipes (cons pipe new-pipes))
+			;)
+			(setq i (1+ i))
+		)
+	)
+	(make-pipe "1-1/4" new-vertices)
+	;(foreach pipe new-pipes
+;		(make-pipe "1-1/4" (get-vertices pipe))
+;	)
+)
 
+
+; Visual test, look at the output.
 (defun test-make-pipe ()
     (make-pipe "1-1/4" '(
 	    (10410.5 15273.4 0.000000) 
@@ -17,6 +43,7 @@
 	)
 )
 
+; Returns the pipe size, ex: "3/4" from a color input of 1 (which is red)
 (defun get-pipe-size (polyline / vertex remaining)
 	(setq vertices '())
 	(foreach property polyline
@@ -28,9 +55,11 @@
 )
 
 (defun make-pipe (size vertices)
-    (make-polyline vertices  (pipe-size-color size) "Pipes2")
+    (make-polyline vertices  (pipe-size-color size) "Pipes")
 )
 
+; Make a vertices for a polyline
+; Also needs an 'SEQEND' entry
 (defun make-vertex (p)
 	(entmake 
 		(list 
@@ -65,8 +94,8 @@
 			(cons 0 "POLYLINE")
 			(cons 8 layer) ; Layer 
 			(cons 62 color) ; Color
-			(cons 40 5.0)
-			(cons 41 5.0)
+			(cons 40 5.0) ; Starting width
+			(cons 41 5.0) ; Ending width
 			(cons 10 '(0 0 0)) ; Always zero 'Dummy pont'
 		)
 	)
@@ -147,7 +176,7 @@
 ; How close a point has to be to a line to be considered near it.
 (setq near-line-margin 5.0)
 
-; Is 'h' near or on the line segment between 'a' and 'b'?
+; Is 'p' near or on the line segment between 'a' and 'b'?
 (defun near-line (p a b / int pp)
     ; Draw an imaginary line from p perpendicular to a-b
     (setq pp (perp-point (list a b) p))
@@ -236,6 +265,7 @@
 	)
 )
 
+; Print the coordinates of the point.  For debugging.
 (defun print-point (label point)
     (princ (strcat "\n" label ": "))
     (princ (car point))
@@ -254,9 +284,6 @@
     (car (cdr point))
 )
 
-;(defun test-slope (a b)
-
-;)
 
 (defun slope (a b / xdiff ydiff)
 	(setq xdiff (- (getx a) (getx b)))
