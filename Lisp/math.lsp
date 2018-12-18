@@ -6,6 +6,43 @@
   (if (< a b) a b)
 )
 
+; Should return five points 
+(defun test-remove-repeated-points ()
+	(remove-repeated-points 
+		'(
+			(1.0 1.0 0.0)
+			
+			(1.0 2.0 0.0)
+			
+			(2.0 3.0 0.0)
+			(2.0 3.0 0.0)
+			(2.0 3.0 0.0)
+			
+			(3.0 3.0 0.0)
+			(3.0 3.0 0.0)
+			
+			(3.0 4.0 0.0)
+		)
+	)
+)
+
+(defun remove-repeated-points (points / last-pt output)
+	(setq output '())
+	(foreach point points
+		(if (not (are-same-point last-pt point))
+			(progn
+				(setq output (cons point output))
+				(setq last-pt point)
+			)
+			(progn
+			
+				(setq last-pt point)
+			)
+		)
+	)
+	(reverse output)
+)
+
 ;(foreach p (get-all-pipes) (make-pipe "1-1/4" (get-vertices p)))
 (defun test-break-all-pipes ( / node-point all-nodes seg new-vertices new-pipes old-pipes pt start end vertex i vertices)
 	(setq new-pipes '())
@@ -14,6 +51,7 @@
 	(foreach pipe old-pipes
 		(setq i 0)
 		(setq vertices (get-vertices pipe))
+		(setq vertices (remove-repeated-points vertices))
 		(setq new-vertices '())
 		;(foreach vertex (get-vertices pipe)
 		(while (< i (length vertices))
@@ -28,45 +66,38 @@
 			(if (not (cadr seg)) ; Last point is nil, end of polyline vertices
 				(progn 
 					(princ " END OF LINE ")
-					;;(make-circle vertex 10.0 color-yellow "Heads")
+					(make-circle vertex 10.0 color-red "Heads")
 				)
 			)
-			(if (= i 0)
+			(if (= i 0) ; First vertex
 				(progn
 					(princ " START OF LINE ")
-					;;(make-circle vertex 14.0 color-green "Heads")
+					(make-circle vertex 14.0 color-red "Heads")
 				)
 			)
 			
-			(foreach node all-nodes
-				(setq node-point (get-ins-point node))
-				(setq dist (distance vertex node-point))
-				(if (< dist near-line-margin)
-					(progn 
-						(princ "\n    Near Node:")
-						(princ node-point)
-						(princ " ")
-						(princ dist)
-						(make-circle vertex 14.0 color-green "Heads")
-					)
-					(if (and 
-							(cadr seg) 
-							(near-line node-point (car seg) (cadr seg))
-						)
+			(if (and (> i 0) (< i (1- (length vertices)))) ; not the first or last vertex index
+				(foreach node all-nodes
+					(setq node-point (get-ins-point node))
+					(setq dist (distance vertex node-point))
+					(if (< dist near-line-margin)
 						(progn 
 							(princ "\n    Near Node:")
 							(princ node-point)
+							(princ " ")
+							(princ dist)
+							(make-circle vertex 14.0 color-green "Heads")
 						)
 					)
+					;;(princ "\n    Node:")
+					;;(princ node-point)
+					;(if (near-line node-point (car seg) (cadr seg))
+					;	(progn 
+					;		(princ "\n    Near Node:")
+					;		(princ node-point)
+					;	)
+					;)
 				)
-				;;(princ "\n    Node:")
-				;;(princ node-point)
-				;(if (near-line node-point (car seg) (cadr seg))
-				;	(progn 
-				;		(princ "\n    Near Node:")
-				;		(princ node-point)
-				;	)
-				;)
 			)
 
 			;(if (near-line pt start end)
@@ -74,7 +105,9 @@
 			;)
 			(setq i (1+ i))
 		)
-		(setq new-pipes (cons new-vertices new-pipes))
+		(if (> (length new-vertices) 0)
+			(setq new-pipes (cons new-vertices new-pipes))
+		)
 	)
 	;(make-pipe "1-1/4" new-vertices)
     (foreach pipe new-pipes
