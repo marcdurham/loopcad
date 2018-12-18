@@ -7,39 +7,57 @@
 )
 
 ;(foreach p (get-all-pipes) (make-pipe "1-1/4" (get-vertices p)))
-(defun test-break-all-pipes ( / new-vertices new-pipes old-pipes pt start end vertex i vertices)
+(defun test-break-all-pipes ( / seg new-vertices new-pipes old-pipes pt start end vertex i vertices)
 	(setq new-pipes '())
-	(setq new-vertices '())
 	(setq old-pipes (get-all-pipes))
 	(foreach pipe old-pipes
 		(setq i 0)
 		(setq vertices (get-vertices pipe))
+		(setq new-vertices '())
 		;(foreach vertex (get-vertices pipe)
 		(while (< i (length vertices))
 			(setq vertex (nth i vertices))
 			(princ "\nVertex:")
 			(princ vertex)
 			(setq new-vertices (cons vertex new-vertices))
+			(setq seg (segment i vertices))
+			(princ "\n    ")
+			(princ seg)
+			(if (not (cadr seg))
+				(progn 
+					(princ " END OF LINE ")
+					(make-circle vertex 10.0 color-yellow "Heads")
+				)
+			)
+			(if (= i 0)
+				(progn
+					(princ " START OF LINE ")
+					(make-circle vertex 14.0 color-green "Heads")
+				)
+			)
 			;(if (near-line pt start end)
 			;	(setq new-pipes (cons pipe new-pipes))
 			;)
 			(setq i (1+ i))
 		)
+		(setq new-pipes (cons new-vertices new-pipes))
 	)
-	(make-pipe "1-1/4" new-vertices)
-	;(foreach pipe new-pipes
-;		(make-pipe "1-1/4" (get-vertices pipe))
-;	)
+	;(make-pipe "1-1/4" new-vertices)
+    (foreach pipe new-pipes
+		(make-pipe "1-1/4" pipe)
+	)
 )
 
 
 ; Visual test, look at the output.
 (defun test-make-pipe ()
-    (make-pipe "1-1/4" '(
-	    (10410.5 15273.4 0.000000) 
-		(10386.9 15294.1 0.000000)
-		(10797.7 15181.8 0.000000)
-		(10856.8 15409.3 0.000000))
+    (make-pipe "1-1/4" 
+		(list
+			(10410.5 15273.4 0.000000) 
+			(10386.9 15294.1 0.000000)
+			(10797.7 15181.8 0.000000)
+			(10856.8 15409.3 0.000000)
+		)
 	)
 )
 
@@ -87,6 +105,17 @@
 ;	)
 ;)
 
+(defun make-circle (center radius color layer)
+	(entmakex 
+		(list 
+			(cons 0 "CIRCLE")
+			(cons 10 center)
+			(cons 40 radius)
+			(cons 8 layer) ; Layer 
+			(cons 62 color) ; Color
+		)
+	)
+)
 
 (defun make-polyline (vertices color layer)
 	(entmakex 
