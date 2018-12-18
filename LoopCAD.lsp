@@ -4,10 +4,10 @@
 
 
 ; Load LoopCAD LISP module files (*.lsp)
-(load "Lisp\\load-safely.lsp")
+(load ".\\Lisp\\load-safely.lsp")
 
 (foreach f (cdr (cdr (vl-directory-files ".\\Lisp")))
-	(if (str= (vl-filename-extension f) ".lsp")
+	(if (= (strcase (vl-filename-extension f)) (strcase ".lsp"))
 		(load-safely (strcat ".\\Lisp\\" f))
 	)
 )
