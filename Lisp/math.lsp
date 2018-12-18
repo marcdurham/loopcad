@@ -43,21 +43,33 @@
 	(reverse output)
 )
 
+(defun test-break ( / old-pipes)
+	(setq old-pipes (get-all-pipes))
+	(foreach pipe (test-break-all-pipes)
+		(make-pipe (car pipe) (cdr pipe))
+	)
+	(foreach pipe old-pipes (entdel (cdr (assoc -1 pipe))))
+)
+	
 ;(foreach p (get-all-pipes) (make-pipe "1-1/4" (get-vertices p)))
-(defun test-break-all-pipes ( / node-point all-nodes seg new-vertices new-pipes old-pipes pt start end vertex i vertices)
+(defun test-break-all-pipes ( / size node-point all-nodes seg new-vertices new-pipes old-pipes pt start end vertex i vertices)
 	(setq new-pipes '())
 	(setq old-pipes (get-all-pipes))
 	(setq all-nodes (get-all-nodes))
 	(foreach pipe old-pipes
 		(setq i 0)
+		(setq size (get-pipe-size pipe))
+		(princ "\nSize: ")
+		(princ size)
+							
 		(setq vertices (get-vertices pipe))
 		(setq vertices (remove-repeated-points vertices))
 		(setq new-vertices '())
+
 		(while (< i (length vertices))
 			(setq vertex (nth i vertices))
 			(princ "\nVertex:")
-			(princ vertex)
-					
+			(princ vertex)				
 			(setq new-vertices (cons vertex new-vertices))
 			(setq seg (segment i vertices))
 			(princ "\n    ")
@@ -73,8 +85,7 @@
 					(princ " START OF LINE ")
 					(make-circle vertex 14.0 color-red "Heads")
 				)
-			)
-			
+			)		
 			(if (and (> i 0) (< i (1- (length vertices)))) ; not the first or last vertex index
 				(foreach node all-nodes
 					(setq node-point (get-ins-point node))
@@ -87,8 +98,12 @@
 							(princ dist)
 							(make-circle vertex 14.0 color-green "Heads")
 							(if (> (length new-vertices) 0)
-								(setq new-pipes (cons new-vertices new-pipes))
-							)
+								(progn
+									(setq new-vertices (cons size new-vertices))
+									(setq new-pipes (cons new-vertices new-pipes))
+								)
+							)							
+
 							(setq new-vertices '())
 							(setq new-vertices (cons vertex new-vertices))
 						)
@@ -106,12 +121,16 @@
 			(setq i (1+ i))
 		)
 		(if (> (length new-vertices) 0)
-			(setq new-pipes (cons new-vertices new-pipes))
+			(progn
+				(setq new-vertices (cons size new-vertices))
+				(setq new-pipes (cons new-vertices new-pipes))
+			)
 		)
 	)
-    (foreach pipe new-pipes
-		(make-pipe "1-1/4" pipe)
-	)
+	new-pipes
+;   (foreach pipe new-pipes
+;		(make-pipe (car pipe) (cdr pipe))
+;	)
 )
 
 
@@ -129,13 +148,8 @@
 
 ; Returns the pipe size, ex: "3/4" from a color input of 1 (which is red)
 (defun get-pipe-size (polyline / vertex remaining)
-	(setq vertices '())
-	(foreach property polyline
-	    (if (= 10 (car property)) 
-		    (setq vertices (cons (cdr property) vertices))
-		)
-	)
-	vertices
+	;(pipe-color-size (cdr (assoc 62 polyline)))
+	(pipe-color-size (ent-color polyline))
 )
 
 (defun make-pipe (size vertices)
@@ -504,6 +518,11 @@
 ; Not tested yet, I think 62 is the color
 (defun get-color (entity-name)
 	(cdr (assoc 62 (entget entity-name)))
+)
+
+; Not tested yet, I think 62 is the color
+(defun ent-color (entity)
+	(cdr (assoc 62 entity))
 )
 
 (defun str= (left right)

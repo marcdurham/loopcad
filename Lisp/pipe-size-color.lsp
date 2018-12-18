@@ -13,6 +13,7 @@
 		(cons "1/2" color-green)
 		(cons "3/4" color-red)
 		(cons "1" color-blue)
+		(cons "1" 150)
 		(cons "1-1/4" color-magenta)
 	)
 )
