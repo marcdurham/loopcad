@@ -2,7 +2,6 @@
 ; Global Variables
 (setq *failed-to-load* 0)
 
-;;;;(vl-vbarun "Controller.ReferenceAllDlls")
 
 ; Load LoopCAD LISP module files (*.lsp)
 (load "Lisp\\load-safely.lsp")
@@ -15,6 +14,8 @@
 (load-safely "Lisp\\head-insert-user.lsp")
 (load-safely "Lisp\\head-insert-coverage.lsp")
 (load-safely "Lisp\\head-data-set.lsp")
+(load-safely "Lisp\\entity-creators.lsp")
+(load-safely "Lisp\\break-pipes.lsp")
 (load-safely "Lisp\\pipe-size-color.lsp")
 (load-safely "Lisp\\pipe-draw.lsp")
 (load-safely "Lisp\\tee-insert.lsp")
@@ -25,10 +26,7 @@
 (load-safely "Lisp\\load-safely-check.lsp")
 (load-safely "job_data.lsp")
 
-; Tests
-;;;;(load-safely "Lisp\\data-request-test.lsp")
-
 ; Check if files all loaded
-;;;;(load-safely-check)
+(load-safely-check)
 
 (princ) ; exit quietly

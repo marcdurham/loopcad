@@ -18,7 +18,7 @@
 (defun C:TEE () (tee-insert))
 (defun C:LABEL-NODES () (send-controller-command "LabelNodes"))
 (defun C:LABEL-PIPES () (send-controller-command "LabelPipes"))
-(defun C:BREAK-PIPES () (send-controller-command "BreakPipes"))
+(defun C:BREAK-PIPES () (break-pipes-delete-old))
 (defun C:JOIN-HEADS () (head-join))
 (defun C:FLOOR-CONNECTOR () (floor-connector-insert))
 (defun C:INSERT-JOB-DATA () (send-controller-command "EditJobData"))
