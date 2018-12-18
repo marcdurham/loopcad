@@ -59,8 +59,8 @@
 	(foreach pipe old-pipes
 		(setq i 0)
 		(setq size (get-pipe-size pipe))
-		(princ "\nSize: ")
-		(princ size)
+	;	(princ "\nSize: ")
+	;	(princ size)
 							
 		(setq vertices (get-vertices pipe))
 		(setq vertices (remove-repeated-points vertices))
@@ -68,35 +68,35 @@
 
 		(while (< i (length vertices))
 			(setq vertex (nth i vertices))
-			(princ "\nVertex:")
-			(princ vertex)				
+		;	(princ "\nVertex:")
+		;	(princ vertex)				
 			(setq new-vertices (cons vertex new-vertices))
 			(setq seg (segment i vertices))
-			(princ "\n    ")
-			(princ seg)
-			(if (not (cadr seg)) ; Last point is nil, end of polyline vertices
-				(progn 
-					(princ " END OF LINE ")
-					(make-circle vertex 10.0 color-red "Heads")
-				)
-			)
-			(if (= i 0) ; First vertex
-				(progn
-					(princ " START OF LINE ")
-					(make-circle vertex 14.0 color-red "Heads")
-				)
-			)		
+		;	(princ "\n    ")
+		;	(princ seg)
+		;	(if (not (cadr seg)) ; Last point is nil, end of polyline vertices
+		;		(progn 
+		;			(princ " END OF LINE ")
+		;			;(make-circle vertex 10.0 color-red "Heads")
+		;		)
+		;	)
+		;	(if (= i 0) ; First vertex
+		;		(progn
+		;			(princ " START OF LINE ")
+		;			(make-circle vertex 14.0 color-red "Heads")
+		;		)
+		;	)		
 			(if (and (> i 0) (< i (1- (length vertices)))) ; not the first or last vertex index
 				(foreach node all-nodes
 					(setq node-point (get-ins-point node))
 					(setq dist (distance vertex node-point))
 					(if (< dist near-line-margin)
 						(progn 
-							(princ "\n    Near Node:")
-							(princ node-point)
-							(princ " ")
-							(princ dist)
-							(make-circle vertex 14.0 color-green "Heads")
+		;					(princ "\n    Near Node:")
+		;					(princ node-point)
+		;					(princ " ")
+		;					(princ dist)
+		;					(make-circle vertex 14.0 color-green "Heads")
 							(if (> (length new-vertices) 0)
 								(progn
 									(setq new-vertices (cons size new-vertices))
@@ -197,14 +197,15 @@
 	)
 )
 
+(setq pipe-width 2.0)
 (defun make-polyline (vertices color layer)
 	(entmakex 
 		(list 
 			(cons 0 "POLYLINE")
 			(cons 8 layer) ; Layer 
 			(cons 62 color) ; Color
-			(cons 40 5.0) ; Starting width
-			(cons 41 5.0) ; Ending width
+			(cons 40 pipe-width) ; Starting width
+			(cons 41 pipe-width) ; Ending width
 			(cons 10 '(0 0 0)) ; Always zero 'Dummy pont'
 		)
 	)
