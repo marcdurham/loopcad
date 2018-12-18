@@ -20,27 +20,6 @@
 			(setq vertex (nth i vertices))
 			(princ "\nVertex:")
 			(princ vertex)
-			(foreach node all-nodes
-				(setq node-point (get-ins-point node))
-				(setq dist (distance vertex node-point))
-				(if (< dist near-line-margin)
-					(progn 
-						(princ "\n    Near Node:")
-						(princ node-point)
-						(princ " ")
-						(princ dist)
-						(make-circle vertex 14.0 color-green "Heads")
-					)
-				)
-				;;(princ "\n    Node:")
-				;;(princ node-point)
-				;(if (near-line node-point (car seg) (cadr seg))
-				;	(progn 
-				;		(princ "\n    Near Node:")
-				;		(princ node-point)
-				;	)
-				;)
-			)
 					
 			(setq new-vertices (cons vertex new-vertices))
 			(setq seg (segment i vertices))
@@ -57,6 +36,37 @@
 					(princ " START OF LINE ")
 					;;(make-circle vertex 14.0 color-green "Heads")
 				)
+			)
+			
+			(foreach node all-nodes
+				(setq node-point (get-ins-point node))
+				(setq dist (distance vertex node-point))
+				(if (< dist near-line-margin)
+					(progn 
+						(princ "\n    Near Node:")
+						(princ node-point)
+						(princ " ")
+						(princ dist)
+						(make-circle vertex 14.0 color-green "Heads")
+					)
+					(if (and 
+							(cadr seg) 
+							(near-line node-point (car seg) (cadr seg))
+						)
+						(progn 
+							(princ "\n    Near Node:")
+							(princ node-point)
+						)
+					)
+				)
+				;;(princ "\n    Node:")
+				;;(princ node-point)
+				;(if (near-line node-point (car seg) (cadr seg))
+				;	(progn 
+				;		(princ "\n    Near Node:")
+				;		(princ node-point)
+				;	)
+				;)
 			)
 
 			;(if (near-line pt start end)
