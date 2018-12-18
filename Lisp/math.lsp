@@ -7,9 +7,10 @@
 )
 
 ;(foreach p (get-all-pipes) (make-pipe "1-1/4" (get-vertices p)))
-(defun test-break-all-pipes ( / seg new-vertices new-pipes old-pipes pt start end vertex i vertices)
+(defun test-break-all-pipes ( / node-point all-nodes seg new-vertices new-pipes old-pipes pt start end vertex i vertices)
 	(setq new-pipes '())
 	(setq old-pipes (get-all-pipes))
+	(setq all-nodes (get-all-nodes))
 	(foreach pipe old-pipes
 		(setq i 0)
 		(setq vertices (get-vertices pipe))
@@ -19,22 +20,45 @@
 			(setq vertex (nth i vertices))
 			(princ "\nVertex:")
 			(princ vertex)
+			(foreach node all-nodes
+				(setq node-point (get-ins-point node))
+				(setq dist (distance vertex node-point))
+				(if (< dist near-line-margin)
+					(progn 
+						(princ "\n    Near Node:")
+						(princ node-point)
+						(princ " ")
+						(princ dist)
+						(make-circle vertex 14.0 color-green "Heads")
+					)
+				)
+				;;(princ "\n    Node:")
+				;;(princ node-point)
+				;(if (near-line node-point (car seg) (cadr seg))
+				;	(progn 
+				;		(princ "\n    Near Node:")
+				;		(princ node-point)
+				;	)
+				;)
+			)
+					
 			(setq new-vertices (cons vertex new-vertices))
 			(setq seg (segment i vertices))
 			(princ "\n    ")
 			(princ seg)
-			(if (not (cadr seg))
+			(if (not (cadr seg)) ; Last point is nil, end of polyline vertices
 				(progn 
 					(princ " END OF LINE ")
-					(make-circle vertex 10.0 color-yellow "Heads")
+					;;(make-circle vertex 10.0 color-yellow "Heads")
 				)
 			)
 			(if (= i 0)
 				(progn
 					(princ " START OF LINE ")
-					(make-circle vertex 14.0 color-green "Heads")
+					;;(make-circle vertex 14.0 color-green "Heads")
 				)
 			)
+
 			;(if (near-line pt start end)
 			;	(setq new-pipes (cons pipe new-pipes))
 			;)
@@ -388,8 +412,9 @@
 	(setq en (entnext))
     (while en
 	    (setq ent (entget en))
-		(if  (and (or (= "HEADS" (get-layer en))
-		            (= "TEES" (get-layer en)))
+		(if  (and (or (str= "HEADS" (get-layer en))
+		            (str= "TEES" (get-layer en))
+					(str= "FLOOR CONNECTORS" (get-layer en)))
 		         (str= (get-etype en) "INSERT")
 			)
 			(setq nodes (cons ent nodes))
