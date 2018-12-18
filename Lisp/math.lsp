@@ -43,60 +43,35 @@
 	(reverse output)
 )
 
-(defun test-break ( / old-pipes)
+(defun test-break-pipes ( / old-pipes)
 	(setq old-pipes (get-all-pipes))
-	(foreach pipe (test-break-all-pipes)
+	(foreach pipe (break-pipes)
 		(make-pipe (car pipe) (cdr pipe))
 	)
+	; Delete all old pipes
 	(foreach pipe old-pipes (entdel (cdr (assoc -1 pipe))))
 )
 	
-;(foreach p (get-all-pipes) (make-pipe "1-1/4" (get-vertices p)))
-(defun test-break-all-pipes ( / size node-point all-nodes seg new-vertices new-pipes old-pipes pt start end vertex i vertices)
+(defun break-pipes ( / size node-point all-nodes seg new-vertices new-pipes old-pipes pt start end vertex i vertices)
 	(setq new-pipes '())
 	(setq old-pipes (get-all-pipes))
 	(setq all-nodes (get-all-nodes))
 	(foreach pipe old-pipes
 		(setq i 0)
-		(setq size (get-pipe-size pipe))
-	;	(princ "\nSize: ")
-	;	(princ size)
-							
+		(setq size (get-pipe-size pipe))					
 		(setq vertices (get-vertices pipe))
 		(setq vertices (remove-repeated-points vertices))
 		(setq new-vertices '())
-
 		(while (< i (length vertices))
-			(setq vertex (nth i vertices))
-		;	(princ "\nVertex:")
-		;	(princ vertex)				
+			(setq vertex (nth i vertices))			
 			(setq new-vertices (cons vertex new-vertices))
 			(setq seg (segment i vertices))
-		;	(princ "\n    ")
-		;	(princ seg)
-		;	(if (not (cadr seg)) ; Last point is nil, end of polyline vertices
-		;		(progn 
-		;			(princ " END OF LINE ")
-		;			;(make-circle vertex 10.0 color-red "Heads")
-		;		)
-		;	)
-		;	(if (= i 0) ; First vertex
-		;		(progn
-		;			(princ " START OF LINE ")
-		;			(make-circle vertex 14.0 color-red "Heads")
-		;		)
-		;	)		
 			(if (and (> i 0) (< i (1- (length vertices)))) ; not the first or last vertex index
 				(foreach node all-nodes
 					(setq node-point (get-ins-point node))
 					(setq dist (distance vertex node-point))
 					(if (< dist near-line-margin)
 						(progn 
-		;					(princ "\n    Near Node:")
-		;					(princ node-point)
-		;					(princ " ")
-		;					(princ dist)
-		;					(make-circle vertex 14.0 color-green "Heads")
 							(if (> (length new-vertices) 0)
 								(progn
 									(setq new-vertices (cons size new-vertices))
@@ -108,14 +83,6 @@
 							(setq new-vertices (cons vertex new-vertices))
 						)
 					)
-					;;(princ "\n    Node:")
-					;;(princ node-point)
-					;(if (near-line node-point (car seg) (cadr seg))
-					;	(progn 
-					;		(princ "\n    Near Node:")
-					;		(princ node-point)
-					;	)
-					;)
 				)
 			)
 			(setq i (1+ i))
@@ -128,9 +95,6 @@
 		)
 	)
 	new-pipes
-;   (foreach pipe new-pipes
-;		(make-pipe (car pipe) (cdr pipe))
-;	)
 )
 
 
@@ -167,24 +131,6 @@
 	)			
 )
 
-;(defun make-lwpolyline (vertices color layer);
-;	(entmakex 
-;		(append 
-;			(list 
-;				(cons 0 "LWPOLYLINE");
-;				(cons 100 "AcDbEntity")
-;				(cons 100 "AcDbPolyline")
-;				(cons 8 layer) ; Layer
-;				(cons 62 color) ; Color
-;				(cons 43 10.0) ; Constant width, default = 0			
-;				(cons 90 (length vertices)) ; Number of vertices
-;				(cons 70 0) ; Default = 0 closed 
-;			)
- ;           ;(mapcar (function (lambda (p) (cons 10 p))) vertices)
-;		)
-;	)
-;)
-
 (defun make-circle (center radius color layer)
 	(entmakex 
 		(list 
@@ -217,23 +163,6 @@
 )
  
 ;(vl-registry-read "HKEY_CURRENT_USER\\Software\\LoopCalc\\ProgeCAD" "Test")
-
-;(defun test-break-pipes ( / pipe segment nodept)
-;    (foreach pipe (get-all-pipes)
-;	    (princ "\nPipe\n")
-;	    (foreach segment (segments pipe)
-;		    (princ "\n    Segment\n") ; Looks pretty good
-;			(princ  (car segment))
-;			(setq nodept (get-ins-point (car get-all-nodes)))
-;			(princ "\n")
-;			(princ nodept)
-;			(princ "\n")
-;			(if (near-line nodept (car segment) (cadr segment))
-;			    (princ "\n      Near line\n")
-;			)
-;		)
-;	)
-;)
 
 (defun test-segments ( / pipe)
     (foreach pipe (get-all-pipes)
