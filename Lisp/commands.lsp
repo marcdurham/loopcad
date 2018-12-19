@@ -17,7 +17,7 @@
 (defun C:ELEVATION-BOX () (elevation-box-draw))
 (defun C:TEE () (tee-insert))
 (defun C:LABEL-NODES () (send-controller-command "LabelNodes"))
-(defun C:LABEL-PIPES () (send-controller-command "LabelPipes"))
+(defun C:LABEL-PIPES () (label-all-pipes))
 (defun C:BREAK-PIPES () (break-pipes-delete-old))
 (defun C:JOIN-HEADS () (head-join))
 (defun C:FLOOR-CONNECTOR () (floor-connector-insert))

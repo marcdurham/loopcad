@@ -30,4 +30,25 @@
 	)
 	(entmakex (list (cons 0 "SEQEND")))
 )
- 
+
+(defun make-text (point text height color layer)
+	(entmakex 
+		(list 
+			(cons 0 "TEXT")
+			(cons 10 point)
+			(cons 1 text)
+			(cons 40 height)
+			(cons 62 color)
+			(cons 8 layer) ; Layer 	
+		)
+	)
+)
+				 
+(defun make-mtext (pt text)
+	(entmakex (list (cons 0 "MTEXT")         
+		(cons 100 "AcDbEntity")
+		(cons 100 "AcDbMText")
+		(cons 10 pt)
+		(cons 1 text))
+	)
+)

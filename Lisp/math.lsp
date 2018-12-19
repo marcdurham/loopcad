@@ -8,6 +8,19 @@
   (if (< a b) a b)
 )
 
+(defun average (a b)
+	(/ (+ a b) 2)
+)
+
+; Manual eyeball test
+(defun test-midpoint ()
+	(make-circle (midpoint (getpoint) (getpoint)) 10.0 color-green "Pipes")
+)
+
+(defun midpoint (a b)
+	(list (average (getx a) (getx b)) (average (gety a) (gety b)) 0.0)
+)
+
 ; Print the coordinates of the point.  For debugging.
 (defun print-point (label point)
     (princ (strcat "\n" label ": "))
@@ -54,7 +67,7 @@
 		    (setq vertices (cons (cdr property) vertices))
 		)
 	)
-	vertices
+	(remove-repeated-points vertices)
 )
 
 (defun get-layer (entity-name)

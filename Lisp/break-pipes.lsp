@@ -16,7 +16,6 @@
 		(setq i 0)
 		(setq size (get-pipe-size pipe))					
 		(setq vertices (get-vertices pipe))
-		(setq vertices (remove-repeated-points vertices))
 		(setq new-vertices '())
 		(while (< i (length vertices))
 			(setq vertex (nth i vertices))			
