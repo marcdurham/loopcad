@@ -45,10 +45,23 @@
 )
 				 
 (defun make-mtext (pt text)
-	(entmakex (list (cons 0 "MTEXT")         
-		(cons 100 "AcDbEntity")
-		(cons 100 "AcDbMText")
-		(cons 10 pt)
-		(cons 1 text))
+	(entmakex 
+		(list 
+			(cons 0 "MTEXT")         
+			(cons 100 "AcDbEntity")
+			(cons 100 "AcDbMText")
+			(cons 10 pt)
+			(cons 1 text)
+		)
+	)
+)
+
+(defun make-block-insert (point block-name)
+	(entmakex 
+		(list 
+			(cons 0 "INSERT")
+			(cons 2 block-name)
+			(cons 10 point)
+		)
 	)
 )

@@ -23,6 +23,10 @@
 	(princ)
 )
 
+(defun insert-head-label (point text)
+	(insert-block point "HeadLabel.dwg" "HeadLabels"
+)
+
 (defun insert-pipe-label (point text)
 	(make-text point text 4.0 color-blue "Pipe Labels")
 )
