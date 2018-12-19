@@ -3,6 +3,28 @@
 	(make-pipe-labels)
 )
 
+(defun get-attribute (tagname ename / att)
+	(foreach att (get-attributes ename)
+		(if (str= tagname (cdr (assoc 2 (entget att))))
+			(cdr (assoc 1 (entget att)))
+		)
+	)
+)
+
+(defun get-attributes (ename / en attributes layer) 
+	(setq attributes '())
+	(setq en (entnext))
+    (while en
+		(if (and (= "ATTRIB" (get-etype en)) (= ename (get-owner-name en)))
+			(progn
+				(setq attributes (cons en attributes))
+			)
+		)
+		(setq en (entnext en))
+	)
+	attributes
+)
+
 (defun make-pipe-labels ( / seg p v vertices label)	
 	(setq p 0)	
 	(foreach pipe (get-all-pipes)
@@ -24,7 +46,7 @@
 )
 
 (defun insert-head-label (point text)
-	(insert-block point "HeadLabel.dwg" "HeadLabels"
+	(insert-block point "HeadLabel.dwg" "HeadLabels")
 )
 
 (defun insert-pipe-label (point text)

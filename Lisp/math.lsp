@@ -78,6 +78,10 @@
 	(cdr (assoc 0 (entget entity-name)))
 )
 
+(defun get-owner-name (entity-name)
+	(cdr (assoc 330 (entget entity-name)))
+)
+
 (defun get-ins-point (entity)
     (if (= (type entity) "ENAME") 
 	    (setq entity (entget entity))
