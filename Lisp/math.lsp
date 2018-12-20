@@ -89,6 +89,10 @@
 	(cdr (assoc 10 entity))
 )
 
+(defun ent-name (entity)
+	(cdr (assoc -1 entity))
+)
+
 (defun get-x-scale (entity-name)
 	(cdr (assoc 41 (entget entity-name)))
 )

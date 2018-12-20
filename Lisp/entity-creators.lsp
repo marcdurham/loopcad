@@ -56,12 +56,15 @@
 	)
 )
 
-(defun make-block-insert (point block-name)
-	(entmakex 
+(defun make-block-insert (point block-name layer)
+	(entmake ; Removed x
 		(list 
 			(cons 0 "INSERT")
-			(cons 2 block-name)
 			(cons 10 point)
+			(cons 2 block-name)
+			(cons 8 layer)
+			(cons 66 1)
 		)
 	)
+	(entlast)
 )
