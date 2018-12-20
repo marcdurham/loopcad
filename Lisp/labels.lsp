@@ -3,12 +3,12 @@
 	(make-pipe-labels)
 )
 
-(defun set-attribute (val tagname ename) 
+(defun set-attribute (val tagname ename / ent) 
 	(setq ent (entget (get-attribute tagname ename)))
 	(setq ent 
 		(subst 
-			(cons 1 val)  ; Old value
-			(assoc 1 ent) ; New replacement value
+			(cons 1 val)  ; New replacement value
+			(assoc 1 ent) ; Old value
 			ent           ; Entity list
 		)
 	)     
