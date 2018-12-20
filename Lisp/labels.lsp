@@ -3,14 +3,34 @@
 	(make-pipe-labels)
 )
 
+(defun set-attribute (val tagname ename) 
+	(setq ent (entget (get-attribute tagname ename)))
+	(setq ent 
+		(subst 
+			(cons 1 val)  ; Old value
+			(assoc 1 ent) ; New replacement value
+			ent           ; Entity list
+		)
+	)     
+	(entmod ent)  
+)
+
+(defun get-attribute-value (tagname ename / attr-entity)
+	(setq attr-entity (entget (get-attribute tagname ename)))
+	; Return attribute value from: (1 . "VALUE HERE")
+	(cdr (assoc 1 attr-entity))
+)
+
 (defun get-attribute (tagname ename / att)
 	(foreach att (get-attributes ename)
-		(if (str= tagname (cdr (assoc 2 (entget att))))
-			(cdr (assoc 1 (entget att)))
+		; Find by tag name: (2 . "TAG NAME")
+		(if (str= tagname (cdr (assoc 2 (entget att)))) 
+			att ; Returns entity name
 		)
 	)
 )
 
+; Returns a list of entity names that are owned by 'ename'
 (defun get-attributes (ename / en attributes layer) 
 	(setq attributes '())
 	(setq en (entnext))
