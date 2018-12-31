@@ -3,27 +3,18 @@
 	(make-pipe-labels)
 )
 
-(defun label-all-nodes ()
+(defun label-all-nodes ( / n)
+	(setq n 1)
 	(foreach node (get-all-nodes)
-		(insert-head-label (get-ins-point node) "YYZ")
-		;(progn
-		;	(princ "\nNode:" )
-		;	;(princ node)
-		;	(princ (get-ins-point node))
-		;)
+		(insert-head-label 
+			(get-ins-point node) 
+			(strcat "H." (itoa n))
+		)
 	)
 )
 
 (defun insert-head-label (point text / e p)
-	;(setq p (make-block-insert point "HeadLabel" "HeadLabels"))
-	; TODO: This isn't working, the ATTRIB entities must need inserting too.
-	;(set-attribute 
-;		p ; Entity name
-;		"HEADNUMBER"
-;		text
-;	)
-	;;;;;(command "-INSERT" "HeadLabel" point 0.5 0.5 0 text)
-	(entmake ; Removed x
+	(entmake
 		(list 
 			(cons 0 "INSERT")
 			(cons 10 point)
@@ -37,13 +28,13 @@
 		(list 
 			(cons 0 "ATTRIB") 
 			(cons 330 e)
-			;(cons -2 e)
-			
 			(cons 1 text) 
 			(cons 2 "HEADNUMBER")
-			(cons 40 10.0) ; Text height
+			(cons 40 5.0) ; Text height
 			(cons 60 0)
-			;(cons 66 1)
+			(cons 62 color-blue)
+			(cons 8 "HeadLabels")
+			(cons 10 (list (+ 3.0 (getx point)) (+ 4.0 (gety point))))
 		)
 	)
 	(entmake

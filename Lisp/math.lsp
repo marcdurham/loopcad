@@ -12,6 +12,23 @@
 	(/ (+ a b) 2)
 )
 
+;(setq e (entnext))
+(defun ents ( / en all all-lists)
+	;(princ "\n\nEntity: ")
+	;(princ (entget en))
+	(setq all '())
+	(setq en (entnext))
+	(while en
+		(setq all (cons en all))
+		(setq en (entnext en))
+	)
+	(setq all-lists '())
+	(foreach en all
+		(setq all-lists (cons (entget en) all-lists))
+	)
+	all-lists
+)
+
 ; Manual eyeball test
 (defun test-midpoint ()
 	(make-circle (midpoint (getpoint) (getpoint)) 10.0 color-green "Pipes")
