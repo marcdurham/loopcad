@@ -99,7 +99,7 @@
 
 (defun make-pipe-labels ( / seg p v vertices label)	
 	(setq p 0)	
-	(foreach pipe (get-all-pipes)
+	(foreach pipe  (reverse (get-all-pipes))
 		(setq v 0)				
 		(setq vertices (get-vertices pipe))
 		(while (< v (length vertices))
