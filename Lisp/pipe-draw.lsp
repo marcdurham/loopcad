@@ -23,9 +23,9 @@
 	)
 	(setvar "OSMODE" osmode-snap-ins-pts)
 	(setvar "ORTHOMODE" 1)
-	(command "-LAYER" "NEW" "Pipe" "")
-	(command "-LAYER" "COLOR" "White" "Pipe" "")
-	(command "-LAYER" "SET" "Pipe" "")
+	(command "-LAYER" "NEW" layer-pipe "")
+	(command "-LAYER" "COLOR" "White" layer-pipe "")
+	(command "-LAYER" "SET" layer-pipe "")
 	(command "-COLOR" (pipe-size-color size))
 	(setq line-width "2\"")
 	(prompt (strcat "\nPipe Size: " size "\n"))
@@ -35,6 +35,8 @@
 
 ; 64 = OSMODE: Snap to insertion points
 (setq osmode-snap-ins-pts 64)
+; Layer for pipes is "Pipe" not "Pipes"
+(setq layer-pipe "Pipe")
 
 (setq pipe-width 2.0)
 
