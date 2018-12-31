@@ -3,7 +3,7 @@
 ;      by clicking a button, to pipe a system.
 ; (pipe-make) is used by the BREAK-PIPES command to re-draw the pipes.
 
-(defun pipe-draw (size vertices / old-osmode old-orthomode line-width)
+(defun pipe-draw (size / old-osmode old-orthomode line-width)
 	(setq old-osmode (getvar "OSMODE"))
 	(setq old-orthomode (getvar "ORTHOMODE"))
 	(defun *error* (message)
@@ -30,10 +30,7 @@
 	(setq line-width "2\"")
 	(prompt (strcat "\nPipe Size: " size "\n"))
 	(prompt "\nDraw pipe to each head.\n")
-	(if vertices
-	    (command "-PLINE" vertices "Width" line-width line-width "")
-	    (command "-PLINE" pause "Width" line-width line-width pause)
-	)
+	(command "-PLINE" pause "Width" line-width line-width pause)
 )
 
 ; 64 = OSMODE: Snap to insertion points
