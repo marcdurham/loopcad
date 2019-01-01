@@ -260,10 +260,12 @@
 	(setq en (entnext))
     (while en
 	    (setq ent (entget en))
-		(if  (and (or (str= "HEADS" (get-layer en))
+		(if (and 
+				(or (str= "HEADS" (get-layer en))
 		            (str= "TEES" (get-layer en))
-					(str= "FLOOR CONNECTORS" (get-layer en)))
-		         (str= (get-etype en) "INSERT")
+					(str= "FLOOR CONNECTORS" (get-layer en))
+				)
+		        (str= (get-etype en) "INSERT")
 			)
 			(setq nodes (cons ent nodes))
 		)
