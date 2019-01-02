@@ -17,4 +17,6 @@
 ; Check if files all loaded
 (load-safely-check)
 
+(define-labels)
+
 (princ) ; exit quietly

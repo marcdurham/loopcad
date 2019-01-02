@@ -25,27 +25,45 @@
 	)
 	(setq e (entlast))
 	(entmake
-		(list 
-			(cons 0 "ATTRIB") 
-			(cons 330 e)
-			(cons 1 text) 
-			(cons 2 "HEADNUMBER")
-			(cons 40 5.0) ; Text height
-			(cons 60 0)
-			(cons 62 color-blue)
-			(cons 8 "HeadLabels")
-			(cons 10 (list (+ 3.0 (getx point)) (+ 4.0 (gety point))))
+		(append 
+			(list 
+				(cons 0 "ATTRIB") 
+				;(cons 330 e)
+				;(cons 1 text) 
+				;(cons 2 "HEADNUMBER") ; Tag string
+				;(cons 40 3.0) ; Text height
+				;(cons 7 "ARIAL") ; Text style
+				;(cons 62 color-blue) ; Color
+				;(cons 8 "HeadLabels") ; Layer
+				(cons 10 (list (+ 3.0 (getx point)) (+ 4.0 (gety point)))) ; Insertion point
+			)
+			(head-label-props text)
 		)
 	)
 	(entmake
 		(list 
 			(cons 0 "SEQEND") 
-			(cons 330 e)
+			;(cons 330 e)
 			(cons -2 e)
 		)
 	)
 	(entupd e)
 	(princ)
+)
+
+; Append this list to an (0 . "ATTRIB") or (0 . "ATTDEF") 
+(defun head-label-props (text)
+	(list 
+			;(cons 0 "ATTRIB") 
+			;(cons 330 e)
+			(cons 1 text) 
+			(cons 2 "HEADNUMBER") ; Tag string
+			(cons 40 3.0) ; Text height
+			(cons 7 "ARIAL") ; Text style
+			(cons 62 color-red) ; Color
+			(cons 8 "HeadLabels") ; Layer
+			;(cons 10 (list (+ 3.0 (getx point)) (+ 4.0 (gety point)))) ; Insertion point
+		)
 )
 
 (defun set-attribute (ename tagname val / em ent)
