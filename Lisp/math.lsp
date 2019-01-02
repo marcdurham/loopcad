@@ -13,6 +13,34 @@
 )
 
 ;(setq e (entnext))
+(defun test-block ()
+	(entmake 
+		(list
+			(cons 0 "BLOCK")
+			(cons 2 "TestBlock")
+		)
+	)
+)
+
+
+(defun ents-oftype ( type / en all all-lists)
+	(setq all '())
+	(setq en (entnext))
+	(while en
+		(if (= (get-etype en) type)
+			(progn
+				(setq all (cons en all))
+				(setq en (entnext en))
+			)
+		)
+	)
+	(setq all-lists '())
+	(foreach en all
+		(setq all-lists (cons (entget en) all-lists))
+	)
+	all-lists
+)
+
 (defun ents ( / en all all-lists)
 	;(princ "\n\nEntity: ")
 	;(princ (entget en))
