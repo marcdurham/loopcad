@@ -1,5 +1,5 @@
 ; TODO: Maybe have two parameters: model-code and filename, use a separate function to determine them.
-(defun head-insert (model coverage slope temperature / model-code)
+(defun head-insert (model coverage slope temperature / model-code pt)
   (setq old-osmode (getvar "OSMODE"))
   (setq temperror *error*)
   (defun *error* (message)
@@ -22,11 +22,31 @@
   (setvar "LWDISPLAY" 0)
   (command "-LAYER" "SET" "Heads" "")
   (while T
-    (setq model-code (model-code-from model coverage slope temperature))
+	(setq model-code "HEAD-X")
+;
+;   This section is for heads that you already know the coverage
+;   Now the default is that you don't know. 
+;   See the head-insert.lsp file and the head-insert function. 
+;
+;   (setq model-code (model-code-from model coverage slope temperature))
+;	(prompt (strcat "\nInserting Head Model Code: " model-code "\n"))
+;   (prompt "\nPress Esc to quit inserting heads.\n")
+;	(command "-INSERT" (strcat "Head" coverage ".dwg") pause 1.0 1.0 0 model-code)
+;
+	(command "-INSERT" (strcat "Head12-20.dwg") pause 1.0 1.0 0 model-code)
+	(setq pt (cdr (assoc 10 (entget (entlast)))))
+	(if (null global:head-coverage)
+		(setq global:head-coverage "16")
+	)
+	(initget "12 14 16 18 20")
+	(if (setq tmp (getkword (strcat "\nHead Coverage [12/14/16/18/20] <" global:head-coverage ">: ")))
+		(setq global:head-coverage tmp)
+	)
+	(entdel (entlast))
+	(setq model-code (model-code-from model global:head-coverage slope temperature))
 	(prompt (strcat "\nInserting Head Model Code: " model-code "\n"))
     (prompt "\nPress Esc to quit inserting heads.\n")
-	;(command "-INSERT" (strcat "Head" coverage ".dwg") pause 1.0 1.0 0 model-code)
-    (command "-INSERT" (strcat "Head12-20.dwg") pause 1.0 1.0 0 model-code)
+	(command "-INSERT" (strcat "Head" global:head-coverage ".dwg") pt 1.0 1.0 0 model-code)
   )
 )
 
