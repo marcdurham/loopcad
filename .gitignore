@@ -2,3 +2,4 @@ Archive/
 **/Thumbs.db
 *.dll
 *.tlb
+/Blocks/*.bak
