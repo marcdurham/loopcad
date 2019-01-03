@@ -153,7 +153,17 @@
    (= 0(strindexof substring string))
 )
 
-
+; Returns if 'items' contains 'item' works for strings only
+; Uses case insenstive str= function.
+(defun list-contains (item items / result)
+	(setq result nil)
+	(foreach i items 
+		(if (str= i item)
+			(setq result T)
+		)
+	)
+	result
+)
 
 
 
