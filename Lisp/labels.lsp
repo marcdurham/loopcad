@@ -27,15 +27,8 @@
 	(entmake
 		(append 
 			(list 
-				(cons 0 "ATTRIB") 
-				;(cons 330 e)
-				;(cons 1 text) 
-				;(cons 2 "HEADNUMBER") ; Tag string
-				;(cons 40 3.0) ; Text height
-				;(cons 7 "ARIAL") ; Text style
-				;(cons 62 color-blue) ; Color
-				;(cons 8 "HeadLabels") ; Layer
-				(cons 10 (list (+ 3.0 (getx point)) (+ 4.0 (gety point)))) ; Insertion point
+				(cons 0 "ATTRIB") ; Entity type
+				(cons 10 (point-offset point 3.0 4.0)) ; Insertion point
 			)
 			(head-label-props text)
 		)
@@ -43,7 +36,6 @@
 	(entmake
 		(list 
 			(cons 0 "SEQEND") 
-			;(cons 330 e)
 			(cons -2 e)
 		)
 	)
@@ -51,19 +43,21 @@
 	(princ)
 )
 
+(defun point-offset (point x y)
+	(list (+ x (getx point)) (+ y (gety point)))
+)
+
 ; Append this list to an (0 . "ATTRIB") or (0 . "ATTDEF") 
+; Example:  (append (list (cons 0 "ATTRIB") point) (head-label-props text))
 (defun head-label-props (text)
 	(list 
-			;(cons 0 "ATTRIB") 
-			;(cons 330 e)
-			(cons 1 text) 
-			(cons 2 "HEADNUMBER") ; Tag string
-			(cons 40 3.0) ; Text height
-			(cons 7 "ARIAL") ; Text style
-			(cons 62 color-red) ; Color
-			(cons 8 "HeadLabels") ; Layer
-			;(cons 10 (list (+ 3.0 (getx point)) (+ 4.0 (gety point)))) ; Insertion point
-		)
+		(cons 1 text) 
+		(cons 2 "HEADNUMBER") ; Tag string
+		(cons 40 3.0) ; Text height
+		(cons 7 "ARIAL") ; Text style
+		(cons 62 color-red) ; Color
+		(cons 8 "HeadLabels") ; Layer
+	)
 )
 
 (defun set-attribute (ename tagname val / em ent)
