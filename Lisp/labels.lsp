@@ -3,23 +3,63 @@
 	(make-pipe-labels)
 )
 
-(defun label-all-nodes ( / n)
+(defun label-all-nodes ( / n node label)
 	(setq n 1)
-	(foreach node (get-all-nodes)
-		(insert-head-label 
-			(get-ins-point node) 
-			(strcat "H." (itoa n))
+	(foreach label (get-all-head-labels)
+		(entdel (cdr (assoc -1 label)))
+	)
+	(foreach node (get-all-heads)
+		(progn	
+			(insert-head-label 
+				(get-ins-point node) 
+				(strcat "H." (itoa n))
+			)
+			(setq n (1+ n))
+		)
+	)
+	(foreach label (get-all-tee-labels)
+		(entdel (cdr (assoc -1 label)))
+	)
+	(foreach node (get-all-tees)
+		(progn		
+			(insert-tee-label 
+				(get-ins-point node) 
+				(strcat "T." (itoa n))
+			)
+			(setq n (1+ n))
 		)
 	)
 )
 
 (defun insert-head-label (point text / e p)
+	(insert-node-label 
+		point 
+		text 
+		"HeadLabel"  ; block-name
+		"HeadLabels" ; layer
+		"HEADNUMBER" ; tag-string
+		color-green ; label-color
+	)
+)
+
+(defun insert-tee-label (point text / e p)
+	(insert-node-label 
+		point 
+		text 
+		"TeeLabel"  ; block-name
+		"TeeLabels" ; layer
+		"TEENUMBER" ; tag-string
+		color-green ; label-color
+	)
+)
+
+(defun insert-node-label (point text block-name layer-name tag-string label-color / e p)
 	(entmake
 		(list 
 			(cons 0 "INSERT")
 			(cons 10 point) ; Insertion point
-			(cons 2 "HeadLabel") ; Block name
-			(cons 8 "HeadLabels") ; Layer
+			(cons 2 block-name) ; Block name
+			(cons 8 layer-name) ; Layer
 			(cons 66 1) ; Attributes follow
 		)
 	)
@@ -30,7 +70,15 @@
 				(cons 0 "ATTRIB") ; Entity type
 				(cons 10 (point-offset point 3.0 4.0)) ; Insertion point
 			)
-			(head-label-props text)
+			;block-name tag-string prompt text label-color layer)
+			(node-label-props 
+				block-name
+				tag-string
+				"Node Number:" ; prompt
+				text 
+				label-color 
+				layer-name
+			)
 		)
 	)
 	(entmake
@@ -46,56 +94,7 @@
 (defun point-offset (point x y)
 	(list (+ x (getx point)) (+ y (gety point)))
 )
-
-(defun set-attribute (ename tagname val / em ent)
-	(setq en (get-attribute ename tagname))
-	(if en
-		(progn
-			(setq ent (entget en))
-			(setq ent 
-				(subst 
-					(cons 1 val)  ; New replacement value
-					(assoc 1 ent) ; Old value
-					ent           ; Entity list
-				)
-			)     
-			(entmod ent)
-		)
-		nil
-	)
-)
-
-(defun get-attribute-value (ename tagname / attr-entity)
-	(setq attr-entity (entget (get-attribute ename tagname)))
-	; Return attribute value from: (1 . "VALUE HERE")
-	(cdr (assoc 1 attr-entity))
-)
-
-; Returns entity name of attribute entity owned by 'ename'
-(defun get-attribute (ename tagname / att)
-	(foreach att (get-attributes ename)
-		; Find by tag name: (2 . "TAG NAME")
-		(if (str= tagname (cdr (assoc 2 (entget att)))) 
-			att ; Returns entity name
-		)
-	)
-)
-
-; Returns a list of entity names that are owned by 'ename'
-(defun get-attributes (ename / en attributes layer) 
-	(setq attributes '())
-	(setq en (entnext))
-    (while en
-		(if (and (= "ATTRIB" (get-etype en)) (= ename (get-owner-name en)))
-			(progn
-				(setq attributes (cons en attributes))
-			)
-		)
-		(setq en (entnext en))
-	)
-	attributes
-)
-
+ 
 (defun make-pipe-labels ( / seg p v vertices label)	
 	(setq p 0)	
 	(foreach pipe  (reverse (get-all-pipes))
@@ -120,19 +119,20 @@
 	(make-text point text 4.0 color-blue "Pipe Labels")
 )
 
-(defun get-all-head-labels ( / en ent labels layer) 
-	(setq labels '())
-	(setq en (entnext))
-    (while en
-		(if (and (str= "HeadLabels" (get-layer en))
-		        (str= (get-etype en) "INSERT")
-			)
-			(setq labels (cons en labels))
-		)
-		(setq en (entnext en))
-	)
-	labels
-)
+; Delete me
+;(defun get-all-head-labels ( / en ent labels layer)
+;	(setq labels '())
+;	(setq en (entnext))
+;   (while en
+;		(if (and (str= "HeadLabels" (get-layer en))
+;		        (str= (get-etype en) "INSERT")
+;			)
+;			(setq labels (cons en labels))
+;		)
+;		(setq en (entnext en))
+;	)
+;	labels
+;)
 
 (defun get-all-pipe-labels ( / en ent labels layer) 
 	(setq labels '())
@@ -156,3 +156,10 @@
 	)
 )
 
+(defun get-all-head-labels ()
+	(get-blocks (list "HeadLabels" "Head Labels"))
+)
+
+(defun get-all-tee-labels ()
+	(get-blocks (list "TeeLabels" "Tee Labels"))
+)

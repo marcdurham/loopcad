@@ -255,30 +255,3 @@
 	pipes
 )
 
-(defun get-all-heads ()
-	(get-nodes (list "HEADS"))
-)
-
-(defun get-all-tees ()
-	(get-nodes (list "TEES"))
-)
-
-(defun get-nodes ( layers / en ent nodes) 
-	(setq nodes '())
-	(setq en (entnext))
-    (while en
-	    (setq ent (entget en))
-		(if (and (list-contains (get-layer en) layers)
-				;(or (str= "HEADS" (get-layer en))
-		        ;    (str= "TEES" (get-layer en))
-				;	(str= "FLOOR CONNECTORS" (get-layer en))
-				;)
-		        (str= (get-etype en) "INSERT")
-			)
-			(setq nodes (cons ent nodes))
-		)
-		(setq en (entnext en))
-	)
-	nodes
-)
-

@@ -11,6 +11,8 @@
 (setq tee-label:layer "TeeLabels")
 
 (defun define-labels ()
+	; These two block definitions are not used by any functions but they are defined so that
+	; a user can use the "INSERT" command to insert them manually if they want.
 	(define-label-block "HeadLabel" "HEADNUMBER" "Head number label" "H.0" color-green "HeadLabels")
 	(define-label-block "TeeLabel" "TEENUMBER" "Tee number label" "T.0" color-blue "TeeLabels")
 	(princ "\nLabels defined.\n")
@@ -30,7 +32,7 @@
 				(cons 0 "ATTDEF")
 				(cons 10 (list 2.0 2.0 0.0))
 			)
-			(head-label-props 
+			(node-label-props 
 				block-name
 				tag-string
 				prompt
@@ -49,15 +51,15 @@
 
 ; Append this list to an (0 . "ATTRIB") or (0 . "ATTDEF") 
 ; Example:  (append (list (cons 0 "ATTRIB") point) (head-label-props text))
-(defun head-label-props (block-name tag-string prompt text label-color layer)
+(defun node-label-props (block-name tag-string prompt text label-color layer-name)
 	(list 
 		(cons 1 text) 
 		(cons 2 tag-string) ; Tag string
 		(cons 3 prompt) ; Prompt string
-		(cons 40 3.0) ; Text height
+		(cons 40 5.0) ; Text height
 		(cons 7 "ARIAL") ; Text style
 		(cons 62 label-color) ; Color
-		(cons 8 layer) ; Layer
+		(cons 8 layer-name) ; Layer
 	)
 )
 
