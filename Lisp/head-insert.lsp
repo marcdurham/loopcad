@@ -25,7 +25,8 @@
     (setq model-code (model-code-from model coverage slope temperature))
 	(prompt (strcat "\nInserting Head Model Code: " model-code "\n"))
     (prompt "\nPress Esc to quit inserting heads.\n")
-    (command "-INSERT" (strcat "Head" coverage ".dwg") pause 1.0 1.0 0 model-code)
+	;(command "-INSERT" (strcat "Head" coverage ".dwg") pause 1.0 1.0 0 model-code)
+    (command "-INSERT" (strcat "Head12-20.dwg") pause 1.0 1.0 0 model-code)
   )
 )
 
