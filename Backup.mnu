@@ -1,0 +1,441 @@
+***MENUGROUP=ICAD
+***TOOLBARS
+**STANDARD
+TBAR_Standard [_Toolbar("Standard", _Top, _Show, 0, 47, 0)]
+ID_&New___ [_Button("&New...", ICON_16_NEW, ICON_16_NEW)]^C^C^C_PNEW
+ID_&Open___ [_Button("&Open...", ICON_16_OPEN, ICON_16_OPEN)]^C^C^C_OPEN
+ID_&Save [_Button("&Save", ICON_16_SAVE, ICON_16_SAVE)]^C^C^C_QSAVE
+[--]
+ID_&Plot___ [_Button("&Plot...", ICON_16_PRINT, ICON_16_PRINT)]^C^C^C_PRINT
+ID_Print_Preview [_Button("Print Preview", ICON_16_PREVIEW, ICON_16_PREVIEW)]^C^C^C_PPREVIEW
+[--]
+ID_Cu&t [_Button("Cu&t", ICON_16_CUT, ICON_16_CUT)]^C^C^C_CUTCLIP
+ID_&Copy [_Button("&Copy", ICON_16_COPY, ICON_16_COPY)]^C^C^C_COPYCLIP
+ID_&Paste [_Button("&Paste", ICON_16_PASTE, ICON_16_PASTE)]^C^C^C_PASTECLIP
+ID_Ma&tch_Properties [_Button("Ma&tch Properties", ICON_16_MATCH, ICON_16_MATCH)]^C^C^C_MATCHPROP
+[--]
+ID_&Undo [_Button("&Undo", ICON_16_UNDO, ICON_16_UNDO)]^C^C^C_U
+ID_&Redo [_Button("&Redo", ICON_16_REDO, ICON_16_REDO)]^C^C^C_REDO
+[--]
+ID_Real-Time_&Pan [_Button("Real-Time &Pan", ICON_16_RTPAN, ICON_16_RTPAN)]'_RTPAN
+ID_Real-Time_Z&oom [_Button("Real-Time Z&oom", ICON_16_RTZOOM, ICON_16_RTZOOM)]'_RTZOOM
+ID_Zoom_Object [_Flyout("Zoom Object", ICON_16_ZOOOBJ, ICON_16_ZOOOBJ, _OtherIcon, TBAR_ZOOM_OBJECT)]'_ZOOM;_O
+ID_&Previous [_Button("&Previous", ICON_16_ZOOPRE, ICON_16_ZOOPRE)]'_ZOOM;_P
+[--]
+ID_Regen [_Flyout("Regen", ICON_16_REGEN, ICON_16_REGEN, _OtherIcon, TBAR_REGEN)]^C^C^C_REGEN
+ID_P&roperties [_Button("P&roperties", ICON_16_MODIFY, ICON_16_MODIFY)]^C^C^C_PROPERTIES
+[--]
+ID_Help [_Button("Help", ICON_16_HELP, ICON_16_HELP)]'_HELP
+**DRAW
+TBAR_Draw [_Toolbar("Draw", _Left, _Show, 0, 75, 0)]
+ID_&Line [_Button("&Line", ICON_16_LINE, ICON_16_LINE)]^C^C^C_LINE
+ID_Cons&truction_Line [_Button("Cons&truction Line", ICON_16_XLINE, ICON_16_XLINE)]^C^C^C_INFLINE
+ID_&Polyline [_Button("&Polyline", ICON_16_PLINE, ICON_16_PLINE)]^C^C^C_POLYLINE
+ID_Pol&ygon [_Button("Pol&ygon", ICON_16_POLYGO, ICON_16_POLYGO)]^C^C^C_POLYGON;
+ID_Rectan&gle [_Button("Rectan&gle", ICON_16_RECTAN, ICON_16_RECTAN)]^C^C^C_RECTANGLE
+ID_3-Point_Arc [_Flyout("3-Point Arc", ICON_16_ARC3PT, ICON_16_ARC3PT, _OtherIcon, TBAR_3-POINT_ARC)]^C^C^C_ARC;
+ID_Circle_Center-Radius [_Flyout("Circle Center-Radius", ICON_16_CIRCLE, ICON_16_CIRCLE, _OtherIcon, TBAR_CIRCLE_CENTER-RADIUS)]^C^C^C_CIRCLE;
+ID_&Revision_Cloud [_Button("&Revision Cloud", ICON_16_, ICON_16_)]^C^C^C_REVCLOUD
+ID_&Spline [_Button("&Spline", ICON_16_SPLINE, ICON_16_SPLINE)]^C^C^C_SPLINE
+ID_Ellipse_Axis-Axis [_Flyout("Ellipse Axis-Axis", ICON_16_ELLCEN, ICON_16_ELLCEN, _OtherIcon, TBAR_ELLIPSE_AXIS-AXIS)]^C^C^C_ELLIPSE;
+ID_Elliptical_Arc_Axis-Axis [_Flyout("Elliptical Arc Axis-Axis", ICON_16_ELLARC, ICON_16_ELLARC, _OtherIcon, TBAR_ELLIPTICAL_ARC_AXIS-AXIS)]^C^C^C_ELLIPSE;_A;\\\\\
+ID_Insert_Block [_Button("Insert Block", ICON_16_DINSER, ICON_16_DINSER)]^C^C^C_DDINSERT
+ID_&Make_block [_Button("&Make block", ICON_16_BLOCK, ICON_16_BLOCK)]^C^C^C_BLOCK
+ID_&Single_Point [_Button("&Single Point", ICON_16_POINT, ICON_16_POINT)]^C^C^C_POINT
+ID_&Hatch___ [_Button("&Hatch...", ICON_16_BHATCH, ICON_16_BHATCH)]^C^C^C_BHATCH
+ID_Gradient___ [_Button("Gradient...", ICON_16_GRADIENT, ICON_16_GRADIENT)]^C^C^C_GRADIENT
+ID_Reg&ion [_Button("Reg&ion", ICON_16_REGION, ICON_16_REGION)]^C^C^C_region
+ID_Table [_Button("Table", ICON_16_TABLE, ICON_16_TABLE)]^C^C^C_TABLE
+ID_&Multiline_Text___ [_Flyout("&Multiline Text...", ICON_16_MTEXT, ICON_16_MTEXT, _OtherIcon, TBAR_&MULTILINE_TEXT___)]^C^C^C_MTEXT
+**MODIFY
+TBAR_Modify [_Toolbar("Modify", _Right, _Show, 1891, 75, 0)]
+ID_Delete [_Button("Delete", ICON_16_ERASE, ICON_16_ERASE)]^C^C^C_DELETE
+ID_Cop&y [_Button("Cop&y", ICON_16_COPYOB, ICON_16_COPYOB)]^C^C^C_COPY
+ID_M&irror [_Button("M&irror", ICON_16_MIRROR, ICON_16_MIRROR)]^C^C^C_MIRROR
+ID_&Offset [_Button("&Offset", ICON_16_OFFSET, ICON_16_OFFSET)]^C^C^C_OFFSET
+ID_&Array [_Button("&Array", ICON_16_ARRREC, ICON_16_ARRREC)]^C^C^C_ARRAY
+ID_Mo&ve [_Button("Mo&ve", ICON_16_MOVE, ICON_16_MOVE)]^C^C^C_MOVE
+ID_Rotat&e [_Button("Rotat&e", ICON_16_ROTATE, ICON_16_ROTATE)]^C^C^C_ROTATE
+ID_&Scale [_Button("&Scale", ICON_16_SCALE, ICON_16_SCALE)]^C^C^C_SCALE
+ID_Stretc&h [_Button("Stretc&h", ICON_16_STRETC, ICON_16_STRETC)]^C^C^C_STRETCH
+ID_Tri&m [_Button("Tri&m", ICON_16_TRIM, ICON_16_TRIM)]^C^C^C_TRIM
+ID_Exten&d [_Button("Exten&d", ICON_16_EXTEND, ICON_16_EXTEND)]^C^C^C_EXTEND
+ID_Edit_Length [_Button("Edit Length", ICON_16_LENGTH, ICON_16_LENGTH)]^C^C^C_EDITLEN
+ID_Break_at_point [_Button("Break at point", ICON_16_BRE1PT, ICON_16_BRE1PT)]^C^C^C_break \_f \@
+ID_Brea&k [_Button("Brea&k", ICON_16_BRE2PT, ICON_16_BRE2PT)]^C^C^C_BREAK
+ID_&Join [_Button("&Join", 1246, 1169)]^C^C^C_JOIN
+ID_&Chamfer [_Button("&Chamfer", ICON_16_CHAMFE, ICON_16_CHAMFE)]^C^C^C_CHAMFER
+ID_Fi&llet [_Button("Fi&llet", ICON_16_FILLET, ICON_16_FILLET)]^C^C^C_FILLET
+ID_E&xplode [_Button("E&xplode", ICON_16_EXPLOD, ICON_16_EXPLOD)]^C^C^C_EXPLODE
+**EXPRESS_TOOLS:LAYER
+TBAR_Express_Tools:Layer [_Toolbar("Express Tools:Layer", _Left, _Show, 0, 515, 0)]
+ID_Set_to_current_the_layer_of_the_selected_entity [_Button("Set to current the layer of the selected entity", ICON_16_SLA, ICON_16_SLA)]^C^C_LAYBYENT;_SET;
+ID_Layer_Previous [_Button("Layer Previous", 1994, 1993)]^C^C_LAYERP
+[--]
+ID_Change_to_current_layer [_Button("Change to current layer", 3295, 5185)]_LAYCUR;
+ID_Move_to_layer [_Button("Move to layer", 3312, 5186)]_LAYMCH;
+ID_New_layer [_Button("New layer", 3316, 5188)]^C^C(load"newlayer");nla;
+[--]
+ID_Isolate_Layer [_Button("Isolate Layer", 3306, 5190)]_LAYISO
+ID_Unisolate_Layer [_Button("Unisolate Layer", 3383, 5192)]_LAYUNISO
+ID_Freeze_layer [_Button("Freeze layer", 3304, 5194)]_LAYFRZ
+ID_Multiple_Freeze_layer [_Button("Multiple Freeze layer", 3314, 5196)]^C^C(load"multiplefreeze");mlf;
+[--]
+ID_Layer_Off [_Button("Layer Off", 3320, 5198)]_LAYOFF
+[--]
+ID_Lock_layer [_Button("Lock layer", 3310, 5200)]_LAYLCK
+ID_Unlock_layer [_Button("Unlock layer", 3330, 5202)]_LAYULK
+[--]
+ID_Set_ON_all_layers [_Button("Set ON all layers", 3322, 5204)]^C^C(load"layer");on
+ID_Set_OFF_all_layer [_Button("Set OFF all layer", 3318, 5206)]^C^C(load"layer");off
+[--]
+ID_Thaw_all_layers [_Button("Thaw all layers", 3326, 5208)]^C^C(load"layer");Thaw
+ID_Freeze_all_layers [_Button("Freeze all layers", 3302, 5210)]^C^C(load"layer");freeze
+[--]
+ID_Unlock_all_layers [_Button("Unlock all layers", 3328, 5212)]^C^C(load"layer");unlock;
+ID_Lock_all_layers [_Button("Lock all layers", 3308, 5214)]^C^C(load"layer");lock;
+[--]
+ID_Clone_entity [_Button("Clone entity", 3297, 5216)]^C^C(load"clone");clone;
+ID_Copy_to_layer [_Button("Copy to layer", 3299, 5236)]^C^C(load"copytolayer");ctl;
+**ADDON
+TBAR_AddOn [_Toolbar("AddOn", _Right, _Show, 1891, 655, 0)]
+ID_&iCADLib_-_Blocks_Manager [_Button("&iCADLib - Blocks Manager", ICON_16_ALE, ICON_16_ALE)]^C^C^Cicadlib
+ID_Raster_to_vector_&Wintopo [_Button("Raster to vector &Wintopo", ICON_16_WINTOPO, ICON_16_WINTOPO)]^C^C^Cwintopo
+ID_Convert_PDF_to_DWG [_Button("Convert PDF to DWG", ICON_16_PDF2CAD, ICON_16_PDF2CAD)]^C^C^C_pdf2cad
+ID_3D_PDF_Export [_Button("3D PDF Export", ICON_16_EXPORTPDF3D, ICON_16_EXPORTPDF3D)]^C^C^C_ExportPdf3d
+**STYLE
+TBAR_Style [_Toolbar("Style", _Top, _Show, 490, 47, 0)]
+ID_Explore_Text_Styles [_Button("Explore Text Styles", ICON_16_TXTSTYLE, ICON_16_TXTSTYLE)]^C^C^C_FONT
+[--]
+ID_CtrlTStyl [_Control(_TxtStyle)]
+[--]
+ID_Dimension_Style [_Button("Dimension Style", ICON_16_DIMSTY, ICON_16_DIMSTY)]^C^C^C_DIMSTYLE
+[--]
+ID_DimStyle  [_Control(_dimstyle)]
+**DRAW_ORDER
+TBAR_Draw_Order [_Toolbar("Draw Order", _Right, _Show, 1891, 493, 0)]
+ID_Bring_to_Front [_Button("Bring to Front", 3251, 3158)]^C^C^C_draworder;\_F
+ID_Send_to_Back [_Button("Send to Back", 3252, 3159)]^C^C^C_draworder;\_B
+ID_Bring_above_objects [_Button("Bring above objects", 1199, 1213)]^C^C^C_draworder;\_A
+ID_Send_under_objects [_Button("Send under objects", 1200, 1214)]^C^C^C_draworder;\_U
+[--]
+ID_Bring_text_objects_to_front [_Flyout("Bring text objects to front", 2054, 1895, _OtherIcon, TBAR_BRING_TEXT_OBJECTS_TO_FRONT)]^C^C^C_AI_DRAWORDER;_FRONT;_FILTER;_TYPE;TEXT;_TYPE;MTEXT;;
+ID_Send_hatch_to_back [_Button("Send hatch to back", 1918, 1896)]^C^C^C_AI_DRAWORDER;_BACK;_FILTER;_TYPE;HATCH;;
+**EXPRESS_TOOLS
+TBAR_Express_Tools [_Toolbar("Express Tools", _Top, _Show, 785, 47, 0)]
+ID_M&ove/Copy/Rotate [_Button("M&ove/Copy/Rotate", 1660, 1733)]^C^C_.MOCORO
+ID_&Multiple_Copy [_Button("&Multiple Copy", 1640, 1732)]^C^C_copym
+[--]
+ID_&Copy_Nested_Objects [_Button("&Copy Nested Objects", 1700, 1734)]^C^C_ncopy
+[--]
+ID_Text_&Fit [_Button("Text &Fit", 1731, 1760)]^C^C_textfit
+ID_Arc-Aligned_text [_Button("Arc-Aligned text", ICON_16_ARCTEXT, ICON_16_ARCTEXT)]^C^C^C_ARCTEXT
+ID_E&xplode_Text [_Button("E&xplode Text", 1706, 1759)]^C^C_txtexp
+[--]
+ID_Breakline [_Button("Breakline", 1283, 1284)]^C^C_BREAKLINE
+**LAYER
+TBAR_Layer [_Toolbar("Layer", _Top, _Show, 995, 47, 0)]
+ID_LAYERS [_Button("LAYERS", ICON_16_LAYERS, ICON_16_LAYERS)]^C^C^C_LAYER
+ID_CtrlLayer [_Control(_Layer)]
+ID_Set_Layer [_Button("Set Layer", ICON_16_MOLC, ICON_16_MOLC)]^C^C^C_LAYBYENT;_SET;
+ID_Layer_Previous [_Button("Layer Previous", 1994, 1993)]^C^C^C_LAYERP
+ID_Layer_State_Manager___ [_Button("Layer State Manager...", 27926, 5220)]^C^C_LMAN
+**ENTITY_PROPERTIES
+TBAR_Entity_Properties [_Toolbar("Entity Properties", _Top, _Show, 1349, 47, 0)]
+ID_CtrlColor [_Control(_Color)]
+[--]
+ID_CtrlLinet [_Control(_Linetype)]
+[--]
+ID_CtrlLineW [_Control(_Lineweight)]
+[--]
+ID_CtrlPStyl [_Control(_PlotStyle)]
+**LOOPCAD_MAIN
+TBAR_LoopCAD_Main [_Toolbar("LoopCAD Main", _Floating, _Show, 353, 176, 0)]
+ID_Load_LoopCAD_modules [_Button("Load LoopCAD modules", .\Icons\LoadLoopCAD.bmp, .\Icons\LoadLoopCAD.bmp)]^C^C_-VBALOAD LoopCAD.vbi;(load "LoopCAD.lsp")
+ID_Insert_head [_Button("Insert head", .\Icons\InsertHead.bmp, .\Icons\InsertHead.bmp)]^C^CHEAD
+ID_Draw_pipe [_Button("Draw pipe", .\Icons\DrawPipe.bmp, .\Icons\DrawPipe.bmp)]^C^CPIPE
+ID_Insert_elevation_box [_Button("Insert elevation box", .\Icons\DrawElevationBox.bmp, .\Icons\DrawElevationBox.bmp)]^C^CELEVATION-BOX
+ID_Insert_tee [_Button("Insert tee", .\Icons\InsertTee.bmp, .\Icons\InsertTee.bmp)]^C^CTEE
+ID_Insert_domestic_tee [_Button("Insert domestic tee", .\Icons\InsertDomesticTee.bmp, .\Icons\InsertDomesticTee.bmp)]^C^CDTEE
+ID_Insert_floor_connector [_Button("Insert floor connector", .\Icons\FloorConnector.bmp, .\Icons\FloorConnector.bmp)]^C^CFLOOR-CONNECTOR
+ID_Join_head_pair [_Button("Join head pair", .\Icons\JoinHeadPair.bmp, .\Icons\JoinHeadPair.bmp)]^C^CJOIN-HEADS
+ID_Label_nodes [_Button("Label nodes", .\Icons\LabelNodes.bmp, .\Icons\LabelNodes.bmp)]^C^CLABEL-NODES
+ID_Label_pipes [_Button("Label pipes", .\Icons\LabelPipes.bmp, .\Icons\LabelPipes.bmp)]^C^CLABEL-PIPES
+ID_Break_pipes [_Button("Break pipes", .\Icons\BreakPipes.bmp, .\Icons\BreakPipes.bmp)]^C^CBREAK-PIPES
+ID_Insert_job_data [_Button("Insert job data", .\Icons\InsertJobData.bmp, .\Icons\InsertJobData.bmp)]^C^CINSERT-JOB-DATA
+ID_Scan_to_CDS_File [_Button("Scan to CDS File", .\Icons\ScanToFSDX.bmp, .\Icons\ScanToFSDX.bmp)]^C^C^C_-VBARUN DrawingScanner.Scan^C
+**LOOPCAD_HEADS
+TBAR_LoopCAD_Heads [_Toolbar("LoopCAD Heads", _Floating, _Show, 703, 176, 0)]
+ID_Set_all_default_head_data [_Button("Set all default head data", .\Icons\HeadData.bmp, .\Icons\HeadData.bmp)]^C^CSET-HEAD-DATA
+ID_Set_default_head_model [_Button("Set default head model", .\Icons\M.bmp, .\Icons\M.bmp)]^C^CSET-HEAD-MODEL
+ID_Set_default_head_coverage_(ft) [_Button("Set default head coverage (ft)", .\Icons\Coverage.bmp, .\Icons\Coverage.bmp)]^C^CSET-HEAD-COVERAGE
+ID_ISet_default_head_slope [_Button("ISet default head slope", .\Icons\Slope.bmp, .\Icons\Slope.bmp)]^C^CSET-HEAD-SLOPE
+ID_Insert_12_x_12_head [_Button("Insert 12 x 12 head", .\Icons\Temperature.bmp, .\Icons\Temperature.bmp)]^C^CSET-HEAD-TEMP
+ID_Insert_12_x_12_head [_Button("Insert 12 x 12 head", .\Icons\12.bmp, .\Icons\12.bmp)]^C^CHEAD-12
+ID_Insert_14_x_14_head [_Button("Insert 14 x 14 head", .\Icons\14.bmp, .\Icons\14.bmp)]^C^CHEAD-14
+ID_Insert_16_x_16_head [_Button("Insert 16 x 16 head", .\Icons\16.bmp, .\Icons\16.bmp)]^C^CHEAD-16
+ID_Insert_18_x_18_head [_Button("Insert 18 x 18 head", .\Icons\18.bmp, .\Icons\18.bmp)]^C^CHEAD-18
+ID_Insert_20_x_20_head [_Button("Insert 20 x 20 head", .\Icons\20.bmp, .\Icons\20.bmp)]^C^CHEAD-20
+**LOOPCAD_PIPE
+TBAR_LoopCAD_Pipe [_Toolbar("LoopCAD Pipe", _Floating, _Show, 953, 176, 0)]
+ID_Draw_1/2_inch_pipe [_Button("Draw 1/2 inch pipe", .\Icons\1_2inch.bmp, .\Icons\1_2inch.bmp)]^C^CPIPE-12
+ID_Draw_3/4_inch_pipe [_Button("Draw 3/4 inch pipe", .\Icons\3_4inch.bmp, .\Icons\3_4inch.bmp)]^C^CPIPE-34
+ID_Draw_1_inch_pipe [_Button("Draw 1 inch pipe", .\Icons\1inch.bmp, .\Icons\1inch.bmp)]^C^CPIPE-1
+ID_Draw_1-1/4_inch_pipe [_Button("Draw 1-1/4 inch pipe", .\Icons\1_1_4inch.bmp, .\Icons\1_1_4inch.bmp)]^C^CPIPE-114
+
+**TBAR_ZOOM_OBJECT
+TBAR_Zoom_Object [_Toolbar("Zoom Object", _Floating, _Hide, 0, 47, 0)]
+ID_Zoom_Object [_Button("Zoom Object", ICON_16_ZOOOBJ, ICON_16_ZOOOBJ)]'_ZOOM;_O
+ID_Zoom_Scale [_Button("Zoom Scale", 3287, 3193)]'_ZOOM;
+ID_Dynamic_Zoom [_Button("Dynamic Zoom", 3285, 3191)]'_ZOOM;_D
+ID_&Window [_Button("&Window", ICON_16_ZOOWIN, ICON_16_ZOOWIN)]'_ZOOM;_W
+ID_&Center [_Button("&Center", ICON_16_ZOOCEN, ICON_16_ZOOCEN)]'_ZOOM;_C
+ID_&In [_Button("&In", ICON_16_ZOOIN, ICON_16_ZOOIN)]'_ZOOM;2x
+ID_&Out [_Button("&Out", ICON_16_ZOOOUT, ICON_16_ZOOOUT)]'_ZOOM;.5x
+ID_&All [_Button("&All", ICON_16_ZOOALL, ICON_16_ZOOALL)]'_ZOOM;_A
+ID_&Extents [_Button("&Extents", ICON_16_ZOOEXT, ICON_16_ZOOEXT)]'_ZOOM;_E
+**TBAR_REGEN
+TBAR_Regen [_Toolbar("Regen", _Floating, _Hide, 0, 47, 0)]
+ID_Regen [_Button("Regen", ICON_16_REGEN, ICON_16_REGEN)]^C^C^C_REGEN
+ID_Regen_&All [_Button("Regen &All", ICON_16_REGENALL, ICON_16_REGENALL)]^C^C^C_REGENALL
+ID_Redraw [_Button("Redraw", 3338, 5237)]'_REDRAW
+**TBAR_3-POINT_ARC
+TBAR_3-Point_Arc [_Toolbar("3-Point Arc", _Floating, _Hide, 0, 75, 0)]
+ID_3-Point_Arc [_Button("3-Point Arc", ICON_16_ARC3PT, ICON_16_ARC3PT)]^C^C^C_ARC;
+ID_Arc_Center-Start-End [_Button("Arc Center-Start-End", ICON_16_ARCCSE, ICON_16_ARCCSE)]^C^C^C_ARC;_C;\\\
+ID_Arc_Start-Center-End [_Button("Arc Start-Center-End", ICON_16_ARCSCE, ICON_16_ARCSCE)]^C^C^C_ARC;\_C;\
+ID_Arc_Start-End-Center [_Button("Arc Start-End-Center", 1372, 1346)]^C^C^C_ARC;\_E;\
+ID_Tangent_Arc [_Button("Tangent Arc", 1377, 1352)]^C^C^C_ARC;;
+ID_Arc_Center-Start-Angle [_Button("Arc Center-Start-Angle", ICON_16_ARCCSA, ICON_16_ARCCSA)]^C^C^C_ARC;_C;\_A;
+ID_Arc_Start-Center-Angle [_Button("Arc Start-Center-Angle", ICON_16_ARCSCA, ICON_16_ARCSCA)]^C^C^C_ARC;\_C;\_A;
+ID_Arc_Start-Angle-Center [_Button("Arc Start-Angle-Center", 1365, 1339)]^C^C^C_ARC;\A;\_C;
+ID_Arc_Start-End-Angle [_Button("Arc Start-End-Angle", ICON_16_ARCSEA, ICON_16_ARCSEA)]^C^C^C_ARC;\_E;\_A;
+ID_Arc_Start-Angle-End [_Button("Arc Start-Angle-End", 1366, 1340)]^C^C^C_ARC;\_A;\
+ID_Arc_Center-Start-Length [_Button("Arc Center-Start-Length", ICON_16_ARCCSL, ICON_16_ARCCSL)]^C^C^C_ARC;_C;\_L;
+ID_Arc_Start-Center-Length [_Button("Arc Start-Center-Length", ICON_16_ARCSCL, ICON_16_ARCSCL)]^C^C^C_ARC;\_C;\_L;
+ID_Arc_Start-Direction-End [_Button("Arc Start-Direction-End", 1370, 1344)]^C^C^C_ARC;\_D;\
+ID_Arc_Start-End-Direction [_Button("Arc Start-End-Direction", ICON_16_ARCSED, ICON_16_ARCSED)]^C^C^C_ARC;\_E;\_D;
+ID_Arc_Start-Radius-End [_Button("Arc Start-Radius-End", 1376, 1351)]^C^C^C_ARC;\_R;\
+ID_Arc_Start-Radius-Angle [_Button("Arc Start-Radius-Angle", 1375, 1349)]^C^C^C_ARC;\_R;\_A;
+ID_Arc_Start-End-Radius [_Button("Arc Start-End-Radius", ICON_16_ARCSER, ICON_16_ARCSER)]^C^C^C_ARC;\_E;\_R;
+**TBAR_CIRCLE_CENTER-RADIUS
+TBAR_Circle_Center-Radius [_Toolbar("Circle Center-Radius", _Floating, _Hide, 0, 75, 0)]
+ID_Circle_Center-Radius [_Button("Circle Center-Radius", ICON_16_CIRCLE, ICON_16_CIRCLE)]^C^C^C_CIRCLE;
+ID_Circle_3-Points [_Button("Circle 3-Points", ICON_16_CIR3PT, ICON_16_CIR3PT)]^C^C^C_CIRCLE;_3P;
+ID_Circle_Center-Diameter [_Button("Circle Center-Diameter", ICON_16_CIRDIA, ICON_16_CIRDIA)]^C^C^C_CIRCLE;\_D;
+ID_Circle_2-Points [_Button("Circle 2-Points", ICON_16_CIR2PT, ICON_16_CIR2PT)]^C^C^C_CIRCLE;_2P;
+ID_Circle_Radius-Tangents [_Button("Circle Radius-Tangents", ICON_16_CIRTTR, ICON_16_CIRTTR)]^C^C^C_CIRCLE;_RTT;
+ID_Convert_Arc_to_Circle [_Button("Convert Arc to Circle", 1470, 1335)]^C^C^C_CIRCLE;_A;
+**TBAR_ELLIPSE_AXIS-AXIS
+TBAR_Ellipse_Axis-Axis [_Toolbar("Ellipse Axis-Axis", _Floating, _Hide, 0, 75, 0)]
+ID_Ellipse_Axis-Axis [_Button("Ellipse Axis-Axis", ICON_16_ELLCEN, ICON_16_ELLCEN)]^C^C^C_ELLIPSE;
+ID_Ellipse_Axis-Rotation [_Button("Ellipse Axis-Rotation", 1398, 1359)]^C^C^C_ELLIPSE;\\_R
+ID_Ellipse_Center-Axes [_Button("Ellipse Center-Axes", ICON_16_ELLCEN, ICON_16_ELLCEN)]^C^C^C_ELLIPSE;_C;\\\
+ID_Ellipse_Center-Rotation [_Button("Ellipse Center-Rotation", 1408, 1313)]^C^C^C_ELLIPSE;_C;\\_R
+**TBAR_ELLIPTICAL_ARC_AXIS-AXIS
+TBAR_Elliptical_Arc_Axis-Axis [_Toolbar("Elliptical Arc Axis-Axis", _Floating, _Hide, 0, 75, 0)]
+ID_Elliptical_Arc_Axis-Axis [_Button("Elliptical Arc Axis-Axis", ICON_16_ELLARC, ICON_16_ELLARC)]^C^C^C_ELLIPSE;_A;\\\\\
+ID_Elliptical_Arc_Axis-Rotation [_Button("Elliptical Arc Axis-Rotation", 1378, 1357)]^C^C^C_ELLIPSE;_A;\\_R;\\\
+ID_Elliptical_Arc_Center-Axes [_Button("Elliptical Arc Center-Axes", 1379, 1358)]^C^C^C_ELLIPSE;_A;_C;\\\\\
+ID_Elliptical_Arc_Center-Rotation [_Button("Elliptical Arc Center-Rotation", 1380, 1471)]^C^C^C_ELLIPSE;_A;_C;\\_R;\\\
+**TBAR_&MULTILINE_TEXT___
+TBAR_&Multiline_Text___ [_Toolbar("&Multiline Text...", _Floating, _Hide, 0, 75, 0)]
+ID_&Multiline_Text___ [_Button("&Multiline Text...", ICON_16_MTEXT, ICON_16_MTEXT)]^C^C^C_MTEXT
+ID_&Single_Line_Text [_Button("&Single Line Text", ICON_16_TEXT, ICON_16_TEXT)]^C^C^C_DTEXT
+ID_Arc-Aligned_text [_Button("Arc-Aligned text", ICON_16_ARCTEXT, ICON_16_ARCTEXT)]^C^C^C_ARCTEXT
+**TBAR_BRING_TEXT_OBJECTS_TO_FRONT
+TBAR_Bring_text_objects_to_front [_Toolbar("Bring text objects to front", _Floating, _Hide, 1891, 493, 0)]
+ID_Bring_text_objects_to_front [_Button("Bring text objects to front", 2054, 1895)]^C^C^C_AI_DRAWORDER;_FRONT;_FILTER;_TYPE;TEXT;_TYPE;MTEXT;;
+ID_Bring_dimension_objects_to_front [_Button("Bring dimension objects to front", 2055, 1894)]^C^C^C_AI_DRAWORDER;_FRONT;_FILTER;_TYPE;DIMENSION;;
+ID_Bring_leader_object_to_front [_Button("Bring leader object to front", 2056, 1893)]^C^C^C_AI_DRAWORDER;_FRONT;_FILTER;_TYPE;LEADER;;
+ID_Bring_all_annotation_objects_to_front [_Button("Bring all annotation objects to front", 2057, 1897)]^C^C^C_AI_DRAWORDER;_FRONT;_FILTER;_TYPE;TEXT;_TYPE;MTEXT;_TYPE;DIMENSION;_TYPE;LEADER;;
+
+***HELPSTRINGS
+TBAR_Standard [Standard]
+ID_&New___ [Creates a new drawing file:  NEW]
+ID_&Open___ [Opens an existing drawing file:  OPEN]
+ID_&Save [Quickly saves the current drawing:  QSAVE]
+ID_&Plot___ [Changes printers and print setup]
+ID_Print_Preview [Shows how the printed page will look]
+ID_Cu&t [Copies objects to the Clipboard and erases the objects from the drawing:  CUTCLIP]
+ID_&Copy [Copies objects to the Clipboard:  COPYCLIP]
+ID_&Paste [Inserts data from the Clipboard:  PASTECLIP]
+ID_Ma&tch_Properties [Copies the properties from one object to one or more objects:  MATCHPROP]
+ID_&Undo [Reverses the most recent operation:  U]
+ID_&Redo [Reverses the effects of the previous UNDO or U command:  REDO]
+ID_Real-Time_&Pan [Real-time panning]
+ID_Real-Time_Z&oom [Real-time zooming]
+TBAR_Zoom_Object [Zooms to display an area spcified by the extents of an object]
+ID_Zoom_Object [Zooms to display an area spcified by the extents of an object]
+ID_Zoom_Scale [Zooms the display using a specified scale factor]
+ID_Dynamic_Zoom [Zooms to display the generated portion of the drawing]
+ID_&Window [Zooms to display an area specified by a rectangular window:  ZOOM W]
+ID_&Center [Displays a window specified by a center point and height:  ZOOM C]
+ID_&In [Increases the apparent size of objects in the current viewport:  ZOOM 2X]
+ID_&Out [Decreases the apparent size of objects in the current viewport:  ZOOM .5X]
+ID_&All [Zooms to display the entire drawing in the current viewport:  ZOOM ALL]
+ID_&Extents [Zooms to display the drawing extents:  ZOOM E]
+ID_&Previous [Zooms to display the previous view:  ZOOM P]
+TBAR_Regen [Recalculates display coordinates for the current window]
+ID_Regen [Recalculates display coordinates for the current window]
+ID_Regen_&All [Regenerates the drawing and refreshes all viewports:  REGENALL]
+ID_Redraw [Refreshes the display of the current window]
+ID_P&roperties [Displays and edits the properties of selected entities]
+ID_Help [Displays online help:  HELP]
+TBAR_Draw [Draw]
+ID_&Line [Creates straight line segments:  LINE]
+ID_Cons&truction_Line [Creates an infinite line:  XLINE]
+ID_&Polyline [Creates two-dimensional polylines:  PLINE]
+ID_Pol&ygon [Creates an equilateral closed polyline:  POLYGON]
+ID_Rectan&gle [Draws a rectangular polyline:  RECTANGLE]
+TBAR_3-Point_Arc [Draws an arc through 3 points]
+ID_3-Point_Arc [Draws an arc through 3 points]
+ID_Arc_Center-Start-End [Draws an arc given center, start, and end]
+ID_Arc_Start-Center-End [Draws an arc given start, center, and end]
+ID_Arc_Start-End-Center [Draws an arc given start, end, and center]
+ID_Tangent_Arc [Draws an arc continuing from the previous entity]
+ID_Arc_Center-Start-Angle [Draws an arc given center, start, and included angle]
+ID_Arc_Start-Center-Angle [Draws an arc given start, center, and included angle]
+ID_Arc_Start-Angle-Center [Draws an arc given start, included angle, and center]
+ID_Arc_Start-End-Angle [Draws an arc given start, end, and included angle]
+ID_Arc_Start-Angle-End [Draws an arc given start, included angle, and end]
+ID_Arc_Center-Start-Length [Draws an arc given center, start, and chord length]
+ID_Arc_Start-Center-Length [Draws an arc given start, center, and chord length]
+ID_Arc_Start-Direction-End [Draws an arc given start, starting direction, and end]
+ID_Arc_Start-End-Direction [Draws an arc given start, end, and starting direction]
+ID_Arc_Start-Radius-End [Draws an arc given start, radius, and end]
+ID_Arc_Start-Radius-Angle [Draws an arc given start, radius, and included angle]
+ID_Arc_Start-End-Radius [Draws an arc given start, end, and radius]
+TBAR_Circle_Center-Radius [Draws a circle given a center point and radius]
+ID_Circle_Center-Radius [Draws a circle given a center point and radius]
+ID_Circle_3-Points [Draws a circle given 3 points on the circle]
+ID_Circle_Center-Diameter [Draws a circle given a center point and diameter]
+ID_Circle_2-Points [Draws a circle given 2 end points of the diameter]
+ID_Circle_Radius-Tangents [Draws a circle of the given radius, tangent to 2 entities]
+ID_Convert_Arc_to_Circle [Turns an existing arc into a complete circle]
+ID_&Revision_Cloud [Draw a revision cloud]
+ID_&Spline [Creates a quadratic or cubic spline (NURBS) curve:  SPLINE]
+TBAR_Ellipse_Axis-Axis [Draws an ellipse given both axes]
+ID_Ellipse_Axis-Axis [Draws an ellipse given both axes]
+ID_Ellipse_Axis-Rotation [Draws an ellipse given major axis and rotation]
+ID_Ellipse_Center-Axes [Draws an ellipse given center and axes]
+ID_Ellipse_Center-Rotation [Draws an ellipse given center and rotation]
+TBAR_Elliptical_Arc_Axis-Axis [Draws an elliptical arc given major and minor axes, and angles]
+ID_Elliptical_Arc_Axis-Axis [Draws an elliptical arc given major and minor axes, and angles]
+ID_Elliptical_Arc_Axis-Rotation [Draws an elliptical arc given major axis, rotation, and angles]
+ID_Elliptical_Arc_Center-Axes [Draws an elliptical arc given center, axes, and angles]
+ID_Elliptical_Arc_Center-Rotation [Draws an elliptical arc given center, rotation, and angles]
+ID_Insert_Block [Inserts a block or a drawing in the current drawing]
+ID_&Make_block [Creates a block definition from objects you select:  BLOCK]
+ID_&Single_Point [Creates a single point:  POINT]
+ID_&Hatch___ [Fills an enclosed area or selected objects with a hatch pattern:  BHATCH]
+ID_Gradient___ [Fills an enclosed area or selected objects with gradient hatches]
+ID_Reg&ion [Creates a region object from a selection set of existing objects:  REGION]
+ID_Table [Creates an empty table object]
+TBAR_&Multiline_Text___ [Creates multiline text:  MTEXT]
+ID_&Multiline_Text___ [Creates multiline text:  MTEXT]
+ID_&Single_Line_Text [Displays text on screen as it is entered:  DTEXT]
+ID_Arc-Aligned_text [Creates text following an arc]
+TBAR_Modify [Modify]
+ID_Delete [Deletes the selection]
+ID_Cop&y [Duplicates the objects you select:  COPY]
+ID_M&irror [Creates a mirror image copy of objects:  MIRROR]
+ID_&Offset [Creates concentric circles, parallel lines, and parallel curves:  OFFSET]
+ID_&Array [Creates multiple copies of objects in a pattern:  ARRAY]
+ID_Mo&ve [Displaces objects a specified distance in a specified direction:  MOVE]
+ID_Rotat&e [Moves objects about a base point:  ROTATE]
+ID_&Scale [Enlarges or reduces objects equally in the X, Y, and Z directions:  SCALE]
+ID_Stretc&h [Moves or stretches objects:  STRETCH]
+ID_Tri&m [Trims objects at a cutting edge defined by other objects:  TRIM]
+ID_Exten&d [Extends an object to meet another object:  EXTEND]
+ID_Edit_Length [Edits the length of the selection]
+ID_Break_at_point [Breaks the selected object at a single point]
+ID_Brea&k [Erases parts of objects or splits an object in two:  BREAK]
+ID_&Join [Joins selected co-linear entities into a single entity]
+ID_&Chamfer [Bevels the edges of objects:  CHAMFER]
+ID_Fi&llet [Rounds and fillets the edges of objects:  FILLET]
+ID_E&xplode [Breaks a compound object into its component objects:  EXPLODE]
+TBAR_Express_Tools:Layer [Express Tools:Layer]
+ID_Set_to_current_the_layer_of_the_selected_entity [Set current layer]
+ID_Layer_Previous [Undoes the last change or set of changes made to layer settings]
+ID_Change_to_current_layer [Change selected entity to current layer]
+ID_Move_to_layer [Move selected entity to layer]
+ID_New_layer [Create a new layer and set selected entity's layer]
+ID_Isolate_Layer [Isolate layer of selected entity]
+ID_Unisolate_Layer [Unisolate layer of selected entity]
+ID_Freeze_layer [Freeze layer of selected entity]
+ID_Multiple_Freeze_layer [Freeze layers of an entity set]
+ID_Layer_Off [Turn layers Off]
+ID_Lock_layer [Lock layer of selected entity]
+ID_Unlock_layer [UnLock layer of selected entity]
+ID_Set_ON_all_layers [Set on every layer in drawing]
+ID_Set_OFF_all_layer [OFF every layer in drawing]
+ID_Thaw_all_layers [Thaw every layer in drawing]
+ID_Freeze_all_layers [Freeze every layer in drawing]
+ID_Unlock_all_layers [Unlock every layer in drawing]
+ID_Lock_all_layers [Lock every layer in drawing]
+ID_Clone_entity [Clone an entity to a layer]
+ID_Copy_to_layer [Copy entity on a selected layer]
+TBAR_AddOn [AddOn]
+ID_&iCADLib_-_Blocks_Manager [Starts Block Library Manager]
+ID_Raster_to_vector_&Wintopo [Starts Wintopo Raster to Vector Tool]
+ID_Convert_PDF_to_DWG [Converts a PDF file in a DWG and open it]
+ID_3D_PDF_Export [Exports a 3D PDF file from current drawing]
+TBAR_Style [Style]
+ID_Explore_Text_Styles [Creates and modifies text styles]
+ID_Dimension_Style [Creates and modifies dimension styles]
+TBAR_Draw_Order [Draw Order]
+ID_Bring_to_Front [Forces selected objects to be displayed in front of all other objects]
+ID_Send_to_Back [Forces selected objects to be displayed behind all other objects]
+ID_Bring_above_objects [Forces selected objects to be displayed in front of specified reference object]
+ID_Send_under_objects [Forces selected objects to be displayed behind specified reference object]
+TBAR_Bring_text_objects_to_front [Forces text objects to be displayed in the front of all other objects]
+ID_Bring_text_objects_to_front [Forces text objects to be displayed in the front of all other objects]
+ID_Bring_dimension_objects_to_front [Forces dimension objects to be displayed in the front of all other objects]
+ID_Bring_leader_object_to_front [Forces leader objects to be displayed in the front of all other objects]
+ID_Bring_all_annotation_objects_to_front [Forces all annotation objects to be displayed in the front of all other objects]
+ID_Send_hatch_to_back [Forces all hatches to be displayed behind all other objects]
+TBAR_Express_Tools [Express Tools]
+ID_M&ove/Copy/Rotate [Moves, copies, rotates, and scales objects: MOCORO]
+ID_&Multiple_Copy [Copies objects multiple times with options to repeat, divide, measure, and array: COPYM]
+ID_&Copy_Nested_Objects [Copies objects nested inside blocks and external references: NCOPY]
+ID_Text_&Fit [Fits text between specified points: TEXTFIT]
+ID_Arc-Aligned_text [Creates text following an arc]
+ID_E&xplode_Text [Explodes text into polylines: TXTEXP]
+ID_Breakline [Creates polyline and inserts break line symbol]
+TBAR_Layer [Layer]
+ID_LAYERS [Explore Layers...]
+ID_Set_Layer [Set Layer by Entity]
+ID_Layer_Previous [Undoes the last change or set of changes made to layer settings]
+ID_Layer_State_Manager___ [Save, restore, import and export a layers state]
+TBAR_Entity_Properties [Entity Properties]
+TBAR_LoopCAD_Main [LoopCAD Main]
+ID_Load_LoopCAD_modules []
+ID_Insert_head []
+ID_Draw_pipe []
+ID_Insert_elevation_box [Insert new elevation box]
+ID_Insert_tee []
+ID_Insert_domestic_tee []
+ID_Insert_floor_connector [Insert floor connector to indicate connections between floors, risers]
+ID_Join_head_pair []
+ID_Label_nodes []
+ID_Label_pipes []
+ID_Break_pipes []
+ID_Insert_job_data []
+ID_Scan_to_CDS_File []
+TBAR_LoopCAD_Heads [LoopCAD Heads]
+ID_Set_all_default_head_data []
+ID_Set_default_head_model []
+ID_Set_default_head_coverage_(ft) []
+ID_ISet_default_head_slope []
+ID_Insert_12_x_12_head []
+ID_Insert_12_x_12_head []
+ID_Insert_14_x_14_head []
+ID_Insert_16_x_16_head []
+ID_Insert_18_x_18_head []
+ID_Insert_20_x_20_head []
+TBAR_LoopCAD_Pipe [LoopCAD Pipe]
+ID_Draw_1/2_inch_pipe []
+ID_Draw_3/4_inch_pipe []
+ID_Draw_1_inch_pipe []
+ID_Draw_1-1/4_inch_pipe []

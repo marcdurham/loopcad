@@ -16,6 +16,7 @@
 (defun C:PIPE-114 () (pipe-draw "1-1/4"))
 (defun C:ELEVATION-BOX () (elevation-box-draw))
 (defun C:TEE () (tee-insert))
+(defun C:DTEE () (domestic-tee-insert))
 (defun C:LABEL-NODES () (label-all-nodes))
 (defun C:LABEL-PIPES () (label-all-pipes))
 (defun C:BREAK-PIPES () (break-pipes-delete-old))

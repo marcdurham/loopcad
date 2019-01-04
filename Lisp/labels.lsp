@@ -25,6 +25,16 @@
 			(setq n (1+ n))
 		)
 	)
+	; Domestic tees are already deleted with Tees above
+	(foreach node (get-all-domestic-tees)
+		(progn		
+			(insert-domestic-tee-label 
+				(get-ins-point node) 
+				(strcat "D.T." (itoa n))
+			)
+			(setq n (1+ n))
+		)
+	)
 	(delete-blockrefs (get-all-riser-labels))
 	(foreach node (get-all-risers)
 		(progn		
@@ -56,6 +66,17 @@
 )
 
 (defun insert-tee-label (point text)
+	(insert-node-label 
+		point 
+		text 
+		"TeeLabel"  ; block-name
+		"TeeLabels" ; layer
+		"TEENUMBER" ; tag-string
+		color-green ; label-color
+	)
+)
+
+(defun insert-domestic-tee-label (point text)
 	(insert-node-label 
 		point 
 		text 
