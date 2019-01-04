@@ -5,9 +5,7 @@
 
 (defun label-all-nodes ( / n node label)
 	(setq n 1)
-	(foreach label (get-all-head-labels)
-		(entdel (cdr (assoc -1 label)))
-	)
+    (delete-blockrefs (get-all-head-labels))
 	(foreach node (get-all-heads)
 		(progn	
 			(insert-head-label 
@@ -17,9 +15,7 @@
 			(setq n (1+ n))
 		)
 	)
-	(foreach label (get-all-tee-labels)
-		(entdel (cdr (assoc -1 label)))
-	)
+	(delete-blockrefs (get-all-tee-labels))
 	(foreach node (get-all-tees)
 		(progn		
 			(insert-tee-label 
@@ -29,9 +25,26 @@
 			(setq n (1+ n))
 		)
 	)
+	(delete-blockrefs (get-all-riser-labels))
+	(foreach node (get-all-risers)
+		(progn		
+			(insert-riser-label 
+				(get-ins-point node)
+				; Risers must be manually re-labeled for now
+				(strcat "R." (itoa n))
+			)
+			(setq n (1+ n))
+		)
+	)
 )
 
-(defun insert-head-label (point text / e p)
+(defun delete-blockrefs (blockrefs)
+	(foreach blockref blockrefs
+		(entdel (cdr (assoc -1 blockref)))
+	)
+)
+
+(defun insert-head-label (point text)
 	(insert-node-label 
 		point 
 		text 
@@ -42,13 +55,24 @@
 	)
 )
 
-(defun insert-tee-label (point text / e p)
+(defun insert-tee-label (point text)
 	(insert-node-label 
 		point 
 		text 
 		"TeeLabel"  ; block-name
 		"TeeLabels" ; layer
 		"TEENUMBER" ; tag-string
+		color-green ; label-color
+	)
+)
+
+(defun insert-riser-label (point text)
+	(insert-node-label 
+		point 
+		text 
+		"RiserLabel"  ; block-name
+		"RiserLabels" ; layer
+		"RISERNUMBER" ; tag-string
 		color-green ; label-color
 	)
 )
@@ -91,10 +115,6 @@
 	(princ)
 )
 
-(defun point-offset (point x y)
-	(list (+ x (getx point)) (+ y (gety point)))
-)
- 
 (defun make-pipe-labels ( / seg p v vertices label)	
 	(setq p 0)	
 	(foreach pipe  (reverse (get-all-pipes))
@@ -118,21 +138,6 @@
 (defun insert-pipe-label (point text)
 	(make-text point text 4.0 color-blue "Pipe Labels")
 )
-
-; Delete me
-;(defun get-all-head-labels ( / en ent labels layer)
-;	(setq labels '())
-;	(setq en (entnext))
-;   (while en
-;		(if (and (str= "HeadLabels" (get-layer en))
-;		        (str= (get-etype en) "INSERT")
-;			)
-;			(setq labels (cons en labels))
-;		)
-;		(setq en (entnext en))
-;	)
-;	labels
-;)
 
 (defun get-all-pipe-labels ( / en ent labels layer) 
 	(setq labels '())
@@ -162,4 +167,8 @@
 
 (defun get-all-tee-labels ()
 	(get-blocks (list "TeeLabels" "Tee Labels"))
+)
+
+(defun get-all-riser-labels ()
+	(get-blocks (list "RiserLabels" "Riser Labels"))
 )
