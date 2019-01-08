@@ -9,6 +9,7 @@ ID_Draw_Elevation_Box [_Button("Insert elevation box", .\Icons\DrawElevationBox.
 ID_Insert_Tee [_Button("Insert tee", .\Icons\InsertTee.bmp, .\Icons\InsertTee.bmp)]^C^CTEE
 ID_Insert_Domestic_Tee [_Button("Insert domestic tee", .\Icons\InsertDomesticTee.bmp, .\Icons\InsertDomesticTee.bmp)]^C^CDTEE
 ID_Insert_Floor_Connector [_Button("Insert floor connector", .\Icons\FloorConnector.bmp, .\Icons\FloorConnector.bmp)]^C^CFLOOR-CONNECTOR
+ID_Insert_Floor_Tag [_Button("Insert floor tag", .\Icons\FloorTag.bmp, .\Icons\FloorTag.bmp)]^C^CFLOOR-TAG
 
 ID_Join_Head_Pair [_Button("Join head pair", .\Icons\JoinHeadPair.bmp, .\Icons\JoinHeadPair.bmp)]^C^CJOIN-HEADS
 ID_Label_Nodes [_Button("Label nodes", .\Icons\LabelNodes.bmp, .\Icons\LabelNodes.bmp)]^C^CLABEL-NODES

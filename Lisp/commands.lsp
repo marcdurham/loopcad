@@ -22,6 +22,7 @@
 (defun C:BREAK-PIPES () (break-pipes-delete-old))
 (defun C:JOIN-HEADS () (head-join))
 (defun C:FLOOR-CONNECTOR () (floor-connector-insert))
+(defun C:FLOOR-TAG () (floor-tag-insert))
 (defun C:INSERT-JOB-DATA () (alert "This must be done manually using the JobData block."))
 
 (princ) ; exit quietly
