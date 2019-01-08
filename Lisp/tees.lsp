@@ -31,5 +31,5 @@
     (command "-LAYER" "COLOR" "White" "Tee" "")
     (setvar "LWDISPLAY" 0)
     (command "-LAYER" "SET" "DomesticTees" "")
-    (command "-INSERT" "Tee.dwg" pause 1.0 1.0 0)  
+    (command "-INSERT" "DomesticTee.dwg" pause 1.0 1.0 0)  
 )
