@@ -1,7 +1,7 @@
 Attribute VB_Name = "basErrXML"
 Option Explicit
 Public Function FSDXNodes2(nodes As Collection) As String
-Dim xNode As node
+Dim xNode As Node
 Dim manifoldDone As Boolean
 Dim strXMLDoc As String
 Dim strNodeRow As String

@@ -170,7 +170,7 @@ Dim vItem As Variant
     
 End Function
 
-Public Function ConvertToHead(InputNode As node) As Head
+Public Function ConvertToHead(InputNode As Node) As Head
     Dim newHead As New Head
     
     If InputNode.NodeTypeID = NODE_TYPE_HEAD Then
@@ -187,7 +187,7 @@ Public Function ConvertToHead(InputNode As node) As Head
 End Function
 
 
-Public Function ConvertToTee(InputNode As node) As Tee
+Public Function ConvertToTee(InputNode As Node) As Tee
     Dim newTee As New Tee
     
     If InputNode.NodeTypeID = NODE_TYPE_TEE Then
@@ -202,7 +202,7 @@ Public Function ConvertToTee(InputNode As node) As Tee
     End If
     
 End Function
-Public Function ConvertToFixture(InputNode As node) As Fixture
+Public Function ConvertToFixture(InputNode As Node) As Fixture
     Dim newFixture As New Fixture
     
     If InputNode.NodeTypeID = NODE_TYPE_FIXTURE Then
@@ -217,7 +217,7 @@ Public Function ConvertToFixture(InputNode As node) As Fixture
     End If
     
 End Function
-Public Function ConvertToRiser(InputNode As node) As Riser
+Public Function ConvertToRiser(InputNode As Node) As Riser
     Dim newRiser As New Riser
     
     If InputNode.NodeTypeID = NODE_TYPE_RISER Then
@@ -231,7 +231,7 @@ Public Function ConvertToRiser(InputNode As node) As Riser
     End If
     
 End Function
-Public Function ConvertToManifold(InputNode As node) As Manifold
+Public Function ConvertToManifold(InputNode As Node) As Manifold
     Dim newManifold As New Manifold
     
     If InputNode.NodeTypeID = NODE_TYPE_MANIFOLD_PORT Then
@@ -507,7 +507,7 @@ End Sub
 Public Sub MatchEntities()
     Dim xPipe As Pipe
     Dim xNodeID As NodeID
-    Dim xNode As node
+    Dim xNode As Node
     Dim dblErrorElevation As Double
     Dim labelHasNode As Boolean
     Dim xTee As Tee
@@ -721,7 +721,7 @@ End Sub
 Public Sub LabelHeadsTees()
     Dim xPipe As Pipe
     Dim xNodeID As NodeID
-    Dim xNode As node
+    Dim xNode As Node
     Dim dblErrorElevation As Double
     Dim newNodeID As NodeID
     Dim block As IntelliCAD.blockInsert
@@ -803,7 +803,7 @@ End Sub
 
 Public Function LabelHeads(Optional StartNodeNumber As Variant) As Long
 'Returns last or highest head number
-    Dim xNode As node
+    Dim xNode As Node
     Dim block As IntelliCAD.blockInsert
     Dim indexHead As Long
     Dim layerheadlabels As IntelliCAD.layer
@@ -829,7 +829,7 @@ End Function
 
 Public Function LabelNodesByType(NodeTypeID As Long, layerName As String, BlockDwgName As String, NumberAttributeName As String, NodeNumberPrefix As String, Optional StartNodeNumber As Variant) As Long
 'Returns last or highest head number
-    Dim xNode As node
+    Dim xNode As Node
     Dim block As IntelliCAD.blockInsert
     Dim indexNode As Long
     Dim layerheadlabels As IntelliCAD.layer
@@ -857,7 +857,7 @@ Public Function LabelNodesByType(NodeTypeID As Long, layerName As String, BlockD
 End Function
 Public Function LabelTees(Optional StartNodeNumber As Variant) As Long
 'Returns highest tee node number
-    Dim xNode As node
+    Dim xNode As Node
     Dim block As IntelliCAD.blockInsert
     Dim indexTee As Long
   
@@ -985,7 +985,7 @@ Public Function GetStartPoint(InputLine As IntelliCAD.lwPolyline) As Variant
     
 End Function
 Public Sub ListNodes(InputCollection As Collection)
-    Dim xNode As node
+    Dim xNode As Node
     For Each xNode In InputCollection
         Debug.Print xNode.NodeNumber & ": " & xNode.name & ": " & xNode.NodeTypeID
     Next xNode
@@ -1729,7 +1729,7 @@ Public Sub ScanEntities() '(OutputFormat As String)
 Dim entity As IntelliCAD.entity
 Dim block As IntelliCAD.blockInsert
 
-Dim newNode As node
+Dim newNode As Node
 Dim newHead As Head
 Dim newPipe As Pipe
 Dim newTee As Tee
@@ -1782,7 +1782,7 @@ Dim strHeadModelCode As String
     entityIndex = 0
     For Each entity In ActiveDocument.ModelSpace
         entityIx = entityIx + 1
-        Set newNode = New node
+        Set newNode = New Node
                 
        debugTextE = debugTextE & vbCrLf & "Scanning Entity Index: " & entityIx & " " & entity.EntityName & " ID = " & entity.EntityType & " Layer = " & entity.layer & " Color = XXX"
        
@@ -1843,7 +1843,7 @@ Dim strHeadModelCode As String
         'Manifold Ports
         ElseIf entity.EntityName = "Point" Then
             Set point = entity
-            Set newNode = New node
+            Set newNode = New Node
             newNode.insertionPoint = point.Coordinates
             newNode.NodeNumber = nodeIndex
             newNode.name = "S.0"
@@ -1865,7 +1865,7 @@ Dim strHeadModelCode As String
                 Or block.name = "PlbgFix" _
                 Or block.name = "Tee" _
                 Or block.name = "FloorConnector" Then
-                Set newNode = New node
+                Set newNode = New Node
                 Set newTee = New Tee
                 
                 Set newNode.insertionPoint = block.insertionPoint
@@ -1902,7 +1902,7 @@ Dim strHeadModelCode As String
                 
             'New Heads
             ElseIf UCase(entity.layer) = UCase("Heads") Then
-                Set newNode = New node
+                Set newNode = New Node
 
                 Set newNode.insertionPoint = block.insertionPoint
                 
@@ -1918,7 +1918,7 @@ Dim strHeadModelCode As String
             'New Nodes, Heads & Tees
             ElseIf UCase(entity.layer) = UCase("0a__Heads") _
                 Or UCase(entity.layer) = UCase("Tees") Then
-                Set newNode = New node
+                Set newNode = New Node
                 'If we have a head, add it to the NewHeads Collection
                 '...but not if it's the manifold
                 
@@ -1937,7 +1937,7 @@ Dim strHeadModelCode As String
                 
             'Manifold / Source
             ElseIf UCase(entity.layer) = UCase("Manifold Ports") Then
-                Set newNode = New node
+                Set newNode = New Node
                 newNode.insertionPoint = entity.insertionPoint
                 newNode.NodeNumber = nodeIndex
                 newNode.NodeTypeID = NODE_TYPE_MANIFOLD_PORT
@@ -2926,7 +2926,7 @@ Public Function ExportObjects(Section As Long, OutputFormat As String)
 Dim strCalculationName As String
 
 Dim xPipe As Pipe
-Dim xNode As node
+Dim xNode As Node
 Dim xTee As Tee
 Dim xRiser As Riser
 Dim xHead As Head
@@ -5502,7 +5502,7 @@ Dim x As Long
 End Function
 Public Function ScanLineEndsAlmost()
 Dim xPipe As Pipe
-Dim xNode As node
+Dim xNode As Node
 Dim xHeadPair As HeadPair
 Dim lngStartAlmosts As Long
 Dim lngEndAlmosts As Long
@@ -5554,7 +5554,7 @@ Const MAX_DIST = 0.2
 End Function
 Public Function TestScanLineEnds()
 Dim xPipe As Pipe
-Dim xNode As node
+Dim xNode As Node
 Dim lngStartAlmosts As Long
 Dim lngEndAlmosts As Long
 Dim dblStartDistance As Double

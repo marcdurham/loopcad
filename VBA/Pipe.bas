@@ -13,8 +13,8 @@ Public actualLen As Double
 Public roundedLen As Double
 Public PipeNumber As Long
 Public Diameter As Double
-Public StartNode As node
-Public EndNode As node
+Public StartNode As Node
+Public EndNode As Node
 Public name As String
 Public polyline As IntelliCAD.lwPolyline
 Public Vertexes As Collection

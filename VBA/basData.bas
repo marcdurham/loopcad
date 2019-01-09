@@ -233,7 +233,7 @@ End Function
 
 Public Function AddNodes(nodes As Collection, CalculationName As String, CalculationID As Long)
     Dim rsNode As New ADODB.Recordset
-    Dim xNode As node
+    Dim xNode As Node
     Dim manifoldDone As Boolean
     
     With rsNode
@@ -521,7 +521,7 @@ End Function
 
 Public Function AddRisers(nodes As Collection, CalculationName As String, CalculationID As Long)
     Dim rsNode As New ADODB.Recordset
-    Dim xNode As node
+    Dim xNode As Node
     
     With rsNode
         .CursorLocation = adUseClient
@@ -854,7 +854,7 @@ End Function
 
 
 Public Function SaveNodesXML(nodes As Collection) As String
-Dim xNode As node
+Dim xNode As Node
 Dim manifoldDone As Boolean
  Dim strXMLDoc As String
 Dim strNodeRow As String
@@ -892,7 +892,7 @@ NextxNode:
     
 End Function
 Public Function SaveJobXML(InputJob As Job) As String
-Dim xNode As node
+Dim xNode As Node
 Dim manifoldDone As Boolean
  Dim strXMLDoc As String
 Dim strJobDataRow As String
@@ -918,7 +918,7 @@ Dim strJobDataRow As String
 End Function
 
 Public Function FSDXNodes(nodes As Collection) As String
-Dim xNode As node
+Dim xNode As Node
 Dim manifoldDone As Boolean
  Dim strXMLDoc As String
 Dim strNodeRow As String
@@ -1043,7 +1043,7 @@ Failure:
 
 End Function
 Public Function FSDXJob(InputJob As Job) As String
-Dim xNode As node
+Dim xNode As Node
 Dim manifoldDone As Boolean
  Dim strXMLDoc As String
 Dim strJobDataRow As String
