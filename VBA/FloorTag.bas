@@ -9,4 +9,4 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Public insertionPoint As Variant
 Public elevation As Double
-Public name As String
+Public Name As String

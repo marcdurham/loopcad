@@ -1,7 +1,7 @@
 Attribute VB_Name = "ReferenceDlls"
 Option Explicit
 
-Sub AddReference(path As String, name As String)
+Sub AddReference(path As String, Name As String)
     Dim VBAEditor As VBIDE.VBE
     Dim vbProj As VBIDE.VBProject
     Dim chkRef As VBIDE.Reference
@@ -12,7 +12,7 @@ Sub AddReference(path As String, name As String)
     Set vbProj = VBAEditor.ActiveVBProject
 
     For Each chkRef In vbProj.References
-        If chkRef.name = name Then
+        If chkRef.Name = Name Then
             BoolExists = True
             GoTo CleanUp
         End If

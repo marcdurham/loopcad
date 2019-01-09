@@ -11,7 +11,7 @@ Public Sub TestGetElevationBoxFloorTag()
     Dim str As String
     Dim p  As Variant
     p = ActiveDocument.Utility.GetPoint(, "Click where you want the test point.")
-    str = GetElevationBoxFloorTag(p).name
+    str = GetElevationBoxFloorTag(p).Name
     Debug.Print "You clicked Floor Tag " & str
 
 End Sub

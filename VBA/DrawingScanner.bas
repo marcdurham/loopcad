@@ -47,7 +47,7 @@ Public Sub Scan(Optional outputFilePath As Variant)
     Set documentElem = objDoc.createElement("Document")
     objRoot.appendChild documentElem
     documentElem.setAttribute "FullName", ActiveDocument.FullName
-    documentElem.setAttribute "Name", ActiveDocument.name
+    documentElem.setAttribute "Name", ActiveDocument.Name
     documentElem.setAttribute "Path", ActiveDocument.path
     
     Set layersElem = objDoc.createElement("Layers")
@@ -72,7 +72,7 @@ Public Sub Scan(Optional outputFilePath As Variant)
     For Each block In ActiveDocument.Blocks
         Set blockElem = objDoc.createElement("Block")
         blocksElem.appendChild blockElem
-        blockElem.setAttribute "Name", block.name
+        blockElem.setAttribute "Name", block.Name
         blockElem.setAttribute "IsLayout", block.IsLayout
         blockElem.setAttribute "IsXRef", block.IsXRef
         
@@ -172,7 +172,7 @@ Public Sub CheckBlockInsert(ent As IntelliCAD.entity, objDoc As MSXML2.DOMDocume
         Set blkInsert = ent
         Set blockInsertElem = objDoc.createElement("BlockInsert")
         objRoot.appendChild blockInsertElem
-        blockInsertElem.setAttribute "Name", blkInsert.name
+        blockInsertElem.setAttribute "Name", blkInsert.Name
         blockInsertElem.setAttribute "Layer", blkInsert.layer
         blockInsertElem.setAttribute "Color", blkInsert.Color.ColorIndex
         blockInsertElem.setAttribute "Rotation", blkInsert.Rotation
@@ -461,7 +461,7 @@ Public Sub CheckTextStyles(txtSty As IntelliCAD.textStyle, objDoc As MSXML2.DOMD
     Set textStyleElem = objDoc.createElement("TextStyle")
     objRoot.appendChild textStyleElem
     
-    textStyleElem.setAttribute "Name", txtSty.name
+    textStyleElem.setAttribute "Name", txtSty.Name
     textStyleElem.setAttribute "Width", txtSty.Width
     textStyleElem.setAttribute "Height", txtSty.Height
     textStyleElem.setAttribute "FontFile", txtSty.FontFile
@@ -474,7 +474,7 @@ Public Sub CheckLayers(layer As IntelliCAD.layer, objDoc As MSXML2.DOMDocument60
     
     Set layerElem = objDoc.createElement("Layer")
     objRoot.appendChild layerElem
-    layerElem.setAttribute "Name", layer.name
+    layerElem.setAttribute "Name", layer.Name
     layerElem.setAttribute "ColorIndex", layer.Color.ColorIndex
     layerElem.setAttribute "ColorMethod", layer.Color.ColorMethod
     layerElem.setAttribute "EntityColor", layer.Color.EntityColor

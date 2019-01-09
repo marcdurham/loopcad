@@ -89,7 +89,7 @@ Dim i As Integer
         Set entit = ActiveDocument.ModelSpace(i)
         If entit.EntityName = "BlockInsert" Then
             Set block = entit
-            If block.name = "JobData" Then
+            If block.Name = "JobData" Then
             
               
     SetAttrib block, "CALCULATED_BY_COMPANY", Job.CalculatedByCompany

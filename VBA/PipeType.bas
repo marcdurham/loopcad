@@ -8,7 +8,7 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Public Color As Long
-Public name As String
+Public Name As String
 Public TotalLength As Double
 Public InternalDiameter As Double
 Public NominalDiameter As Double

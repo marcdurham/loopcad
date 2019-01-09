@@ -9,7 +9,7 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Public insertionPoint As Variant
 Public NodeNumber As Long
-Public name As String
+Public Name As String
 'Public Model As String
 Public elevation As Double
 Public NodeTypeID As Long

@@ -8,6 +8,6 @@ Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Public insertionPoint As Variant
-Public name As String
+Public Name As String
 Public elevation As Double
 

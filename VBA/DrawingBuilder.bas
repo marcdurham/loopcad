@@ -257,7 +257,7 @@ Public Sub BuildBlockInsert(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.bloc
         Set point = BuildPoint(pointNode)
         blockName = nodeItem.selectSingleNode("@Name").text
         
-        If block.name = "*Model_Space" Then
+        If block.Name = "*Model_Space" Then
             Set blockInsert = ActiveDocument.ModelSpace.InsertBlock( _
             point, _
             blockName, _

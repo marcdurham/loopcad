@@ -27,7 +27,7 @@ Public Sub ChangeHeadModel(FromModel As String, ToModel As String)
     For Each entity In ActiveDocument.ModelSpace
         If entity.EntityName = "BlockInsert" Then
             Set block = entity
-            If block.name = FromModel Then
+            If block.Name = FromModel Then
                 Set newBlock = ActiveDocument.ModelSpace.InsertBlock(block.insertionPoint, ToModel, 1, 1, 1, 0)
                 newBlock.layer = "0a__Heads"
                 block.Delete
@@ -52,8 +52,8 @@ Public Sub listHeadModels(model As String)
     For Each entity In ActiveDocument.ModelSpace
         If entity.EntityName = "BlockInsert" Then
             Set block = entity
-            If UCase(block.name) Like UCase(model) Then
-                Debug.Print "Head " & i & " " & block.name
+            If UCase(block.Name) Like UCase(model) Then
+                Debug.Print "Head " & i & " " & block.Name
                 i = i + 1
             End If
         End If

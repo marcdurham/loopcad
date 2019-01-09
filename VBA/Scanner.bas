@@ -75,14 +75,14 @@ Dim yFloorPoint As Variant '(0 To 2) As Double
         For Each xRiser In Risers
             '''If xRiser.Name Like "*.L" Then '**** test only
                 xFloorPoint = FloorCoordinates(xRiser.insertionPoint)
-                Debug.Print xRiser.name & ": Relative " & xFloorPoint(0) & ", " & xFloorPoint(1) & " Absolute " & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y
+                Debug.Print xRiser.Name & ": Relative " & xFloorPoint(0) & ", " & xFloorPoint(1) & " Absolute " & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y
                 For Each yRiser In Risers
                     yFloorPoint = FloorCoordinates(yRiser.insertionPoint)
                     'If xFloorPoint(0) = yFloorPoint(0) And xFloorPoint(1) = yFloorPoint(1) Then
                     'Debug.Print vbTab & yRiser.Name & ": Relative " & yFloorPoint(0) & ", " & yFloorPoint(1) & " Absolute " & yRiser.InsertionPoint.x & ", " & yRiser.InsertionPoint.y
                     '''If yRiser.Name Like "*.L" Then
                         If PointsMatchAlmost(xFloorPoint, yFloorPoint) Then
-                            Debug.Print vbTab & "matches " & yRiser.name
+                            Debug.Print vbTab & "matches " & yRiser.Name
                         End If
                     '''End If '****** test only
                 Next yRiser
@@ -145,7 +145,7 @@ Dim vItem As Variant
     bResult = False
     
     For Each vItem In InputCollection
-        If vItem.name = Match.name Then
+        If vItem.Name = Match.Name Then
             bResult = True
             Exit For
         End If
@@ -160,7 +160,7 @@ Dim vItem As Variant
     bResult = False
     
     For Each vItem In InputCollection
-        If vItem.name = MatchName Then
+        If vItem.Name = MatchName Then
             bResult = True
             Exit For
         End If
@@ -177,7 +177,7 @@ Public Function ConvertToHead(InputNode As Node) As Head
         newHead.elevation = InputNode.elevation
         Set newHead.insertionPoint = InputNode.insertionPoint
         newHead.model = InputNode.model
-        newHead.name = InputNode.name
+        newHead.Name = InputNode.Name
         newHead.NodeNumber = InputNode.NodeNumber
         Set ConvertToHead = newHead
     Else
@@ -194,7 +194,7 @@ Public Function ConvertToTee(InputNode As Node) As Tee
         newTee.elevation = InputNode.elevation
         Set newTee.insertionPoint = InputNode.insertionPoint
         newTee.model = InputNode.model
-        newTee.name = InputNode.name
+        newTee.Name = InputNode.Name
         newTee.NodeNumber = InputNode.NodeNumber
         Set ConvertToTee = newTee
     Else
@@ -209,7 +209,7 @@ Public Function ConvertToFixture(InputNode As Node) As Fixture
         newFixture.elevation = InputNode.elevation
         newFixture.insertionPoint = InputNode.insertionPoint
         newFixture.model = InputNode.model
-        newFixture.name = InputNode.name
+        newFixture.Name = InputNode.Name
         newFixture.NodeNumber = InputNode.NodeNumber
         Set ConvertToFixture = newFixture
     Else
@@ -223,7 +223,7 @@ Public Function ConvertToRiser(InputNode As Node) As Riser
     If InputNode.NodeTypeID = NODE_TYPE_RISER Then
         newRiser.elevation = InputNode.elevation
         Set newRiser.insertionPoint = InputNode.insertionPoint
-        newRiser.name = InputNode.name
+        newRiser.Name = InputNode.Name
         newRiser.NodeNumber = InputNode.NodeNumber
         Set ConvertToRiser = newRiser
     Else
@@ -237,7 +237,7 @@ Public Function ConvertToManifold(InputNode As Node) As Manifold
     If InputNode.NodeTypeID = NODE_TYPE_MANIFOLD_PORT Then
         newManifold.elevation = InputNode.elevation
         Set newManifold.insertionPoint = InputNode.insertionPoint
-        newManifold.name = InputNode.name
+        newManifold.Name = InputNode.Name
         newManifold.NodeNumber = InputNode.NodeNumber
         Set ConvertToManifold = newManifold
     Else
@@ -257,9 +257,9 @@ Dim xHeadLabel As IntelliCAD.blockInsert
         If TypeOf xObject Is IntelliCAD.blockInsert Then
             Set xHeadLabel = xObject
             If UCase(xHeadLabel.layer) = UCase("HeadLabels") _
-            Or UCase(xHeadLabel.name) = UCase("HeadLabel") _
+            Or UCase(xHeadLabel.Name) = UCase("HeadLabel") _
             Or UCase(xHeadLabel.layer) = UCase("0b__Head_IDs") _
-            Or UCase(xHeadLabel.name) = UCase("HeadID") Then deleteLabels.Add xHeadLabel
+            Or UCase(xHeadLabel.Name) = UCase("HeadID") Then deleteLabels.Add xHeadLabel
         End If
     Next lngObjectIndex
     
@@ -279,7 +279,7 @@ Dim xTeeLabel As IntelliCAD.blockInsert
     
         If TypeOf xObject Is IntelliCAD.blockInsert Then
             Set xTeeLabel = xObject
-            If UCase(xTeeLabel.layer) = UCase("TeeLabels") Or UCase(xTeeLabel.name) = UCase("TeeLabel") Then deleteLabels.Add xTeeLabel
+            If UCase(xTeeLabel.layer) = UCase("TeeLabels") Or UCase(xTeeLabel.Name) = UCase("TeeLabel") Then deleteLabels.Add xTeeLabel
         End If
     Next lngObjectIndex
     
@@ -299,7 +299,7 @@ Dim xRiserLabel As IntelliCAD.blockInsert
     
         If TypeOf xObject Is IntelliCAD.blockInsert Then
             Set xRiserLabel = xObject
-            If UCase(xRiserLabel.layer) = UCase("RiserLabels") Or UCase(xRiserLabel.name) = UCase("RiserLabel") Then deleteLabels.Add xRiserLabel
+            If UCase(xRiserLabel.layer) = UCase("RiserLabels") Or UCase(xRiserLabel.Name) = UCase("RiserLabel") Then deleteLabels.Add xRiserLabel
         End If
     Next lngObjectIndex
     
@@ -392,7 +392,7 @@ Dim midPoint As Variant
                             iXm = midPoint(0)
                             iYm = midPoint(1)
                             ''2011-06-16 MLD'''Debug.Print vbTab & iXa & ", " & iYa & " > " & iXb & ", " & iYb & " MidPoint = " & iXm & ", " & iYm
-                            DrawOneLabel iXm, iYm, InputPipe.name, InputPipe.polyline.Color
+                            DrawOneLabel iXm, iYm, InputPipe.Name, InputPipe.polyline.Color
                         End If
                     Else
                         MsgBox "This polyline does not have enough points!"
@@ -533,11 +533,11 @@ Public Sub MatchEntities()
                 If xNodeID.insertionPoint.y = xNode.insertionPoint.y _
                     And xNodeID.insertionPoint.Z = xNode.insertionPoint.Z _
                     And xNodeID.insertionPoint.x = xNode.insertionPoint.x Then
-                    xNode.name = xNodeID.name
+                    xNode.Name = xNodeID.Name
                     If xNode.NodeTypeID = NODE_TYPE_HEAD Then
                         'TODO: newHead.Model = Entit.Name
                         If Not CollectionContainsName(Heads, xNode) Then
-                            Heads.Add ConvertToHead(xNode), xNodeID.name
+                            Heads.Add ConvertToHead(xNode), xNodeID.Name
                         End If
                         
                     ElseIf xNode.NodeTypeID = NODE_TYPE_TEE Then
@@ -574,7 +574,7 @@ Public Sub MatchEntities()
                     'Debug.Print "Pipe Match " & xPipe.PipeNumber & " " & xPipe.ActualLength & " Node: " & xNode.Name
                     Set xPipe.StartNode = xNode
             ElseIf PointsMatchAlmost(xNode.insertionPoint, xPipe.startPoint, 0.01) Then
-                Debug.Print "Pipe Point Match Almost " & xPipe.PipeNumber & " " & xPipe.ActualLength & " Node: " & xNode.name
+                Debug.Print "Pipe Point Match Almost " & xPipe.PipeNumber & " " & xPipe.ActualLength & " Node: " & xNode.Name
                 '2014'ErrorCircle xNode.InsertionPoint, 130, "Almost " & xPipe.Name, 0.111, 0.211, 0.311
             End If
             If xNode.insertionPoint.x = xPipe.endPoint(0) _
@@ -582,14 +582,14 @@ Public Sub MatchEntities()
                     'Debug.Print "Pipe Match " & xPipe.PipeNumber & " " & xPipe.ActualLength & " Node: " & xNode.Name
                     Set xPipe.EndNode = xNode
             ElseIf PointsMatchAlmost(xNode.insertionPoint, xPipe.endPoint, 0.01) Then
-                Debug.Print "Pipe Point Match Almost " & xPipe.PipeNumber & " " & xPipe.ActualLength & " Node: " & xNode.name
+                Debug.Print "Pipe Point Match Almost " & xPipe.PipeNumber & " " & xPipe.ActualLength & " Node: " & xNode.Name
                 '2014'ErrorCircle xNode.InsertionPoint, 130, "Almost " & xPipe.Name, 0.111, 0.211, 0.311
             End If
             
         Next xPipe
         
         'Error in node name
-        If Trim(xNode.name) = "" Then
+        If Trim(xNode.Name) = "" Then
             dblErrorElevation = PointElevation(xNode.insertionPoint)
             Debug.Print "Missing Name at " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", " & xNode.insertionPoint.Z & ", Elevation = " & dblErrorElevation & " make sure the insertion point of the Head or Tee label lines up with the head or tee itself."
             '2014'ErrorCircle xNode.InsertionPoint, Colors.vicCyan, "Missing Name"
@@ -634,7 +634,7 @@ Public Sub MatchEntities()
     
     teeIndex = 1
     For Each xTee In Tees
-        If xTee.name = "S.0" Then
+        If xTee.Name = "S.0" Then
             Tees.Remove teeIndex
         End If
         teeIndex = teeIndex + 1
@@ -642,7 +642,7 @@ Public Sub MatchEntities()
     
     'Change any tee named "S.0" to a manifold port
     For Each xNode In nodes
-        If xNode.name = "S.0" And xNode.NodeTypeID <> NODE_TYPE_MANIFOLD_PORT Then
+        If xNode.Name = "S.0" And xNode.NodeTypeID <> NODE_TYPE_MANIFOLD_PORT Then
             xNode.NodeTypeID = NODE_TYPE_MANIFOLD_PORT
             If Not CollectionContainsName(ManifoldNodes, xNode) Then
                 ManifoldNodes.Add ConvertToManifold(xNode)
@@ -765,7 +765,7 @@ Public Sub LabelHeadsTees()
             
         
         'Error in node name
-        If Trim(xNode.name) = "" Then
+        If Trim(xNode.Name) = "" Then
             '''dblErrorElevation = PointElevation(xNode.InsertionPoint)
             ''''Debug.Print "Missing Name at " & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y & ", " & xNode.InsertionPoint.z & ", Elevation = " & dblErrorElevation & " make sure the insertion point of the Head or Tee label lines up with the head or tee itself."
             '''ErrorCircle xNode.InsertionPoint, Colors.vicCyan, "Missing Name"
@@ -789,7 +789,7 @@ Public Sub LabelHeadsTees()
             
         
         'Error in node name
-        If Trim(xNode.name) = "" Then
+        If Trim(xNode.Name) = "" Then
             '''dblErrorElevation = PointElevation(xNode.InsertionPoint)
             ''''Debug.Print "Missing Name at " & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y & ", " & xNode.InsertionPoint.z & ", Elevation = " & dblErrorElevation & " make sure the insertion point of the Head or Tee label lines up with the head or tee itself."
             '''ErrorCircle xNode.InsertionPoint, Colors.vicCyan, "Missing Name"
@@ -987,7 +987,7 @@ End Function
 Public Sub ListNodes(InputCollection As Collection)
     Dim xNode As Node
     For Each xNode In InputCollection
-        Debug.Print xNode.NodeNumber & ": " & xNode.name & ": " & xNode.NodeTypeID
+        Debug.Print xNode.NodeNumber & ": " & xNode.Name & ": " & xNode.NodeTypeID
     Next xNode
 End Sub
 
@@ -1001,14 +1001,14 @@ Public Sub ListPipes(InputCollection As Collection)
         If xPipe.StartNode Is Nothing Then
             strStartName = "Error"
         Else
-            strStartName = xPipe.StartNode.name
+            strStartName = xPipe.StartNode.Name
         End If
         If xPipe.EndNode Is Nothing Then
             strEndName = "Error"
         Else
-            strEndName = xPipe.EndNode.name
+            strEndName = xPipe.EndNode.Name
         End If
-        Debug.Print xPipe.PipeNumber & ": " & xPipe.name & " Start: " & strStartName & " End: " & strEndName
+        Debug.Print xPipe.PipeNumber & ": " & xPipe.Name & " Start: " & strStartName & " End: " & strEndName
     Next xPipe
     
 End Sub
@@ -1024,7 +1024,7 @@ Dim v As Variant
     If Not Col Is Nothing Then
         If Col.Count > 0 Then
             For Each v In Col
-                Debug.Print "Name = " & v.name '& " " & v.InsertionPoint.x & ", " & v.InsertionPoint.y
+                Debug.Print "Name = " & v.Name '& " " & v.InsertionPoint.x & ", " & v.InsertionPoint.y
             Next v
         Else
             Debug.Print "Collection.Count = " & Col.Count
@@ -1142,8 +1142,8 @@ Public Sub ScanNodeLabels(NodePrefix As String, NewPrefix As String)
     End If
     
     For Each nodeLabel In NodeIDs
-        If Mid(nodeLabel.name, 1, 2) = NodePrefix Then
-            Debug.Print "nodeLabel " & nodeLabel.name
+        If Mid(nodeLabel.Name, 1, 2) = NodePrefix Then
+            Debug.Print "nodeLabel " & nodeLabel.Name
         End If
         
     Next nodeLabel
@@ -1274,7 +1274,7 @@ Dim v As Variant
 lngIndex = 0
 lngLowestIndex = 0
     For Each v In InputCollection
-        lngIndex = ExtractLong(v.name)
+        lngIndex = ExtractLong(v.Name)
         If lngIndex < lngLowestIndex Then lngLowestIndex = lngIndex
         If lngIndex > lngHighestIndex Then lngHighestIndex = lngIndex
     Next v
@@ -1282,7 +1282,7 @@ lngLowestIndex = 0
     nextIndex = lngLowestIndex
     While nextIndex <= lngHighestIndex
         For Each v In InputCollection
-            lngIndex = ExtractLong(v.name)
+            lngIndex = ExtractLong(v.Name)
             If lngIndex = nextIndex Then
                 ReturnCol.Add v
                 Exit For
@@ -1483,13 +1483,13 @@ Public Function MeasureAllPipe2() As Long
             'RFC431616-155
             
             'Fittings, Risers
-            If entit.name = "PipeFitting" _
-                Or entit.name = "vpilc" Then
+            If entit.Name = "PipeFitting" _
+                Or entit.Name = "vpilc" Then
                 Set newHead = New Head
                 newHead.insertionPoint = entit.insertionPoint
                 newHead.NodeNumber = headIndex
-                If entit.name = "vpilc" Then
-                    newHead.name = "R." & riserIndex
+                If entit.Name = "vpilc" Then
+                    newHead.Name = "R." & riserIndex
                     riserIndex = riserIndex + 1
                 End If
                 Heads.Add newHead
@@ -1499,15 +1499,15 @@ Public Function MeasureAllPipe2() As Long
             
             'Heads
             ElseIf UCase(entit.layer) = UCase("0a__Heads") Then
-                Debug.Print "Head " & headIndex & " " & entit.name
+                Debug.Print "Head " & headIndex & " " & entit.Name
                 
                 'If we have a head, add it to the Heads Collection
                 '...but not if it's the manifold
-                If UCase(entit.name) <> UCase("Manifold_Info") Then
+                If UCase(entit.Name) <> UCase("Manifold_Info") Then
                     Set newHead = New Head
                     newHead.insertionPoint = entit.insertionPoint
                     newHead.NodeNumber = headIndex
-                    newHead.model = entit.name
+                    newHead.model = entit.Name
                     Heads.Add newHead
                 End If
                 
@@ -1534,7 +1534,7 @@ Public Function MeasureAllPipe2() As Long
             'Head IDs
             ElseIf UCase(entit.layer) = UCase("0b__Head_IDs") Then
                 newHeadIDPoint = entit.insertionPoint
-                Debug.Print "Head ID " & entit.name & "  " & entit.Handle
+                Debug.Print "Head ID " & entit.Name & "  " & entit.Handle
                 att = entit.GetAttributes()
                 'Debug.Print vbTab & (att.Count - 1)
                 'Dim head_att_no As Long
@@ -1547,7 +1547,7 @@ Public Function MeasureAllPipe2() As Long
                         
                         If att(head_att_no).TagString = "VALUE" Then
                             Set newHeadID = New HeadID
-                            newHeadID.name = att(head_att_no).TextString
+                            newHeadID.Name = att(head_att_no).TextString
                             newHeadID.insertionPoint = newHeadIDPoint 'att(head_att_no).InsertionPoint
                             nodes.Add newHeadID
                         End If
@@ -1632,13 +1632,13 @@ Public Function MeasureAllPipe() As Long
             'RFC431616-155
             
             'Fittings, Risers
-            If entit.name = "PipeFitting" _
-                Or entit.name = "vpilc" Then
+            If entit.Name = "PipeFitting" _
+                Or entit.Name = "vpilc" Then
                 Set newHead = New Head
                 newHead.insertionPoint = entit.insertionPoint
                 newHead.NodeNumber = headIndex
-                If entit.name = "vpilc" Then
-                    newHead.name = "R." & riserIndex
+                If entit.Name = "vpilc" Then
+                    newHead.Name = "R." & riserIndex
                     riserIndex = riserIndex + 1
                 End If
                 Heads.Add newHead
@@ -1648,15 +1648,15 @@ Public Function MeasureAllPipe() As Long
             
             'Heads
             ElseIf UCase(entit.layer) = UCase("0a__Heads") Then
-                Debug.Print "Head " & headIndex & " " & entit.name
+                Debug.Print "Head " & headIndex & " " & entit.Name
                 
                 'If we have a head, add it to the Heads Collection
                 '...but not if it's the manifold
-                If entit.name <> "Manifold_Info" Then
+                If entit.Name <> "Manifold_Info" Then
                     Set newHead = New Head
                     newHead.insertionPoint = entit.insertionPoint
                     newHead.NodeNumber = headIndex
-                    newHead.model = entit.name
+                    newHead.model = entit.Name
                     Heads.Add newHead
                 End If
                 
@@ -1683,7 +1683,7 @@ Public Function MeasureAllPipe() As Long
             'Head IDs
             ElseIf UCase(entit.layer) = UCase("0b__Head_IDs") Then
                 newHeadIDPoint = entit.insertionPoint
-                Debug.Print "Head ID " & entit.name & "  " & entit.Handle
+                Debug.Print "Head ID " & entit.Name & "  " & entit.Handle
                 att = entit.GetAttributes()
                 'Debug.Print vbTab & (att.Count - 1)
                 'Dim head_att_no As Long
@@ -1696,7 +1696,7 @@ Public Function MeasureAllPipe() As Long
                         
                         If att(head_att_no).TagString = "VALUE" Then
                             Set newHeadID = New HeadID
-                            newHeadID.name = att(head_att_no).TextString
+                            newHeadID.Name = att(head_att_no).TextString
                             newHeadID.insertionPoint = newHeadIDPoint 'att(head_att_no).InsertionPoint
                             nodes.Add newHeadID
                         End If
@@ -1810,7 +1810,7 @@ Dim strHeadModelCode As String
                     newPipe.ActualLength = pipeLength
                     newPipe.Diameter = PipeDiameterOfColor(polyline.Color, entity.layer)
                     newPipe.PipeNumber = pipeIndex
-                    newPipe.name = "P" & pipeIndex
+                    newPipe.Name = "P" & pipeIndex
                     
                     
                     newPipe.startPoint = GetStartPoint(polyline)
@@ -1846,7 +1846,7 @@ Dim strHeadModelCode As String
             Set newNode = New Node
             newNode.insertionPoint = point.Coordinates
             newNode.NodeNumber = nodeIndex
-            newNode.name = "S.0"
+            newNode.Name = "S.0"
             
             newNode.NodeTypeID = NODE_TYPE_MANIFOLD_PORT
             nodes.Add newNode
@@ -1860,35 +1860,35 @@ Dim strHeadModelCode As String
             Set block = entity
             
             'Fittings, Risers
-            If block.name = "PipeFitting" _
-                Or block.name = "vpilc" _
-                Or block.name = "PlbgFix" _
-                Or block.name = "Tee" _
-                Or block.name = "FloorConnector" Then
+            If block.Name = "PipeFitting" _
+                Or block.Name = "vpilc" _
+                Or block.Name = "PlbgFix" _
+                Or block.Name = "Tee" _
+                Or block.Name = "FloorConnector" Then
                 Set newNode = New Node
                 Set newTee = New Tee
                 
                 Set newNode.insertionPoint = block.insertionPoint
                 newNode.NodeNumber = nodeIndex
                 
-                If block.name = "vpilc" Then
-                    newNode.name = "R." & riserIndex & "." & GetAttrib(block, "VPIPE")
+                If block.Name = "vpilc" Then
+                    newNode.Name = "R." & riserIndex & "." & GetAttrib(block, "VPIPE")
                     newNode.NodeTypeID = NODE_TYPE_RISER
                     riserIndex = riserIndex + 1     'Since these are numbered by this Scanner, we want to make sure they are unique
                 
-                ElseIf block.name = "FloorConnector" Then
-                    newNode.name = "R." & riserIndex
+                ElseIf block.Name = "FloorConnector" Then
+                    newNode.Name = "R." & riserIndex
                     newNode.NodeTypeID = NODE_TYPE_RISER
                     riserIndex = riserIndex + 1     'Since these are numbered by this Scanner, we want to make sure they are unique
                     
-                ElseIf block.name = "PlbgFix" Then
+                ElseIf block.Name = "PlbgFix" Then
                     Set newNodeID = New NodeID
-                    newNodeID.name = GetAttrib(block, "SHOWVALUE")
+                    newNodeID.Name = GetAttrib(block, "SHOWVALUE")
                     newNodeID.insertionPoint = block.insertionPoint
                     NodeIDs.Add newNodeID
 
                     newNode.NodeTypeID = NODE_TYPE_FIXTURE
-                    newNode.name = newNodeID.name
+                    newNode.Name = newNodeID.Name
                     
                     fixtureIndex = fixtureIndex + 1
                 
@@ -1923,11 +1923,11 @@ Dim strHeadModelCode As String
                 '...but not if it's the manifold
                 
                 'Heads & Tees:                              They are distinguished from each other by the MatchEntities() function.
-                If entity.name <> "Manifold_Info" Then
+                If entity.Name <> "Manifold_Info" Then
                     'This is/should be a head
                     newNode.insertionPoint = entity.insertionPoint
                     newNode.NodeNumber = nodeIndex
-                    newNode.model = entity.name
+                    newNode.model = entity.Name
                     newNode.NodeTypeID = NODE_TYPE_HEAD
 
                     nodes.Add newNode
@@ -1951,14 +1951,14 @@ Dim strHeadModelCode As String
             'NodeIDs:                                       These are matched to Heads and Tees, after ScanEntities, by the MatchEntities() function.
             ElseIf UCase(entity.layer) = UCase("0b__Head_IDs") Then
                 Set newNodeID = New NodeID
-                newNodeID.name = GetAttrib(entity, "VALUE")
+                newNodeID.Name = GetAttrib(entity, "VALUE")
                 newNodeID.insertionPoint = entity.insertionPoint
                 NodeIDs.Add newNodeID
                 
             'HeadLabels (New replacement for nodeid)
-            ElseIf UCase(block.name) = UCase("HeadLabel") Then
+            ElseIf UCase(block.Name) = UCase("HeadLabel") Then
                 Set newNodeID = New NodeID
-                newNodeID.name = GetAttrib(entity, "HEADNUMBER")
+                newNodeID.Name = GetAttrib(entity, "HEADNUMBER")
                 Set newNodeID.insertionPoint = block.insertionPoint
                 NodeIDs.Add newNodeID
                 If UCase(entity.layer) <> UCase("HeadLabels") Then
@@ -1966,9 +1966,9 @@ Dim strHeadModelCode As String
                 End If
                 
             'TeeLabels (New replacement for nodeid)
-            ElseIf UCase(block.name) = UCase("TeeLabel") Then
+            ElseIf UCase(block.Name) = UCase("TeeLabel") Then
                 Set newNodeID = New NodeID
-                newNodeID.name = GetAttrib(entity, "TEENUMBER")
+                newNodeID.Name = GetAttrib(entity, "TEENUMBER")
                 Set newNodeID.insertionPoint = block.insertionPoint
                 NodeIDs.Add newNodeID
                 If UCase(entity.layer) <> UCase("TeeLabels") Then
@@ -1976,9 +1976,9 @@ Dim strHeadModelCode As String
                 End If
                 
             'RiserLabels (New replacement for nodeid)
-            ElseIf UCase(block.name) = UCase("RiserLabel") Then
+            ElseIf UCase(block.Name) = UCase("RiserLabel") Then
                 Set newNodeID = New NodeID
-                newNodeID.name = GetAttrib(entity, "RISERNUMBER")
+                newNodeID.Name = GetAttrib(entity, "RISERNUMBER")
                 Set newNodeID.insertionPoint = block.insertionPoint
                 NodeIDs.Add newNodeID
                 If UCase(entity.layer) <> UCase("RiserLabels") Then
@@ -1992,15 +1992,15 @@ Dim strHeadModelCode As String
 '                Job.LeadN = GetAttrib(entity, "LEAD_NUMBER")
                 
             'Floor Tags
-            ElseIf UCase(block.name) = UCase("FloorTag") Then
+            ElseIf UCase(block.Name) = UCase("FloorTag") Then
                 Set newFloorTag = New FloorTag
                 Set newFloorTag.insertionPoint = block.insertionPoint
-                newFloorTag.name = GetAttrib(entity, "NAME")
+                newFloorTag.Name = GetAttrib(entity, "NAME")
                 newFloorTag.elevation = GetAttrib(entity, "ELEVATION")
                 FloorTags.Add newFloorTag
             
             'Floor Connector
-            ElseIf UCase(block.name) = UCase("FloorConnector") Then
+            ElseIf UCase(block.Name) = UCase("FloorConnector") Then
                 Set newFloorConnector = New FloorConnector
                 FloorConnectors.Add newFloorConnector
             
@@ -2023,7 +2023,7 @@ Dim entitIndex As Long
     entitIndex = 0
     For Each entit In ActiveDocument.ModelSpace
         If entit.EntityName = "BlockInsert" Then
-            If UCase(entit.name) = UCase("vpilc") Then
+            If UCase(entit.Name) = UCase("vpilc") Then
             'If entit.Layer = "0e__Pipes" Then
                 Debug.Print "Found one"
                 'ScanAttrib Entit
@@ -2327,7 +2327,7 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
                 newPipe.ActualLength = pipeLength
                 newPipe.Diameter = PipeDiameterOfColor(entit.Color, entit.layer)
                 newPipe.PipeNumber = entitIndex
-                newPipe.name = "P" & entitIndex
+                newPipe.Name = "P" & entitIndex
                 lngLastCoord = ((entit.Coordinates.Count - 1) - 1) / 2
                 newPipe.endPoint = entit.Coordinate(lngLastCoord)
                 newPipe.startPoint = entit.Coordinate(0)
@@ -2355,14 +2355,14 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             Set b = entit
             
             'Fittings, Risers
-            If b.name = "PipeFitting" _
-                Or b.name = "vpilc" Then
+            If b.Name = "PipeFitting" _
+                Or b.Name = "vpilc" Then
                 Set newTee = New Head
                 newTee.insertionPoint = b.insertionPoint
                 newTee.NodeNumber = headIndex
                 
-                If entit.name = "vpilc" Then
-                    newTee.name = "R." & riserIndex & "." & GetAttrib(entit, "VPIPE")
+                If entit.Name = "vpilc" Then
+                    newTee.Name = "R." & riserIndex & "." & GetAttrib(entit, "VPIPE")
                     newTee.insertionPoint = b.insertionPoint
                     
 
@@ -2382,12 +2382,12 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
                 
                 'If we have a head, add it to the NewHeads Collection
                 '...but not if it's the manifold
-                If UCase(entit.name) <> UCase("Manifold_Info") Then
+                If UCase(entit.Name) <> UCase("Manifold_Info") Then
                     'This is/should be a head
                     '''Set newHead = New Head
                     newHead.insertionPoint = entit.insertionPoint
                     newHead.NodeNumber = headIndex
-                    newHead.model = entit.name
+                    newHead.model = entit.Name
                     nodes.Add newHead
                 Else
                     'TODO: *** Manifold ?
@@ -2400,7 +2400,7 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             'NodeIDs
             ElseIf UCase(entit.layer) = UCase("0b__Head_IDs") Then
                 Set newNodeID = New NodeID
-                newNodeID.name = GetAttrib(entit, "VALUE")
+                newNodeID.Name = GetAttrib(entit, "VALUE")
                 newNodeID.insertionPoint = entit.insertionPoint
                 NodeIDs.Add newNodeID
             End If
@@ -2410,9 +2410,9 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             Set point = entit
             newHead.insertionPoint = point.Coordinates
             If OutputFormat = "R" Then
-                newHead.name = "S.0"
+                newHead.Name = "S.0"
             Else
-                newHead.name = "S.1"
+                newHead.Name = "S.1"
             End If
             nodes.Add newHead
             ManifoldNodes.Add newHead
@@ -2438,7 +2438,7 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
     For Each xNode In nodes
         
         'NodeID Label to Node Matcher If Block
-        If xNode.name Like "R.*" Then
+        If xNode.Name Like "R.*" Then
             'Risers do not have NodeID labels
             Risers.Add xNode
         'Non Risers: Heads, Tees
@@ -2448,17 +2448,17 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
                 If xNodeID.insertionPoint.y = xNode.insertionPoint.y _
                     And xNodeID.insertionPoint.Z = xNode.insertionPoint.Z _
                     And xNodeID.insertionPoint.x = xNode.insertionPoint.x Then
-                    xNode.name = xNodeID.name
+                    xNode.Name = xNodeID.Name
                     
-                    If xNode.name Like "H.[0-9]*" Then
+                    If xNode.Name Like "H.[0-9]*" Then
                         'TODO: newHead.Model = Entit.Name
                         'ScanAttrib Entit
                         If Not CollectionContainsName(Heads, xNode) Then
                             Heads.Add xNode
                         End If
                         
-                    ElseIf xNode.name Like "T.[0-9]*" _
-                        Or xNode.name Like "T[0-9]*" Then
+                    ElseIf xNode.Name Like "T.[0-9]*" _
+                        Or xNode.Name Like "T[0-9]*" Then
                         If Not CollectionContainsName(Tees, xNode) Then
                             Tees.Add xNode
                         End If
@@ -2483,7 +2483,7 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
         Next xPipe
         
         '''Debug.Print "Node " & xNode.Name & " 100'    //" & Format(xNode.InsertionPoint.x / 12, "0.0") & ", " & Format(xNode.InsertionPoint.y / 12, "0.0") & ", "; Format(xNode.InsertionPoint.z / 12, "0.0")
-        If Trim(xNode.name) = "" Then
+        If Trim(xNode.Name) = "" Then
             dblErrorElevation = PointElevation(xNode.insertionPoint)
             Debug.Print "Missing Name at " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", " & xNode.insertionPoint.Z & ", Elevation = " & dblErrorElevation & " make sure the insertion point of the Head or Tee label lines up with the head or tee itself."
             '2014'ErrorCircle xNode.InsertionPoint, Colors.vicCyan, "Missing Name"
@@ -2529,14 +2529,14 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             '2014' xPipe.startPoint, Colors.vicMagenta, "P" & xPipe.PipeNumber & " StartNode ERROR"
             '2014'ErrorCircle xPipe.EndPoint, Colors.vicWhite, "P" & xPipe.PipeNumber & " StartNode OK"
         Else
-            strStart = xPipe.StartNode.name
+            strStart = xPipe.StartNode.Name
         End If
         If xPipe.EndNode Is Nothing Then
             strEnd = "X"
             '2014'ErrorCircle xPipe.EndPoint, Colors.vicMagenta, "P" & xPipe.PipeNumber & " EndNode ERROR"
             '2014'ErrorCircle xPipe.startPoint, Colors.vicWhite, "P" & xPipe.PipeNumber & " EndNode OK"
         Else
-            strEnd = xPipe.EndNode.name
+            strEnd = xPipe.EndNode.Name
         End If
         'Debug.Print "Pipe P" & xPipe.PipeNumber & " " & strStart & " " & strEnd & " " & xPipe.RoundedLengthFeet & "' " & xPipe.Diameter & " "
         'Print Head Constructors
@@ -2550,7 +2550,7 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             'MsgBox "Are you sure you want to export the data into Resden Reducer 2000.mdb?"
             Exit Function
         Else
-            strCalculationName = InputBox("What would you like to name this calculation?", "Export Sprinkler to Resden Reducer", ActiveDocument.name & " " & Now())
+            strCalculationName = InputBox("What would you like to name this calculation?", "Export Sprinkler to Resden Reducer", ActiveDocument.Name & " " & Now())
             If strCalculationName = "" Then
                 MsgBox "You didn't select a name, the exporting has been cancelled."
                 Exit Function
@@ -2578,21 +2578,21 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             xHead.elevation = PointElevation(xHead.insertionPoint)  'Get elevation of head
             
             If OutputFormat = "H" Then
-                Debug.Print "ss.AddNewHead(""" & xHead.name & """, " & xHead.elevation & ", """ & xHead.model; """);            //" & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y
+                Debug.Print "ss.AddNewHead(""" & xHead.Name & """, " & xHead.elevation & ", """ & xHead.model; """);            //" & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y
             
             ElseIf OutputFormat = "R" Then
-                Debug.Print ExtractLong(xHead.name) & ", " & xHead.elevation & ", " & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y & ", """ & xHead.name & """"
+                Debug.Print ExtractLong(xHead.Name) & ", " & xHead.elevation & ", " & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y & ", """ & xHead.Name & """"
             
             ElseIf OutputFormat = "RDB" Then
                 'The debug line doesn't *need* to be here, but it's handy for debugging...
-                Debug.Print ExtractLong(xHead.name) & ", " & xHead.elevation & ", " & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y & ", """ & xHead.name & """"
+                Debug.Print ExtractLong(xHead.Name) & ", " & xHead.elevation & ", " & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y & ", """ & xHead.Name & """"
                 
                 Set newResNode = New ResNode
-                newResNode.NodeNo = ExtractLong(xHead.name)
+                newResNode.NodeNo = ExtractLong(xHead.Name)
                 newResNode.elevation = xHead.elevation
                 newResNode.CoordinateX = xHead.insertionPoint.x
                 newResNode.CoordinateY = xHead.insertionPoint.y
-                newResNode.NodeName = xHead.name
+                newResNode.NodeName = xHead.Name
                 
                 ResNodes.Add newResNode, CStr(newResNode.NodeNo)
             Else
@@ -2612,12 +2612,12 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             If xHeadPair.HeadA Is Nothing Then
                 strHeadAName = "ErrorNothing"
             Else
-                strHeadAName = xHeadPair.HeadA.name
+                strHeadAName = xHeadPair.HeadA.Name
             End If
             If xHeadPair.HeadB Is Nothing Then
                 strHeadBName = "ErrorNothing"
             Else
-                strHeadBName = xHeadPair.HeadB.name
+                strHeadBName = xHeadPair.HeadB.Name
             End If
             If OutputFormat = "H" Then
                 Debug.Print "ss.AddNewHeadGroup(""" & strHeadAName & """, """ & strHeadBName & """);"
@@ -2641,18 +2641,18 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             'Debug.Print "Tee " & xNode.Name & " Elevation = " & xNode.Elevation & " // " & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y
             If OutputFormat = "H" Then
                 'Debug.Print "junctions.Add(Junction.NewJunction(""" & xNode.Name & """, " & xNode.Elevation & "));            //" & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y
-                Debug.Print "ss.AddNewTee(""" & xNode.name & """, " & xNode.elevation & ");            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
+                Debug.Print "ss.AddNewTee(""" & xNode.Name & """, " & xNode.elevation & ");            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
             ElseIf OutputFormat = "R" Then
-                Debug.Print ExtractLong(xNode.name) & ", " & xNode.elevation & ", " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", """ & xNode.name & """"
+                Debug.Print ExtractLong(xNode.Name) & ", " & xNode.elevation & ", " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", """ & xNode.Name & """"
             ElseIf OutputFormat = "RDB" Then
-                Debug.Print ExtractLong(xNode.name) & ", " & xNode.elevation & ", " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", """ & xNode.name & """"
+                Debug.Print ExtractLong(xNode.Name) & ", " & xNode.elevation & ", " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", """ & xNode.Name & """"
                 
                 Set newResNode = New ResNode
-                newResNode.NodeNo = ExtractLong(xNode.name)
+                newResNode.NodeNo = ExtractLong(xNode.Name)
                 newResNode.elevation = xNode.elevation
                 newResNode.CoordinateX = xNode.insertionPoint.x
                 newResNode.CoordinateY = xNode.insertionPoint.y
-                newResNode.NodeName = xNode.name
+                newResNode.NodeName = xNode.Name
                 
                 ResNodes.Add newResNode, CStr(newResNode.NodeNo)
                 
@@ -2678,18 +2678,18 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             xNode.elevation = PointElevation(xNode.insertionPoint)
             'Debug.Print "Riser " & xNode.Name & " Elevation = " & xNode.Elevation & " // " & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y
             If OutputFormat = "H" Then
-                Debug.Print "ss.AddNewRiser(""" & xNode.name & """, " & xNode.elevation & ");            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
+                Debug.Print "ss.AddNewRiser(""" & xNode.Name & """, " & xNode.elevation & ");            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
             ElseIf OutputFormat = "R" Then
-                Debug.Print ExtractLong(xNode.name) & ", " & xNode.elevation & ", " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", """ & xNode.name & """"
+                Debug.Print ExtractLong(xNode.Name) & ", " & xNode.elevation & ", " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", """ & xNode.Name & """"
             ElseIf OutputFormat = "RDB" Then
-                Debug.Print ExtractLong(xNode.name) & ", " & xNode.elevation & ", " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", """ & xNode.name & """"
+                Debug.Print ExtractLong(xNode.Name) & ", " & xNode.elevation & ", " & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y & ", """ & xNode.Name & """"
                 
                 Set newResNode = New ResNode
-                newResNode.NodeNo = ExtractLong(xNode.name)
+                newResNode.NodeNo = ExtractLong(xNode.Name)
                 newResNode.elevation = xNode.elevation
                 newResNode.CoordinateX = xNode.insertionPoint.x
                 newResNode.CoordinateY = xNode.insertionPoint.y
-                newResNode.NodeName = xNode.name
+                newResNode.NodeName = xNode.Name
                 
                 ResNodes.Add newResNode, CStr(newResNode.NodeNo)
                                   
@@ -2715,19 +2715,19 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             'Debug.Print "Manifold " & xNode.Name & " Elevation = " & xNode.Elevation & " // " & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y
             If OutputFormat = "H" Then
                 'Debug.Print "//junctions.Add(Junction.NewJunction(""" & xNode.Name & """, " & xNode.Elevation & "));            //" & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y
-                Debug.Print strCommentFirstManifold & "ss.AddNewManifold(""" & xNode.name & """, " & xNode.elevation & ");            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
+                Debug.Print strCommentFirstManifold & "ss.AddNewManifold(""" & xNode.Name & """, " & xNode.elevation & ");            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
                 strCommentFirstManifold = "//"
             ElseIf OutputFormat = "R" Then
-                Debug.Print "//junctions.Add(Junction.NewJunction(""" & xNode.name & """, " & xNode.elevation & "));            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
+                Debug.Print "//junctions.Add(Junction.NewJunction(""" & xNode.Name & """, " & xNode.elevation & "));            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
             ElseIf OutputFormat = "RDB" Then
-                Debug.Print "//junctions.Add(Junction.NewJunction(""" & xNode.name & """, " & xNode.elevation & "));            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
+                Debug.Print "//junctions.Add(Junction.NewJunction(""" & xNode.Name & """, " & xNode.elevation & "));            //" & xNode.insertionPoint.x & ", " & xNode.insertionPoint.y
                 
                 Set newResNode = New ResNode
                 newResNode.NodeNo = 0 'The manifold is always zero ... 'ExtractLong(xNode.Name)
                 newResNode.elevation = xNode.elevation
                 newResNode.CoordinateX = xNode.insertionPoint.x
                 newResNode.CoordinateY = xNode.insertionPoint.y
-                newResNode.NodeName = xNode.name
+                newResNode.NodeName = xNode.Name
                 
                 If ResNodes.Count = 0 Then ResNodes.Add newResNode, CStr(newResNode.NodeNo)
                 
@@ -2761,16 +2761,16 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
                     strPipeMessage = "  //ERROR: Two ends nothing"
                 ElseIf xPipe.StartNode Is Nothing Then
                     StartNodeName = "ErrorNothing"
-                    EndNodeName = xPipe.EndNode.name
+                    EndNodeName = xPipe.EndNode.Name
                     strPipeMessage = "  //ERROR: StartNode nothing"
                 ElseIf xPipe.EndNode Is Nothing Then
-                    StartNodeName = xPipe.StartNode.name
+                    StartNodeName = xPipe.StartNode.Name
                     StartNodeNameFull = "ErrorNothing"
                     EndNodeName = "ErrorNothing"
                     strPipeMessage = "  //ERROR: EndNode nothing"
                 Else
-                    EndNodeName = xPipe.EndNode.name
-                    StartNodeName = xPipe.StartNode.name
+                    EndNodeName = xPipe.EndNode.Name
+                    StartNodeName = xPipe.StartNode.Name
                     strPipeMessage = " "
                 End If
                 
@@ -2795,20 +2795,20 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             ElseIf xPipe.StartNode Is Nothing Then
                 StartNodeName = "ErrorNothing"
                 StartNodeNameFull = "ErrorNothing"
-                EndNodeName = ExtractLong(xPipe.EndNode.name)
-                EndNodeNameFull = xPipe.EndNode.name
+                EndNodeName = ExtractLong(xPipe.EndNode.Name)
+                EndNodeNameFull = xPipe.EndNode.Name
                 strPipeMessage = "  //ERROR: StartNode nothing"
             ElseIf xPipe.EndNode Is Nothing Then
-                StartNodeName = ExtractLong(xPipe.StartNode.name)
-                StartNodeNameFull = xPipe.StartNode.name
+                StartNodeName = ExtractLong(xPipe.StartNode.Name)
+                StartNodeNameFull = xPipe.StartNode.Name
                 EndNodeName = "ErrorNothing"
                 EndNodeNameFull = "ErrorNothing"
                 strPipeMessage = "  //ERROR: EndNode nothing"
             Else
-                EndNodeName = ExtractLong(xPipe.EndNode.name)
-                EndNodeNameFull = xPipe.EndNode.name
-                StartNodeName = ExtractLong(xPipe.StartNode.name)
-                StartNodeNameFull = xPipe.StartNode.name
+                EndNodeName = ExtractLong(xPipe.EndNode.Name)
+                EndNodeNameFull = xPipe.EndNode.Name
+                StartNodeName = ExtractLong(xPipe.StartNode.Name)
+                StartNodeNameFull = xPipe.StartNode.Name
                 strPipeMessage = " "
             End If
                 
@@ -2855,8 +2855,8 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
 
         ElseIf OutputFormat = "Rtest" Then
             Debug.Print Format(xPipe.PipeNumber, "00") & vbTab & _
-                ExtractLong(xPipe.StartNode.name) & vbTab & _
-                ExtractLong(xPipe.EndNode.name) & vbTab & _
+                ExtractLong(xPipe.StartNode.Name) & vbTab & _
+                ExtractLong(xPipe.EndNode.Name) & vbTab & _
                 Format(xPipe.ActualLength / 12, "0.0") & vbTab & _
                 Format(xPipe.Diameter, "0.000") & vbTab & vbTab & _
                 vbTab & vbTab & _
@@ -2907,7 +2907,7 @@ Dim xPipe As Pipe
             '2014'ErrorCircle xPipe.startPoint, Colors.vicMagenta, "P" & xPipe.PipeNumber & " StartNode = Nothing ERROR"
             '2014'ErrorCircle xPipe.EndPoint, Colors.vicWhite
         Else
-            strStart = xPipe.StartNode.name
+            strStart = xPipe.StartNode.Name
         End If
         
         If xPipe.EndNode Is Nothing Then
@@ -2915,7 +2915,7 @@ Dim xPipe As Pipe
             '2014'ErrorCircle xPipe.EndPoint, Colors.vicMagenta, "P" & xPipe.PipeNumber & " EndNode = Nothing ERROR"
             '2014'ErrorCircle xPipe.startPoint, Colors.vicWhite
         Else
-            strEnd = xPipe.EndNode.name
+            strEnd = xPipe.EndNode.Name
         End If
         
     Next xPipe
@@ -2955,7 +2955,7 @@ Dim lngCalculationID As Long
         If Not DeleteNodesPipes() Then
             Exit Function
         Else
-            strCalculationName = InputBox("What would you like to name this calculation?", "Export Sprinkler to Resden Reducer", ActiveDocument.name & " " & Now())
+            strCalculationName = InputBox("What would you like to name this calculation?", "Export Sprinkler to Resden Reducer", ActiveDocument.Name & " " & Now())
             If strCalculationName = "" Then
                 MsgBox "You didn't select a name, the exporting has been cancelled."
                 Exit Function
@@ -2989,21 +2989,21 @@ Dim lngCalculationID As Long
             xHead.elevation = PointElevation(xHead.insertionPoint)  'Get elevation of head
             
             If OutputFormat = "H" Then
-                Debug.Print "ss.AddNewHead(""" & xHead.name & """, " & xHead.elevation & ", """ & xHead.model; """);            //" & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y
+                Debug.Print "ss.AddNewHead(""" & xHead.Name & """, " & xHead.elevation & ", """ & xHead.model; """);            //" & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y
             
             ElseIf OutputFormat = "R" Then
-                Debug.Print ExtractLong(xHead.name) & ", " & xHead.elevation & ", " & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y & ", """ & xHead.name & """"
+                Debug.Print ExtractLong(xHead.Name) & ", " & xHead.elevation & ", " & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y & ", """ & xHead.Name & """"
             
             ElseIf OutputFormat = "RDB" Then
                 'The debug line doesn't *need* to be here, but it's handy for debugging...
-                Debug.Print ExtractLong(xHead.name) & ", " & xHead.elevation & ", " & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y & ", """ & xHead.name & """"
+                Debug.Print ExtractLong(xHead.Name) & ", " & xHead.elevation & ", " & xHead.insertionPoint.x & ", " & xHead.insertionPoint.y & ", """ & xHead.Name & """"
                 
                 Set newResNode = New ResNode
-                newResNode.NodeNo = ExtractLong(xHead.name)
+                newResNode.NodeNo = ExtractLong(xHead.Name)
                 newResNode.elevation = xHead.elevation
                 newResNode.CoordinateX = xHead.insertionPoint.x
                 newResNode.CoordinateY = xHead.insertionPoint.y
-                newResNode.NodeName = xHead.name
+                newResNode.NodeName = xHead.Name
                 
                 ResNodes.Add newResNode, CStr(newResNode.NodeNo)
             Else
@@ -3023,12 +3023,12 @@ Dim lngCalculationID As Long
             If xHeadPair.HeadA Is Nothing Then
                 strHeadAName = "ErrorNothing"
             Else
-                strHeadAName = xHeadPair.HeadA.name
+                strHeadAName = xHeadPair.HeadA.Name
             End If
             If xHeadPair.HeadB Is Nothing Then
                 strHeadBName = "ErrorNothing"
             Else
-                strHeadBName = xHeadPair.HeadB.name
+                strHeadBName = xHeadPair.HeadB.Name
             End If
             If OutputFormat = "H" Then
                 Debug.Print "ss.AddNewHeadGroup(""" & strHeadAName & """, """ & strHeadBName & """);"
@@ -3052,18 +3052,18 @@ Dim lngCalculationID As Long
             'Debug.Print "Tee " & xNode.Name & " Elevation = " & xNode.Elevation & " // " & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y
             If OutputFormat = "H" Then
                 'Debug.Print "junctions.Add(Junction.NewJunction(""" & xNode.Name & """, " & xNode.Elevation & "));            //" & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y
-                Debug.Print "ss.AddNewTee(""" & xTee.name & """, " & xTee.elevation & ");            //" & xTee.insertionPoint.x & ", " & xTee.insertionPoint.y
+                Debug.Print "ss.AddNewTee(""" & xTee.Name & """, " & xTee.elevation & ");            //" & xTee.insertionPoint.x & ", " & xTee.insertionPoint.y
             ElseIf OutputFormat = "R" Then
-                Debug.Print ExtractLong(xTee.name) & ", " & xTee.elevation & ", " & xTee.insertionPoint.x & ", " & xTee.insertionPoint.y & ", """ & xTee.name & """"
+                Debug.Print ExtractLong(xTee.Name) & ", " & xTee.elevation & ", " & xTee.insertionPoint.x & ", " & xTee.insertionPoint.y & ", """ & xTee.Name & """"
             ElseIf OutputFormat = "RDB" Then
-                Debug.Print ExtractLong(xTee.name) & ", " & xTee.elevation & ", " & xTee.insertionPoint.x & ", " & xTee.insertionPoint.y & ", """ & xTee.name & """"
+                Debug.Print ExtractLong(xTee.Name) & ", " & xTee.elevation & ", " & xTee.insertionPoint.x & ", " & xTee.insertionPoint.y & ", """ & xTee.Name & """"
                 
                 Set newResNode = New ResNode
-                newResNode.NodeNo = ExtractLong(xTee.name)
+                newResNode.NodeNo = ExtractLong(xTee.Name)
                 newResNode.elevation = xTee.elevation
                 newResNode.CoordinateX = xTee.insertionPoint.x
                 newResNode.CoordinateY = xTee.insertionPoint.y
-                newResNode.NodeName = xTee.name
+                newResNode.NodeName = xTee.Name
                 
                 ResNodes.Add newResNode, CStr(newResNode.NodeNo)
                 
@@ -3089,23 +3089,23 @@ Dim lngCalculationID As Long
             xRiser.elevation = PointElevation(xRiser.insertionPoint)
             'Debug.Print "Riser " & xNode.Name & " Elevation = " & xNode.Elevation & " // " & xNode.InsertionPoint.x & ", " & xNode.InsertionPoint.y
             If OutputFormat = "H" Then
-                Debug.Print "ss.AddNewRiser(""" & xRiser.name & """, " & xRiser.elevation & ");            //" & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y
+                Debug.Print "ss.AddNewRiser(""" & xRiser.Name & """, " & xRiser.elevation & ");            //" & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y
             ElseIf OutputFormat = "R" Then
-                Debug.Print ExtractLong(xRiser.name) & ", " & xRiser.elevation & ", " & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y & ", """ & xRiser.name & """"
+                Debug.Print ExtractLong(xRiser.Name) & ", " & xRiser.elevation & ", " & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y & ", """ & xRiser.Name & """"
             ElseIf OutputFormat = "RDB" Then
-                Debug.Print ExtractLong(xRiser.name) & ", " & xRiser.elevation & ", " & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y & ", """ & xRiser.name & """"
+                Debug.Print ExtractLong(xRiser.Name) & ", " & xRiser.elevation & ", " & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y & ", """ & xRiser.Name & """"
                 
                 Set newResNode = New ResNode
-                newResNode.NodeNo = ExtractLong(xRiser.name)
+                newResNode.NodeNo = ExtractLong(xRiser.Name)
                 newResNode.elevation = xRiser.elevation
                 newResNode.CoordinateX = xRiser.insertionPoint.x
                 newResNode.CoordinateY = xRiser.insertionPoint.y
-                newResNode.NodeName = xRiser.name
+                newResNode.NodeName = xRiser.Name
                 
                 ResNodes.Add newResNode, CStr(newResNode.NodeNo)
                 
             ElseIf OutputFormat = "DB" Then
-                Debug.Print ExtractLong(xRiser.name) & ", " & xRiser.elevation & ", " & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y & ", """ & xRiser.name & """"
+                Debug.Print ExtractLong(xRiser.Name) & ", " & xRiser.elevation & ", " & xRiser.insertionPoint.x & ", " & xRiser.insertionPoint.y & ", """ & xRiser.Name & """"
                         
             Else
                 Debug.Print "I'm sorry Dave, I don't recognize the format """ & OutputFormat & """"
@@ -3131,19 +3131,19 @@ Dim lngCalculationID As Long
         For Each xManifold In ManifoldNodes
             xManifold.elevation = PointElevation(xManifold.insertionPoint)
             If OutputFormat = "H" Then
-                Debug.Print strCommentFirstManifold & "ss.AddNewManifold(""" & xManifold.name & """, " & xManifold.elevation & ");            //" & xManifold.insertionPoint.x & ", " & xManifold.insertionPoint.y
+                Debug.Print strCommentFirstManifold & "ss.AddNewManifold(""" & xManifold.Name & """, " & xManifold.elevation & ");            //" & xManifold.insertionPoint.x & ", " & xManifold.insertionPoint.y
                 strCommentFirstManifold = "//"
             ElseIf OutputFormat = "R" Then
-                Debug.Print "//junctions.Add(Junction.NewJunction(""" & xManifold.name & """, " & xManifold.elevation & "));            //" & xManifold.insertionPoint.x & ", " & xManifold.insertionPoint.y
+                Debug.Print "//junctions.Add(Junction.NewJunction(""" & xManifold.Name & """, " & xManifold.elevation & "));            //" & xManifold.insertionPoint.x & ", " & xManifold.insertionPoint.y
             ElseIf OutputFormat = "RDB" Then
-                Debug.Print "//junctions.Add(Junction.NewJunction(""" & xManifold.name & """, " & xManifold.elevation & "));            //" & xManifold.insertionPoint.x & ", " & xManifold.insertionPoint.y
+                Debug.Print "//junctions.Add(Junction.NewJunction(""" & xManifold.Name & """, " & xManifold.elevation & "));            //" & xManifold.insertionPoint.x & ", " & xManifold.insertionPoint.y
                 
                 Set newResNode = New ResNode
                 newResNode.NodeNo = 0 'The manifold is always zero ... 'ExtractLong(xNode.Name)
                 newResNode.elevation = xManifold.elevation
                 newResNode.CoordinateX = xManifold.insertionPoint.x
                 newResNode.CoordinateY = xManifold.insertionPoint.y
-                newResNode.NodeName = xManifold.name
+                newResNode.NodeName = xManifold.Name
                 
                 If ResNodes.Count = 0 Then ResNodes.Add newResNode, CStr(newResNode.NodeNo)
                 
@@ -3177,16 +3177,16 @@ Dim lngCalculationID As Long
                         strPipeMessage = "  //ERROR: Two ends nothing"
                     ElseIf xPipe.StartNode Is Nothing Then
                         StartNodeName = "ErrorNothing"
-                        EndNodeName = xPipe.EndNode.name
+                        EndNodeName = xPipe.EndNode.Name
                         strPipeMessage = "  //ERROR: StartNode nothing"
                     ElseIf xPipe.EndNode Is Nothing Then
-                        StartNodeName = xPipe.StartNode.name
+                        StartNodeName = xPipe.StartNode.Name
                         StartNodeNameFull = "ErrorNothing"
                         EndNodeName = "ErrorNothing"
                         strPipeMessage = "  //ERROR: EndNode nothing"
                     Else
-                        EndNodeName = xPipe.EndNode.name
-                        StartNodeName = xPipe.StartNode.name
+                        EndNodeName = xPipe.EndNode.Name
+                        StartNodeName = xPipe.StartNode.Name
                         strPipeMessage = " "
                     End If
                     
@@ -3211,20 +3211,20 @@ Dim lngCalculationID As Long
                 ElseIf xPipe.StartNode Is Nothing Then
                     StartNodeName = "ErrorNothing"
                     StartNodeNameFull = "ErrorNothing"
-                    EndNodeName = ExtractLong(xPipe.EndNode.name)
-                    EndNodeNameFull = xPipe.EndNode.name
+                    EndNodeName = ExtractLong(xPipe.EndNode.Name)
+                    EndNodeNameFull = xPipe.EndNode.Name
                     strPipeMessage = "  //ERROR: StartNode nothing"
                 ElseIf xPipe.EndNode Is Nothing Then
-                    StartNodeName = ExtractLong(xPipe.StartNode.name)
-                    StartNodeNameFull = xPipe.StartNode.name
+                    StartNodeName = ExtractLong(xPipe.StartNode.Name)
+                    StartNodeNameFull = xPipe.StartNode.Name
                     EndNodeName = "ErrorNothing"
                     EndNodeNameFull = "ErrorNothing"
                     strPipeMessage = "  //ERROR: EndNode nothing"
                 Else
-                    EndNodeName = ExtractLong(xPipe.EndNode.name)
-                    EndNodeNameFull = xPipe.EndNode.name
-                    StartNodeName = ExtractLong(xPipe.StartNode.name)
-                    StartNodeNameFull = xPipe.StartNode.name
+                    EndNodeName = ExtractLong(xPipe.EndNode.Name)
+                    EndNodeNameFull = xPipe.EndNode.Name
+                    StartNodeName = ExtractLong(xPipe.StartNode.Name)
+                    StartNodeNameFull = xPipe.StartNode.Name
                     strPipeMessage = " "
                 End If
                     
@@ -3271,8 +3271,8 @@ Dim lngCalculationID As Long
     
             ElseIf OutputFormat = "Rtest" Then
                 Debug.Print Format(xPipe.PipeNumber, "00") & vbTab & _
-                    ExtractLong(xPipe.StartNode.name) & vbTab & _
-                    ExtractLong(xPipe.EndNode.name) & vbTab & _
+                    ExtractLong(xPipe.StartNode.Name) & vbTab & _
+                    ExtractLong(xPipe.EndNode.Name) & vbTab & _
                     Format(xPipe.ActualLength / 12, "0.0") & vbTab & _
                     Format(xPipe.Diameter, "0.000") & vbTab & vbTab & _
                     vbTab & vbTab & _
@@ -3306,7 +3306,7 @@ Public Function CheckAddLayer(layerName As String, LayerColor As PipeColors, Opt
     End If
     
     For Each lay In ActiveDocument.Layers
-        If UCase(lay.name) = UCase(layerName) Then
+        If UCase(lay.Name) = UCase(layerName) Then
             bAlreadyHasLayer = True
             Set CheckAddLayer = lay
             Exit For
@@ -3345,7 +3345,7 @@ Public Sub FindHead() '(HeadName As String)
     HeadName = InputBox("Enter head name to find:", "FindHead()", "H.1")
     If HeadName <> "" Then
         For Each xHead In Heads
-            If xHead.name = HeadName Then
+            If xHead.Name = HeadName Then
                 ActiveDocument.Application.ZoomCenter xHead.insertionPoint, 500
                 bHeadFound = True
                 Exit For
@@ -3368,7 +3368,7 @@ Public Sub FindTee()
     TeeName = InputBox("Enter tee name to find:", "FindTee()", "T.1")
     If TeeName <> "" Then
         For Each xTee In Tees
-            If xTee.name = TeeName Then
+            If xTee.Name = TeeName Then
                 ActiveDocument.Application.ZoomCenter xTee.insertionPoint, 500
                 bTeeFound = True
                 Exit For
@@ -3851,7 +3851,7 @@ Dim strIconPath As String
 
     If Application.MenuGroups.Count > 0 Then
         For Each mg In Application.MenuGroups
-            If mg.name = "LoopCalcMenu" Then
+            If mg.Name = "LoopCalcMenu" Then
                 hasLoopCadMenu = True
                 Set loopCalcMenuGroup = mg
                 Exit For
@@ -3863,7 +3863,7 @@ Dim strIconPath As String
     If Not hasLoopCadMenu Then
         If Application.MenuGroups.Count > 0 Then
             For Each mg In Application.MenuGroups
-                If mg.name = "ACAD" Then
+                If mg.Name = "ACAD" Then
                     hasACADMenu = True
                     Set loopCalcMenuGroup = mg
                     loopCalcMenuGroup.SaveAs SUPPORT_FOLDER & "\LoopCAD", acMenuFileSource
@@ -3882,7 +3882,7 @@ Dim strIconPath As String
         
     If loopCalcMenuGroup.Toolbars.Count > 0 Then
         For Each tb In loopCalcMenuGroup.Toolbars
-            If tb.name = strModelPrefix Then
+            If tb.Name = strModelPrefix Then
                 Set headsToolBar = tb
                 hasHeadsToolBar = True
                 Exit For
@@ -3907,7 +3907,7 @@ Dim strIconPath As String
         For i = (headsToolBar.Count - 1) To 0 Step -1
         'For Each tbi In newToolBar
             Set newToolBarItem = headsToolBar.Item(i)
-            If newToolBarItem.name Like strModelPrefix & "-[0-9][0-9]" Then
+            If newToolBarItem.Name Like strModelPrefix & "-[0-9][0-9]" Then
                 'hasVK450_18 = True
                 'headsToolBar.Delete
                 newToolBarItem.Delete
@@ -4005,7 +4005,7 @@ On Error GoTo ErrTrap
 
     If Application.MenuGroups.Count > 0 Then
         For Each mg In Application.MenuGroups
-            If mg.name = "LoopCalcMenu" Then
+            If mg.Name = "LoopCalcMenu" Then
                 hasLoopCadMenu = True
                 Set loopCalcMenuGroup = mg
                 Exit For
@@ -4017,7 +4017,7 @@ On Error GoTo ErrTrap
     If Not hasLoopCadMenu Then
         If Application.MenuGroups.Count > 0 Then
             For Each mg In Application.MenuGroups
-                If mg.name = "ACAD" Then
+                If mg.Name = "ACAD" Then
                     hasACADMenu = True
                     Set loopCalcMenuGroup = mg
                     loopCalcMenuGroup.SaveAs SUPPORT_FOLDER & "\LoopCAD", acMenuFileSource
@@ -4040,7 +4040,7 @@ On Error GoTo ErrTrap
 '***********************
     If loopCalcMenuGroup.Toolbars.Count > 0 Then
         For Each tb In loopCalcMenuGroup.Toolbars
-            If tb.name = "LoopCAD" Then
+            If tb.Name = "LoopCAD" Then
                 Set mainToolBar = tb
                 hasMainToolBar = True
                 Exit For
@@ -4144,7 +4144,7 @@ On Error GoTo ErrTrap
 '*******************
     If loopCalcMenuGroup.Toolbars.Count > 0 Then
         For Each tb In loopCalcMenuGroup.Toolbars
-            If tb.name = strModelPrefix Then
+            If tb.Name = strModelPrefix Then
                 Set headsToolBar = tb
                 hasHeadsToolBar = True
                 Exit For
@@ -4167,7 +4167,7 @@ On Error GoTo ErrTrap
     If headsToolBar.Count > 0 Then
         For i = (headsToolBar.Count - 1) To 0 Step -1
             Set newToolBarItem = headsToolBar.Item(i)
-            If newToolBarItem.name Like strModelPrefix & "-[0-9][0-9]" Then
+            If newToolBarItem.Name Like strModelPrefix & "-[0-9][0-9]" Then
                 newToolBarItem.Delete
             End If
         Next i
@@ -4273,7 +4273,7 @@ On Error GoTo ErrTrap
 
     If Application.MenuGroups.Count > 0 Then
         For Each mg In Application.MenuGroups
-            If mg.name = "LoopCalcMenu" Then
+            If mg.Name = "LoopCalcMenu" Then
                 hasLoopCadMenu = True
                 Set loopCalcMenuGroup = mg
                 Exit For
@@ -4285,7 +4285,7 @@ On Error GoTo ErrTrap
     If Not hasLoopCadMenu Then
         If Application.MenuGroups.Count > 0 Then
             For Each mg In Application.MenuGroups
-                If mg.name = "ACAD" Then
+                If mg.Name = "ACAD" Then
                     hasACADMenu = True
                     Set loopCalcMenuGroup = mg
                     loopCalcMenuGroup.SaveAs SUPPORT_FOLDER & "\LoopCAD", acMenuFileSource
@@ -4303,7 +4303,7 @@ On Error GoTo ErrTrap
 '*******************
     If loopCalcMenuGroup.Toolbars.Count > 0 Then
         For Each tb In loopCalcMenuGroup.Toolbars
-            If tb.name = strModelPrefix Then
+            If tb.Name = strModelPrefix Then
                 Set headsToolBar = tb
                 hasHeadsToolBar = True
                 Exit For
@@ -4324,7 +4324,7 @@ On Error GoTo ErrTrap
     If headsToolBar.Count > 0 Then
         For i = (headsToolBar.Count - 1) To 0 Step -1
             Set newToolBarItem = headsToolBar.Item(i)
-            If newToolBarItem.name Like strModelPrefix & "-[0-9][0-9]" Then
+            If newToolBarItem.Name Like strModelPrefix & "-[0-9][0-9]" Then
                 newToolBarItem.Delete
             End If
         Next i
@@ -4399,7 +4399,7 @@ DoAgain:
     
     For Each xFloorTag In FloorTags
 
-        Debug.Print "FloorTags " & xFloorTag.name
+        Debug.Print "FloorTags " & xFloorTag.Name
 
     Next xFloorTag
 
@@ -4515,11 +4515,11 @@ Public Sub TestFloorTags_All() '(TestPoint As Variant)
             Set closestFloorTag = xFloorTag
         End If
         'closestFloorTag
-        Debug.Print "FloorTag = " & xFloorTag.name & " " & xFloorTag.insertionPoint.x & ", " & xFloorTag.insertionPoint.y & ", " & xFloorTag.insertionPoint.Z & " Distance = " & dist
+        Debug.Print "FloorTag = " & xFloorTag.Name & " " & xFloorTag.insertionPoint.x & ", " & xFloorTag.insertionPoint.y & ", " & xFloorTag.insertionPoint.Z & " Distance = " & dist
     Next xFloorTag
     
-    Debug.Print "The closest point is " & closestFloorTag.name
-    Debug.Print "The closest point to 2 is " & NearestFloorTag(testPoint).name
+    Debug.Print "The closest point is " & closestFloorTag.Name
+    Debug.Print "The closest point to 2 is " & NearestFloorTag(testPoint).Name
     Dim relative As Variant
     
     relative = RelativeCoordinates(closestFloorTag.insertionPoint, testPoint)
@@ -4538,7 +4538,7 @@ Public Sub TestFloorTags_All() '(TestPoint As Variant)
             absolute = AddCoordinates(xFloorTag.insertionPoint, relative)
             ActiveDocument.ModelSpace.InsertBlock absolute, "FloorConnector.dwg", 1, 1, 1, 0
             
-            Debug.Print " inserting at " & absolute(0) & ", " & absolute(1) & " for " & xFloorTag.name
+            Debug.Print " inserting at " & absolute(0) & ", " & absolute(1) & " for " & xFloorTag.Name
         'End If
     Next xFloorTag
     
@@ -4705,7 +4705,7 @@ Public Function NearestFloorTag(testPoint As Variant) As FloorTag
             Set closestFloorTag = xFloorTag
         End If
         'closestFloorTag
-        Debug.Print "FloorTag = " & xFloorTag.name & " " & xFloorTag.insertionPoint.x & ", " & xFloorTag.insertionPoint.y & ", " & xFloorTag.insertionPoint.Z & " Distance = " & dist
+        Debug.Print "FloorTag = " & xFloorTag.Name & " " & xFloorTag.insertionPoint.x & ", " & xFloorTag.insertionPoint.y & ", " & xFloorTag.insertionPoint.Z & " Distance = " & dist
     Next xFloorTag
     
     ' Debug.Print "The closest point is " & closestFloorTag.Name
@@ -4837,10 +4837,10 @@ Dim pipeIndex As Long
         If entity.EntityName = "BlockInsert" Then
             
             Set block = entity
-            If UCase(block.name) = UCase("FakeHead") _
+            If UCase(block.Name) = UCase("FakeHead") _
                 Or UCase(block.layer) = UCase("Heads") _
                 Or UCase(block.layer) = UCase("0a__Heads") _
-                Or UCase(block.name) = UCase("Tee") Then
+                Or UCase(block.Name) = UCase("Tee") Then
             
                 nodes.Add block
                 
@@ -5241,7 +5241,7 @@ Public Sub FindNode()
     NodeName = InputBox("Enter node name to find:", "FindNode()", "H.1")
     If NodeName <> "" Then
         For Each xHead In Heads
-            If xHead.name = NodeName Then
+            If xHead.Name = NodeName Then
                 ActiveDocument.Application.ZoomCenter xHead.insertionPoint, 500
                 bNodeFound = True
                 Exit For
@@ -5249,7 +5249,7 @@ Public Sub FindNode()
         Next xHead
         If bNodeFound Then Exit Sub
         For Each xTee In Tees
-            If xTee.name = NodeName Then
+            If xTee.Name = NodeName Then
                 ActiveDocument.Application.ZoomCenter xTee.insertionPoint, 500
                 bNodeFound = True
                 Exit For
@@ -5257,7 +5257,7 @@ Public Sub FindNode()
         Next xTee
         If bNodeFound Then Exit Sub
         For Each xRiser In Risers
-            If xRiser.name = NodeName Then
+            If xRiser.Name = NodeName Then
                 ActiveDocument.Application.ZoomCenter xRiser.insertionPoint, 500
                 bNodeFound = True
                 Exit For
@@ -5606,14 +5606,14 @@ Dim vPipeSize As Variant
         Else
            Set pType = New PipeType
            pType.InternalDiameter = xPipe.Diameter
-           pType.name = CStr(xPipe.Diameter)
+           pType.Name = CStr(xPipe.Diameter)
            pType.TotalLength = xPipe.ActualLength
-           PipeTypes.Add pType, CStr(pType.name)
+           PipeTypes.Add pType, CStr(pType.Name)
         End If
     Next xPipe
     
     For Each pType In PipeTypes
-        Debug.Print pType.name & " = " & pType.TotalLength / 12
+        Debug.Print pType.Name & " = " & pType.TotalLength / 12
     Next pType
 End Sub
 Public Function RemovePipeClones() As Long

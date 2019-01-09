@@ -36,7 +36,7 @@ Dim strNodeRow As String
             ' Create elements under "node" element, and
             Set objMemberName = objDom.createElement("name")
             objMemberElem.appendChild objMemberName
-            objMemberName.text = xNode.name
+            objMemberName.text = xNode.Name
             
             
             Dim eleNodeNo As IXMLDOMElement
@@ -60,7 +60,7 @@ Dim strNodeRow As String
             
             
             
-            strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<name>" & xNode.name & "</name>" & vbCrLf
+            strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<name>" & xNode.Name & "</name>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<node_no>" & xNode.NodeNumber & "</node_no>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<insertion_point><x>" & xNode.insertionPoint.x & "</x><y>" & xNode.insertionPoint.y & "</y><z>" & xNode.insertionPoint.Z & "</z></insertion_point>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<elevation>" & xNode.elevation & "</elevation>" & vbCrLf
@@ -209,7 +209,7 @@ Public Function PrintText(entText As IntelliCAD.text)
 End Function
 Public Function PrintBlockRef(entText As IntelliCAD.blockInsert)
     Debug.Print "<blockref><layer>" & entText.layer & "</layer>"
-    Debug.Print "   <name>" & entText.name & "</name>"
+    Debug.Print "   <name>" & entText.Name & "</name>"
     Debug.Print "   <insertionpoint><x>" & entText.insertionPoint.x & "</x><y>" & entText.insertionPoint.y & "</y><z>" & entText.insertionPoint.Z & "</z></insertionpoint>"
     Debug.Print "</blockref>"
 End Function

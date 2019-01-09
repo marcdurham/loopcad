@@ -253,7 +253,7 @@ Public Function AddNodes(nodes As Collection, CalculationName As String, Calcula
             End If
             
             .AddNew
-            !NodeName = xNode.name
+            !NodeName = xNode.Name
             !NodeNo = xNode.NodeNumber
             !CoordinateX = xNode.insertionPoint.x
             !CoordinateY = xNode.insertionPoint.y
@@ -361,7 +361,7 @@ Public Function AddHeads(Heads As Collection, CalculationName As String, Calcula
         .Open "SELECT * FROM Nodes"
         For Each xHead In Heads
             .AddNew
-            !NodeName = xHead.name
+            !NodeName = xHead.Name
             !NodeNo = xHead.NodeNumber
             !CoordinateX = xHead.insertionPoint.x 'xHead.CoordinateX
             !CoordinateY = xHead.insertionPoint.y 'xHead.CoordinateY
@@ -424,12 +424,12 @@ Public Function AddHeadPairs(HeadPairs As Collection, CalculationID As Long)
             If xHeadPair.HeadA Is Nothing Then
                 strHeadAName = "Error"
             Else
-                strHeadAName = xHeadPair.HeadA.name
+                strHeadAName = xHeadPair.HeadA.Name
             End If
             If xHeadPair.HeadB Is Nothing Then
                 strHeadBName = "Error"
             Else
-                strHeadBName = xHeadPair.HeadB.name
+                strHeadBName = xHeadPair.HeadB.Name
             End If
         
         
@@ -531,7 +531,7 @@ Public Function AddRisers(nodes As Collection, CalculationName As String, Calcul
         .Open "SELECT * FROM Nodes"
         For Each xNode In nodes
             .AddNew
-            !NodeName = xNode.name
+            !NodeName = xNode.Name
             !NodeNo = xNode.NodeNumber
             !CoordinateX = xNode.insertionPoint.x
             !CoordinateY = xNode.insertionPoint.y
@@ -573,13 +573,13 @@ Public Function AddPipes(Pipes As Collection, CalculationID As Long)
             If xPipe.StartNode Is Nothing Then
                 strStartNodeName = "Error"
             Else
-                strStartNodeName = xPipe.StartNode.name
+                strStartNodeName = xPipe.StartNode.Name
             End If
             !StartNodeName = strStartNodeName
             If xPipe.EndNode Is Nothing Then
                 strEndNodeName = "Error"
             Else
-                strEndNodeName = xPipe.EndNode.name
+                strEndNodeName = xPipe.EndNode.Name
             End If
             !EndNodeName = strEndNodeName
             !Diameter = xPipe.Diameter
@@ -613,13 +613,13 @@ Public Function SavePipesXML(Pipes As Collection)
             If xPipe.StartNode Is Nothing Then
                 strStartNodeName = "Error"
             Else
-                strStartNodeName = xPipe.StartNode.name
+                strStartNodeName = xPipe.StartNode.Name
             End If
             strPipeRow = strPipeRow & vbTab & vbTab & "<StartNodeName>" & strStartNodeName & "</StartNodeName>" & vbCrLf
             If xPipe.EndNode Is Nothing Then
                 strEndNodeName = "Error"
             Else
-                strEndNodeName = xPipe.EndNode.name
+                strEndNodeName = xPipe.EndNode.Name
             End If
             strPipeRow = strPipeRow & vbTab & vbTab & "<EndNodeName>" & strEndNodeName & "</EndNodeName>" & vbCrLf
             strPipeRow = strPipeRow & vbTab & vbTab & "<Diameter>" & xPipe.Diameter & "</Diameter>" & vbCrLf
@@ -663,12 +663,12 @@ Public Function SaveHeadPairsXML(HeadPairs As Collection)
             If xHeadPair.HeadA Is Nothing Then
                 strHeadAName = "Error"
             Else
-                strHeadAName = xHeadPair.HeadA.name
+                strHeadAName = xHeadPair.HeadA.Name
             End If
             If xHeadPair.HeadB Is Nothing Then
                 strHeadBName = "Error"
             Else
-                strHeadBName = xHeadPair.HeadB.name
+                strHeadBName = xHeadPair.HeadB.Name
             End If
         
             strHead = vbTab & "<HeadGroupHeads>" & vbCrLf
@@ -875,7 +875,7 @@ Dim strNodeRow As String
             End If
             
             
-            strNodeRow = strNodeRow & vbTab & vbTab & "<NodeName>" & xNode.name & "</NodeName>" & vbCrLf
+            strNodeRow = strNodeRow & vbTab & vbTab & "<NodeName>" & xNode.Name & "</NodeName>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & "<NodeNo>" & xNode.NodeNumber & "</NodeNo>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & "<CoordinateX>" & xNode.insertionPoint.x & "</CoordinateX>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & "<CoordinateY>" & xNode.insertionPoint.y & "</CoordinateY>" & vbCrLf
@@ -942,7 +942,7 @@ Dim strNodeRow As String
             
             
             
-            strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<name>" & xNode.name & "</name>" & vbCrLf
+            strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<name>" & xNode.Name & "</name>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<node_no>" & xNode.NodeNumber & "</node_no>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<insertion_point><x>" & xNode.insertionPoint.x & "</x><y>" & xNode.insertionPoint.y & "</y><z>" & xNode.insertionPoint.Z & "</z></insertion_point>" & vbCrLf
             strNodeRow = strNodeRow & vbTab & vbTab & vbTab & vbTab & vbTab & "<elevation>" & xNode.elevation & "</elevation>" & vbCrLf
@@ -983,7 +983,7 @@ Public Function FSDXPipes(Pipes As Collection) As String
                 'Err.Raise 1, "FSDX Pipes", "Pipe " & xPipe.PipeNumber & " is missing a start node! File will not be saved. " '  The other node is " & strStartNodeName
                 GoTo Failure
             Else
-                strStartNodeName = xPipe.StartNode.name
+                strStartNodeName = xPipe.StartNode.Name
             End If
             strPipeRow = strPipeRow & vbTab & vbTab & vbTab & vbTab & "<start_node_name>" & strStartNodeName & "</start_node_name>" & vbCrLf
             If xPipe.EndNode Is Nothing Then
@@ -991,7 +991,7 @@ Public Function FSDXPipes(Pipes As Collection) As String
                 Err.Raise 1, "FSDX Pipes", "Pipe " & xPipe.PipeNumber & " is missing an end node!  The other node is " & strStartNodeName
                 GoTo Failure
             Else
-                strEndNodeName = xPipe.EndNode.name
+                strEndNodeName = xPipe.EndNode.Name
             End If
             If xPipe.polyline Is Nothing Then
                 strLineType = ""
@@ -1087,12 +1087,12 @@ Public Function FSDXHeadPairs(HeadPairs As Collection)
             If xHeadPair.HeadA Is Nothing Then
                 strHeadAName = "Error"
             Else
-                strHeadAName = xHeadPair.HeadA.name
+                strHeadAName = xHeadPair.HeadA.Name
             End If
             If xHeadPair.HeadB Is Nothing Then
                 strHeadBName = "Error"
             Else
-                strHeadBName = xHeadPair.HeadB.name
+                strHeadBName = xHeadPair.HeadB.Name
             End If
 
             strHeadGroupRow = strHeadGroupRow & vbTab & vbTab & vbTab & "<heads>" & vbCrLf
