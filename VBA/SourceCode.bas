@@ -42,7 +42,7 @@ Dim d As Variant
         Debug.Print "File: " & d
         d = VBA.Dir()
         name = Left(d, Len(d) - 4)
-        If LCase(Right(d, 3)) = "bas" Then
+        If LCase(Right(d, 4)) = ".bas" Then
             VBE.ActiveVBProject.VBComponents.Import "C:\LoopCAD\VBA\" & name & ".bas"
         End If
     Loop
