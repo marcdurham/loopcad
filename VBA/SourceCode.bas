@@ -21,14 +21,11 @@ Dim name As String
 
     With VBE.ActiveVBProject
         For i = 1 To .VBComponents.Count
-    
             name = .VBComponents(i).CodeModule.name
     
-            If ModuleName <> "VersionControl" Then
-                If Right(ModuleName, 6) = "Macros" Then
-                    .VBComponents.Remove .VBComponents(name)
-                    .VBComponents.Import "C:\LoopCAD\VBA\" & name & ".bas"
-               End If
+            If name <> "SourceCode" And name <> "ThisWorkspace" Then
+                .VBComponents.Remove .VBComponents(name)
+                .VBComponents.Import "C:\LoopCAD\VBA\" & name & ".bas"
             End If
         Next i
     End With
