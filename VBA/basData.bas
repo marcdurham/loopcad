@@ -39,7 +39,6 @@ Private Const OFN_OVERWRITEPROMPT        As Long = &H2
 Private Const OFN_FILEMUSTEXIST          As Long = &H1000
 Private Const OFN_PATHMUSTEXIST          As Long = &H800
 
-Public pCon As ADODB.Connection
 Type Product
     Cost As Currency
     Labor As Double

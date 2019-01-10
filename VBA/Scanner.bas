@@ -20,7 +20,7 @@ Public FloorTags As New Collection
 Public FloorConnectors As New Collection
 
 Public headModels As Collection
-Public conLoopCalcData As ADODB.Connection
+'Public conLoopCalcData As ADODB.Connection
 
 Public Const ICON_FOLDER = "D:\LoopCAD\Icons"
 Public Const LISP_FOLDER = "D:\LoopCAD"

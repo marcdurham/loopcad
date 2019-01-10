@@ -1,4 +1,14 @@
 Attribute VB_Name = "SourceCode"
+'***********************************************
+'**** How to use this SourceCode.bas module ****
+'**** ******************************************
+' 1. Create a new module/project in VBA Editor
+' 2. Import the SourceCode.bas file
+' 3. Run the ImportCodeModules() method
+'
+' You do not need to use the RemoveCodeModules when
+' you use SourceCode.bas
+'
 Public Sub SaveCodeModules()
 'This code Exports all VBA modules
 Dim i As Integer
@@ -20,16 +30,18 @@ Public Sub RemoveCodeModules()
 Dim i As Integer
 Dim moduleName As String
 Dim moduleCount As Integer
-
-    With VBE.ActiveVBProject
-        moduleCount = .VBComponents.Count
-        For i = moduleCount To 1 Step -1
-            moduleName = .VBComponents(i).CodeModule.Name
-            If moduleName <> "SourceCode" And moduleName <> "ThisWorkspace" Then
-                .VBComponents.Remove .VBComponents(moduleName)
-            End If
-        Next i
-    End With
+    
+    If MsgBox("Are you sure you want to delete all VBA modules?", vbYesNoCancel) = vbYes Then
+        With VBE.ActiveVBProject
+            moduleCount = .VBComponents.Count
+            For i = moduleCount To 1 Step -1
+                moduleName = .VBComponents(i).CodeModule.Name
+                If moduleName <> "SourceCode" And moduleName <> "ThisWorkspace" Then
+                    .VBComponents.Remove .VBComponents(moduleName)
+                End If
+            Next i
+        End With
+    End If
 
 End Sub
 Public Sub ImportCodeModules()
