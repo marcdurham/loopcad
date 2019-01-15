@@ -10,7 +10,8 @@
         (command "-COLOR" "BYLAYER")
         (command "-LAYER" "SET" "0" "")
     )
-    (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having a different scale, being 12 time bigger than they should be
+    (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having 
+	; a different scale, being 12 time bigger than they should be
     (setvar "OSMODE" 0)
     (command "-LAYER" "NEW" "HeadPairs" "")
     (command "-LAYER" "COLOR" "Yellow" "HeadPairs" "")
