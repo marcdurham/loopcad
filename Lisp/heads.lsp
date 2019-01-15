@@ -11,8 +11,8 @@
     (setvar "LWDISPLAY" 1)
 	(setq *error* temperror)
   )
-  (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having a
-                        ;different scale, being 12 times bigger than they should be.
+  (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having a
+                        ; different scale, being 12 times bigger than they should be.
   (setvar "OSMODE" 0)
   (command "-LAYER" "NEW" "Heads" "")
   (command "-LAYER" "NEW" "HeadCoverage" "")
