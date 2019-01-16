@@ -114,4 +114,17 @@ Public Sub LoadCalculatedByCompanies()
     Me.CalculatedByCompany.AddItem "X-Fire Security"
     Me.CalculatedByCompany.AddItem "13dpex.com"
     
+    Me.SupplyPipeType.Clear
+    Me.SupplyPipeType.AddItem "Blazemaster CPVC"
+    Me.SupplyPipeType.AddItem "Spears CPVC"
+    
+    Me.SprinklerPipeType.Clear
+    Me.SprinklerPipeType.AddItem "Rehau PEX"
+    Me.SprinklerPipeType.AddItem "Uponor PEX"
+    
+    Me.SprinklerFittingType.Clear
+    Me.SprinklerFittingType.AddItem "Rehau Brass PEX"
+    Me.SprinklerFittingType.AddItem "Rehau Plastic PEX"
+    Me.SprinklerFittingType.AddItem "Uponor Brass PEX"
+    
 End Sub
