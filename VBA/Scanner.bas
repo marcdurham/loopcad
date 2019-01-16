@@ -440,7 +440,7 @@ Dim traceLine As IntelliCAD.line
 End Sub
 'Public Function EntityElevation(entity As AcadObject) As Variant
 Public Function EntityElevation(entity As IntelliCAD.entity) As Variant
-Dim entit As AcadObject
+Dim Entit As AcadObject
 Dim Boxes As New Collection
 Dim Labels As New Collection
 Dim Box As IntelliCAD.polyline
@@ -450,11 +450,11 @@ Dim ElevLabel As IntelliCAD.text
 
 
     'See which Boxes exist
-    For Each entit In ActiveDocument.ModelSpace
-        If UCase(entit.layer) = UCase("ElevationBox") Then
+    For Each Entit In ActiveDocument.ModelSpace
+        If UCase(Entit.layer) = UCase("ElevationBox") Then
             Debug.Print "Elevation Box Layer!"
-            If entit.EntityName = "Polyline" Then
-                Set Box = entit
+            If Entit.EntityName = "Polyline" Then
+                Set Box = Entit
                 Coordinates = Box.Coordinates
                 If (Coordinates.Count - 1) = 7 Then ' an upper bound of 7 means it's a rectangle
                     Debug.Print "Box!"
@@ -462,12 +462,12 @@ Dim ElevLabel As IntelliCAD.text
                     eBox.Box = Box
                     Boxes.Add eBox
                 End If
-            ElseIf entit.EntityName = "Text" Then
-                Set ElevLabel = entit
+            ElseIf Entit.EntityName = "Text" Then
+                Set ElevLabel = Entit
                 Labels.Add ElevLabel
             End If
         End If
-    Next entit
+    Next Entit
     
     'get elevation text
     For Each eBox In Boxes
@@ -478,7 +478,7 @@ Dim ElevLabel As IntelliCAD.text
                 eBox.elevation = 1
             End If
         Next ElevLabel
-    Next entit
+    Next Entit
     
     'See which Box Entity is in
     For Each eBox In Boxes
@@ -486,7 +486,7 @@ Dim ElevLabel As IntelliCAD.text
             EntityElevation = eBox.elevation
             Exit For
         End If
-    Next entit
+    Next Entit
 
 End Function
 
@@ -1184,7 +1184,7 @@ Dim strCalculationName As String
 End Sub
 
 Public Function PointElevation(point As Variant, Optional InputElevationBoxes As Variant) As Variant
-Dim entit As IntelliCAD.entity
+Dim Entit As IntelliCAD.entity
 Dim Boxes As New Collection
 Dim Labels As New Collection
 Dim Box As IntelliCAD.lwPolyline
@@ -1448,16 +1448,16 @@ Public Function MeasureAllPipe2() As Long
     allPipesLength = 0: entitIndex = 1: headIndex = 1: riserIndex = 1
     pipes75Length = 0: pipes1Length = 0
     
-    Dim entit As IntelliCAD.entity 'AutoCAD.Entity
-    For Each entit In ActiveDocument.ModelSpace
+    Dim Entit As IntelliCAD.entity 'AutoCAD.Entity
+    For Each Entit In ActiveDocument.ModelSpace
         'Pipes
-        If entit.EntityName = "Polyline" Then
-            If UCase(entit.layer) = UCase("0e__Pipes-R-FP") Then
+        If Entit.EntityName = "Polyline" Then
+            If UCase(Entit.layer) = UCase("0e__Pipes-R-FP") Then
                 Set newPipe = New Pipe
                 
-                newPipe.Diameter = PipeDiameterOfColor(entit.Color, entit.layer)
+                newPipe.Diameter = PipeDiameterOfColor(Entit.Color, Entit.layer)
                 
-                pipeLength = Measure(entit)
+                pipeLength = Measure(Entit)
                 allPipesLength = allPipesLength + pipeLength
                 newPipe.ActualLength = pipeLength
                 If newPipe.Diameter = 0.675 Then
@@ -1469,9 +1469,9 @@ Public Function MeasureAllPipe2() As Long
                 End If
                 
                 newPipe.PipeNumber = entitIndex
-                lngLastCoord = ((entit.Coordinates.Count - 1) - 1) / 2
-                newPipe.endPoint = entit.Coordinate(lngLastCoord)
-                newPipe.startPoint = entit.Coordinate(0)
+                lngLastCoord = ((Entit.Coordinates.Count - 1) - 1) / 2
+                newPipe.endPoint = Entit.Coordinate(lngLastCoord)
+                newPipe.startPoint = Entit.Coordinate(0)
                 Pipes.Add newPipe
                 Debug.Print "Pipe " & entitIndex & vbTab & ".L=" & Format(pipeLength, "0.00 in") & " " & vbTab & newPipe.Diameter
                 entitIndex = entitIndex + 1
@@ -1479,16 +1479,16 @@ Public Function MeasureAllPipe2() As Long
         End If
         
         'Heads & HeadIDs
-        If entit.EntityName = "BlockInsert" Then
+        If Entit.EntityName = "BlockInsert" Then
             'RFC431616-155
             
             'Fittings, Risers
-            If entit.Name = "PipeFitting" _
-                Or entit.Name = "vpilc" Then
+            If Entit.Name = "PipeFitting" _
+                Or Entit.Name = "vpilc" Then
                 Set newHead = New Head
-                newHead.insertionPoint = entit.insertionPoint
+                newHead.insertionPoint = Entit.insertionPoint
                 newHead.NodeNumber = headIndex
-                If entit.Name = "vpilc" Then
+                If Entit.Name = "vpilc" Then
                     newHead.Name = "R." & riserIndex
                     riserIndex = riserIndex + 1
                 End If
@@ -1498,22 +1498,22 @@ Public Function MeasureAllPipe2() As Long
             
             
             'Heads
-            ElseIf UCase(entit.layer) = UCase("0a__Heads") Then
-                Debug.Print "Head " & headIndex & " " & entit.Name
+            ElseIf UCase(Entit.layer) = UCase("0a__Heads") Then
+                Debug.Print "Head " & headIndex & " " & Entit.Name
                 
                 'If we have a head, add it to the Heads Collection
                 '...but not if it's the manifold
-                If UCase(entit.Name) <> UCase("Manifold_Info") Then
+                If UCase(Entit.Name) <> UCase("Manifold_Info") Then
                     Set newHead = New Head
-                    newHead.insertionPoint = entit.insertionPoint
+                    newHead.insertionPoint = Entit.insertionPoint
                     newHead.NodeNumber = headIndex
-                    newHead.model = entit.Name
+                    newHead.model = Entit.Name
                     Heads.Add newHead
                 End If
                 
                 'Scan Attributes
                 Dim att As Variant
-                att = entit.GetAttributes()
+                att = Entit.GetAttributes()
                 'Debug.Print vbTab & (att.Count - 1)
                 Dim head_att_no As Long
                 'Debug.Print vbTab & "value = " & att(1).EntityName
@@ -1532,10 +1532,10 @@ Public Function MeasureAllPipe2() As Long
                 headIndex = headIndex + 1
                 
             'Head IDs
-            ElseIf UCase(entit.layer) = UCase("0b__Head_IDs") Then
-                newHeadIDPoint = entit.insertionPoint
-                Debug.Print "Head ID " & entit.Name & "  " & entit.Handle
-                att = entit.GetAttributes()
+            ElseIf UCase(Entit.layer) = UCase("0b__Head_IDs") Then
+                newHeadIDPoint = Entit.insertionPoint
+                Debug.Print "Head ID " & Entit.Name & "  " & Entit.Handle
+                att = Entit.GetAttributes()
                 'Debug.Print vbTab & (att.Count - 1)
                 'Dim head_att_no As Long
                 'Debug.Print vbTab & "value = " & att(1).EntityName
@@ -1558,7 +1558,7 @@ Public Function MeasureAllPipe2() As Long
         End If
     
         
-    Next entit
+    Next Entit
     Debug.Print "Total Pipe Length = " & Format(allPipesLength, "0.0") & " ft  " & headIndex & " heads"
     Debug.Print "All 0.75 inch pipe = " & Format(pipes75Length, "0.0") & " ft"
     Debug.Print "All 1.00 inch pipe = " & Format(pipes1Length, "0.0") & " ft"
@@ -1595,16 +1595,16 @@ Public Function MeasureAllPipe() As Long
     allPipesLength = 0: entitIndex = 1: headIndex = 1: riserIndex = 1
     pipes75Length = 0: pipes1Length = 0
     
-    Dim entit As IntelliCAD.entity 'AutoCAD.AcadEntity
-    For Each entit In ActiveDocument.ModelSpace
+    Dim Entit As IntelliCAD.entity 'AutoCAD.AcadEntity
+    For Each Entit In ActiveDocument.ModelSpace
         'Pipes
-        If entit.EntityName = "Polyline" Then
-            If UCase(entit.layer) = UCase("0e__Pipes-R-FP") Then
+        If Entit.EntityName = "Polyline" Then
+            If UCase(Entit.layer) = UCase("0e__Pipes-R-FP") Then
                 Set newPipe = New Pipe
                 
-                newPipe.Diameter = PipeDiameterOfColor(entit.Color, entit.layer)
+                newPipe.Diameter = PipeDiameterOfColor(Entit.Color, Entit.layer)
                 
-                pipeLength = Measure(entit)
+                pipeLength = Measure(Entit)
                 allPipesLength = allPipesLength + pipeLength
                 newPipe.ActualLength = pipeLength
                 If newPipe.Diameter = 0.675 Then
@@ -1618,9 +1618,9 @@ Public Function MeasureAllPipe() As Long
                 End If
                 
                 newPipe.PipeNumber = entitIndex
-                lngLastCoord = ((entit.Coordinates.Count - 1) - 1) / 2
-                newPipe.endPoint = entit.Coordinate(lngLastCoord)
-                newPipe.startPoint = entit.Coordinate(0)
+                lngLastCoord = ((Entit.Coordinates.Count - 1) - 1) / 2
+                newPipe.endPoint = Entit.Coordinate(lngLastCoord)
+                newPipe.startPoint = Entit.Coordinate(0)
                 Pipes.Add newPipe
                 Debug.Print "Pipe " & entitIndex & vbTab & ".L=" & Format(pipeLength, "0.00 in") & " " & vbTab & newPipe.Diameter
                 entitIndex = entitIndex + 1
@@ -1628,16 +1628,16 @@ Public Function MeasureAllPipe() As Long
         End If
         
         'Heads & HeadIDs
-        If entit.EntityName = "BlockInsert" Then
+        If Entit.EntityName = "BlockInsert" Then
             'RFC431616-155
             
             'Fittings, Risers
-            If entit.Name = "PipeFitting" _
-                Or entit.Name = "vpilc" Then
+            If Entit.Name = "PipeFitting" _
+                Or Entit.Name = "vpilc" Then
                 Set newHead = New Head
-                newHead.insertionPoint = entit.insertionPoint
+                newHead.insertionPoint = Entit.insertionPoint
                 newHead.NodeNumber = headIndex
-                If entit.Name = "vpilc" Then
+                If Entit.Name = "vpilc" Then
                     newHead.Name = "R." & riserIndex
                     riserIndex = riserIndex + 1
                 End If
@@ -1647,22 +1647,22 @@ Public Function MeasureAllPipe() As Long
             
             
             'Heads
-            ElseIf UCase(entit.layer) = UCase("0a__Heads") Then
-                Debug.Print "Head " & headIndex & " " & entit.Name
+            ElseIf UCase(Entit.layer) = UCase("0a__Heads") Then
+                Debug.Print "Head " & headIndex & " " & Entit.Name
                 
                 'If we have a head, add it to the Heads Collection
                 '...but not if it's the manifold
-                If entit.Name <> "Manifold_Info" Then
+                If Entit.Name <> "Manifold_Info" Then
                     Set newHead = New Head
-                    newHead.insertionPoint = entit.insertionPoint
+                    newHead.insertionPoint = Entit.insertionPoint
                     newHead.NodeNumber = headIndex
-                    newHead.model = entit.Name
+                    newHead.model = Entit.Name
                     Heads.Add newHead
                 End If
                 
                 'Scan Attributes
                 Dim att As Variant
-                att = entit.GetAttributes()
+                att = Entit.GetAttributes()
                 'Debug.Print vbTab & (att.Count - 1)
                 Dim head_att_no As Long
                 'Debug.Print vbTab & "value = " & att(1).EntityName
@@ -1681,10 +1681,10 @@ Public Function MeasureAllPipe() As Long
                 headIndex = headIndex + 1
                 
             'Head IDs
-            ElseIf UCase(entit.layer) = UCase("0b__Head_IDs") Then
-                newHeadIDPoint = entit.insertionPoint
-                Debug.Print "Head ID " & entit.Name & "  " & entit.Handle
-                att = entit.GetAttributes()
+            ElseIf UCase(Entit.layer) = UCase("0b__Head_IDs") Then
+                newHeadIDPoint = Entit.insertionPoint
+                Debug.Print "Head ID " & Entit.Name & "  " & Entit.Handle
+                att = Entit.GetAttributes()
                 'Debug.Print vbTab & (att.Count - 1)
                 'Dim head_att_no As Long
                 'Debug.Print vbTab & "value = " & att(1).EntityName
@@ -1707,7 +1707,7 @@ Public Function MeasureAllPipe() As Long
         End If
     
         
-    Next entit
+    Next Entit
     Debug.Print "Total Pipe Length = " & Format(allPipesLength / 12, "0.0") & " ft  " & headIndex & " heads"
     Debug.Print "All 0.75 inch pipe = " & Format(pipes75Length / 12, "0.0") & " ft"
     Debug.Print "All 1.00 inch pipe = " & Format(pipes1Length / 12, "0.0") & " ft"
@@ -2017,39 +2017,39 @@ Dim strHeadModelCode As String
  
 End Sub
 Public Function ScanInterlinks()
-Dim entit As IntelliCAD.entity
+Dim Entit As IntelliCAD.entity
 Dim entitIndex As Long
 
     entitIndex = 0
-    For Each entit In ActiveDocument.ModelSpace
-        If entit.EntityName = "BlockInsert" Then
-            If UCase(entit.Name) = UCase("vpilc") Then
+    For Each Entit In ActiveDocument.ModelSpace
+        If Entit.EntityName = "BlockInsert" Then
+            If UCase(Entit.Name) = UCase("vpilc") Then
             'If entit.Layer = "0e__Pipes" Then
                 Debug.Print "Found one"
                 'ScanAttrib Entit
-                Debug.Print vbTab & GetAttrib(entit, "VPIPE")
+                Debug.Print vbTab & GetAttrib(Entit, "VPIPE")
                 entitIndex = entitIndex + 1
             End If
         End If
-    Next entit
+    Next Entit
 
 End Function
-Public Function GetAttrib(entit As IntelliCAD.entity, AttribName As Variant) As Variant
+Public Function GetAttrib(Entit As IntelliCAD.entity, AttribName As String) As Variant
 'Scan Attributes
-Dim att As IntelliCAD.Attributes
-Dim att_no As Long
+Dim attribs As IntelliCAD.Attributes
+Dim i As Long
 Dim Block As IntelliCAD.blockInsert
     
-    If TypeOf entit Is IntelliCAD.blockInsert Then
-        Set Block = entit
-        Set att = Block.GetAttributes()
-        For att_no = 0 To (att.Count - 1)
-            If att(att_no).EntityName = "Attribute" Then
-                If att(att_no).TagString = AttribName Then
-                    GetAttrib = att(att_no).TextString
+    If TypeOf Entit Is IntelliCAD.blockInsert Then
+        Set Block = Entit
+        Set attribs = Block.GetAttributes()
+        For i = 0 To (attribs.Count - 1)
+            If attribs.Item(i).EntityName = "Attribute" Then
+                If attribs.Item(i).TagString = AttribName Then
+                    GetAttrib = attribs.Item(i).TextString
                 End If
             End If
-        Next att_no
+        Next i
     End If
 
 End Function
@@ -2065,17 +2065,19 @@ Dim att_no As Long
             If att(att_no).TagString = AttribName Then
                 'GetAttrib = att(att_no).TextString
                 att(att_no).TextString = value
+                att(att_no).Update
+                Exit For
             End If
         'End If
     Next att_no
 
 End Function
-Public Function ScanAttrib(entit As IntelliCAD.entity) As Variant
+Public Function ScanAttrib(Entit As IntelliCAD.entity) As Variant
 'Scan Attributes
 Dim att As Variant
 Dim att_no As Long
     
-    att = entit.GetAttributes()
+    att = Entit.GetAttributes()
     'Debug.Print vbTab & (att.Count - 1)
     'Debug.Print vbTab & "value = " & att(1).EntityName
     For att_no = 0 To (att.Count - 1)
@@ -2301,7 +2303,7 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
     
     acc = 0: entitIndex = 1: headIndex = 1: riserIndex = 1000
     
-    Dim entit As IntelliCAD.entity
+    Dim Entit As IntelliCAD.entity
     
     If IsMissing(OutputFormat) Then OutputFormat = "H"
     If OutputFormat = "Hydrauculator" Then OutputFormat = "H"
@@ -2312,25 +2314,25 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
     DeleteErrorCircles
     
     'Begin Entity Finding Loop **********************************************************************
-    For Each entit In ActiveDocument.ModelSpace
+    For Each Entit In ActiveDocument.ModelSpace
         Set newHead = New Head
     
         'Pipes
-        If entit.EntityName = "Polyline" Then
-            If UCase(entit.layer) = UCase("0e__Pipes-R-FP") Then
-                pipeLength = Measure(entit)
+        If Entit.EntityName = "Polyline" Then
+            If UCase(Entit.layer) = UCase("0e__Pipes-R-FP") Then
+                pipeLength = Measure(Entit)
                 acc = acc + pipeLength
                 'Dim xxx As IntelliCAD.Polyline
                 'xxx.Coordinates  trace pipe out... This is an array of doubles.
                 
                 Set newPipe = New Pipe
                 newPipe.ActualLength = pipeLength
-                newPipe.Diameter = PipeDiameterOfColor(entit.Color, entit.layer)
+                newPipe.Diameter = PipeDiameterOfColor(Entit.Color, Entit.layer)
                 newPipe.PipeNumber = entitIndex
                 newPipe.Name = "P" & entitIndex
-                lngLastCoord = ((entit.Coordinates.Count - 1) - 1) / 2
-                newPipe.endPoint = entit.Coordinate(lngLastCoord)
-                newPipe.startPoint = entit.Coordinate(0)
+                lngLastCoord = ((Entit.Coordinates.Count - 1) - 1) / 2
+                newPipe.endPoint = Entit.Coordinate(lngLastCoord)
+                newPipe.startPoint = Entit.Coordinate(0)
                 If Not CollectionContainsName(Pipes, newPipe) Then
                     Pipes.Add newPipe
                 End If
@@ -2338,9 +2340,9 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
                 entitIndex = entitIndex + 1
             End If
         'Head Pairs
-        ElseIf entit.EntityName = "Line" Then
-            If UCase(entit.layer) = UCase("0d__2Hd_Calcs") Then
-                Set newHeadPairLine = entit
+        ElseIf Entit.EntityName = "Line" Then
+            If UCase(Entit.layer) = UCase("0d__2Hd_Calcs") Then
+                Set newHeadPairLine = Entit
                 Set newHeadPair = New HeadPair
                 Set newHeadPair.HeadPairLine = newHeadPairLine
                 HeadPairs.Add newHeadPair
@@ -2349,10 +2351,10 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
         End If
         
         'Heads & NodeIDs
-        If entit.EntityName = "BlockInsert" Then
+        If Entit.EntityName = "BlockInsert" Then
             'RFC431616-155
             Dim b As IntelliCAD.blockInsert
-            Set b = entit
+            Set b = Entit
             
             'Fittings, Risers
             If b.Name = "PipeFitting" _
@@ -2361,8 +2363,8 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
                 newTee.insertionPoint = b.insertionPoint
                 newTee.NodeNumber = headIndex
                 
-                If entit.Name = "vpilc" Then
-                    newTee.Name = "R." & riserIndex & "." & GetAttrib(entit, "VPIPE")
+                If Entit.Name = "vpilc" Then
+                    newTee.Name = "R." & riserIndex & "." & GetAttrib(Entit, "VPIPE")
                     newTee.insertionPoint = b.insertionPoint
                     
 
@@ -2376,18 +2378,18 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             
             
             'New Nodes, Heads & Tees
-            ElseIf UCase(entit.layer) = UCase("0a__Heads") Then
+            ElseIf UCase(Entit.layer) = UCase("0a__Heads") Then
                 'Debug.Print "Head " & headIndex & " " & entit.Name
 
                 
                 'If we have a head, add it to the NewHeads Collection
                 '...but not if it's the manifold
-                If UCase(entit.Name) <> UCase("Manifold_Info") Then
+                If UCase(Entit.Name) <> UCase("Manifold_Info") Then
                     'This is/should be a head
                     '''Set newHead = New Head
-                    newHead.insertionPoint = entit.insertionPoint
+                    newHead.insertionPoint = Entit.insertionPoint
                     newHead.NodeNumber = headIndex
-                    newHead.model = entit.Name
+                    newHead.model = Entit.Name
                     nodes.Add newHead
                 Else
                     'TODO: *** Manifold ?
@@ -2398,16 +2400,16 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
                 headIndex = headIndex + 1
                 
             'NodeIDs
-            ElseIf UCase(entit.layer) = UCase("0b__Head_IDs") Then
+            ElseIf UCase(Entit.layer) = UCase("0b__Head_IDs") Then
                 Set newNodeID = New NodeID
-                newNodeID.Name = GetAttrib(entit, "VALUE")
-                newNodeID.insertionPoint = entit.insertionPoint
+                newNodeID.Name = GetAttrib(Entit, "VALUE")
+                newNodeID.insertionPoint = Entit.insertionPoint
                 NodeIDs.Add newNodeID
             End If
         End If
         'Manifold Ports
-        If UCase(entit.layer) = UCase("0a__Heads") And entit.EntityName = "Point" Then
-            Set point = entit
+        If UCase(Entit.layer) = UCase("0a__Heads") And Entit.EntityName = "Point" Then
+            Set point = Entit
             newHead.insertionPoint = point.Coordinates
             If OutputFormat = "R" Then
                 newHead.Name = "S.0"
@@ -2418,7 +2420,7 @@ Public Function Scan(Section As Long, Optional OutputFormat As Variant) As Long
             ManifoldNodes.Add newHead
             lngSourceNumber = lngSourceNumber + 1
         End If
-    Next entit
+    Next Entit
     'End of Entity Finding ******************************************************************************************
     
     Debug.Print "//Total Pipe Length = " & Format(acc, "0.0") & " ft  " & headIndex & " heads"

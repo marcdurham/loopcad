@@ -132,7 +132,7 @@ Public Sub SaveErrorXML()
 End Sub
 
 Public Sub ScanCADObjects()
-    Dim entit As IntelliCAD.entity
+    Dim Entit As IntelliCAD.entity
     
     Dim entPoly As AutoCAD.AcadObject
     Dim entPolylines As New Collection
@@ -153,30 +153,30 @@ Public Sub ScanCADObjects()
     previousLayer = ""
 
     'See which Boxes exist
-    For Each entit In ActiveDocument.ModelSpace
+    For Each Entit In ActiveDocument.ModelSpace
 
-        If IsOurLayer(entit.layer) Then
-            If previousLayer <> entit.layer Then
-                Debug.Print "ScanCADObjects = "; entit.layer
-                previousLayer = entit.layer
+        If IsOurLayer(Entit.layer) Then
+            If previousLayer <> Entit.layer Then
+                Debug.Print "ScanCADObjects = "; Entit.layer
+                previousLayer = Entit.layer
                 ''Debug.Print "   Elevation Box Layer! Entity.EntityName = " & entit.EntityName
             End If
            'Debug.Print "Elevation Box Layer! Entity.EntityName = " & entit.EntityName
-            If UCase(entit.EntityName) = UCase("BlockInsert") Then
-                Set entBlock = entit
+            If UCase(Entit.EntityName) = UCase("BlockInsert") Then
+                Set entBlock = Entit
                 cadBlocks.Add entBlock
-            ElseIf UCase(entit.EntityName) = UCase("Polyline") Then
-                Set entPoly = entit
+            ElseIf UCase(Entit.EntityName) = UCase("Polyline") Then
+                Set entPoly = Entit
                 entPolylines.Add entPoly
-            ElseIf UCase(entit.EntityName) = UCase("MText") Then
-                Set entMText = entit
+            ElseIf UCase(Entit.EntityName) = UCase("MText") Then
+                Set entMText = Entit
                 cadMTexts.Add entMText
-            ElseIf UCase(entit.EntityName) = UCase("Text") Then
-                Set entText = entit
+            ElseIf UCase(Entit.EntityName) = UCase("Text") Then
+                Set entText = Entit
                 cadTexts.Add entText
             End If
         End If
-    Next entit
+    Next Entit
     
     
     For Each entPoly In entPolylines

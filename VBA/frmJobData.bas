@@ -46,14 +46,15 @@ Public Sub SaveJobData()
     Scanner.Job.SupplyStaticPressure = Me.SupplyStaticPressure
     Scanner.Job.SupplyResidualPressure = Me.SupplyResidualPressure
     Scanner.Job.SupplyElevation = Me.SupplyElevation
-    Scanner.Job.SupplyPipeLength = Me.SupplyManifoldPipeLength
-    Scanner.Job.SupplyPipeType = Me.SupplyManifoldPipeType
-    Scanner.Job.SupplyPipeSize = Me.SupplyManifoldPipeSize
+    Scanner.Job.SupplyPipeLength = Me.SupplyPipeLength
+    Scanner.Job.SupplyPipeType = Me.SupplyPipeType
+    Scanner.Job.SupplyPipeSize = Me.SupplyPipeSize
     Scanner.Job.SupplyPipeInternalDiameter = Me.SupplyPipeInternalDiameter
     Scanner.Job.SupplyPipeFittingsSummary = Me.SupplyPipeFittingsSummary
     Scanner.Job.SupplyPipeFittingsEquivLength = Me.SupplyPipeFittingsEquivLength
-    Scanner.Job.SupplyPipeWaterFlowPressureLoss = Me.SupplyPipeWaterFlowPressureLoss
-    Scanner.Job.WaterFlowMakeModel = Me.WaterFlowMakeModel
+    Scanner.Job.SupplyPipeAddPressureLoss = Me.SupplyPipeAddPressureLoss
+    Scanner.Job.WaterFlowSwitchMakeModel = Me.WaterFlowSwitchMakeModel
+    Scanner.Job.WaterFlowSwitchPressureLoss = Me.WaterFlowSwitchPressureLoss
     Scanner.Job.DomesticFlowAdded = Me.DomesticFlowAdded
         
     JobData.SetJobData
@@ -94,16 +95,16 @@ Public Sub LoadJobData()
         Me.SupplyStaticPressure = Scanner.Job.SupplyStaticPressure
         Me.SupplyResidualPressure = Scanner.Job.SupplyResidualPressure
         Me.SupplyElevation = Scanner.Job.SupplyElevation
-        Me.SupplyPipeLength = Scanner.Job.SupplyManifoldPipeLength
-        Me.SupplyPipeType = Scanner.Job.SupplyManifoldPipeType
-        Me.SupplyPipeSize = Scanner.Job.SupplyManifoldPipeSize
+        Me.SupplyPipeLength = Scanner.Job.SupplyPipeLength
+        Me.SupplyPipeType = Scanner.Job.SupplyPipeType
+        Me.SupplyPipeSize = Scanner.Job.SupplyPipeSize
         Me.SupplyPipeInternalDiameter = Scanner.Job.SupplyPipeInternalDiameter
         Me.SupplyPipeFittingsSummary = Scanner.Job.SupplyPipeFittingsSummary
         Me.SupplyPipeFittingsEquivLength = Scanner.Job.SupplyPipeFittingsEquivLength
-        Me.SupplyPipeWaterFlowPressureLoss = Scanner.Job.SupplyPipeWaterFlowPressureLoss
-        Me.WaterFlowMakeModel = Scanner.Job.WaterFlowMakeModel
+        Me.SupplyPipeAddPressureLoss = Scanner.Job.SupplyPipeAddPressureLoss
+        Me.WaterFlowSwitchMakeModel = Scanner.Job.WaterFlowSwitchMakeModel
+        Me.WaterFlowSwitchPressureLoss = Scanner.Job.WaterFlowSwitchPressureLoss
         Me.DomesticFlowAdded = Scanner.Job.DomesticFlowAdded
-       
     End If
     
 End Sub

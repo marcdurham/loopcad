@@ -13,10 +13,7 @@ On Error GoTo ErrTrap
     SetAttrib Block, "CALCULATED_BY_COMPANY", Job.CalculatedByCompany
     SetAttrib Block, "JOB_NUMBER", Job.JobNumber
     SetAttrib Block, "JOB_NAME", Job.JobName
-    'SetAttrib block, "LEAD_NUMBER", Job.LeadN
-    'SetAttrib block, "SITE_LOCATION", Job.SiteLocation
     SetAttrib Block, "JOB_SITE_LOCATION", Job.JobSiteLocation
-    
     SetAttribFromBox Block, "SPRINKER_PIPE_TYPE", Job.SprinklerPipeType
     SetAttribFromBox Block, "SPRINKLER_FITTING_TYPE", Job.SprinklerFittingType
     SetAttribFromBox Block, "SUPPLY_NAME", Job.SupplyName
@@ -24,28 +21,20 @@ On Error GoTo ErrTrap
     SetAttribFromBox Block, "SUPPLY_STATIC_PRESSURE", Job.SupplyStaticPressure
     SetAttribFromBox Block, "SUPPLY_RESIDUAL_PRESSURE", Job.SupplyResidualPressure
     SetAttribFromBox Block, "SUPPLY_ELEVATION", Job.SupplyElevation
-    SetAttribFromBox Block, "SUPPLY_MANIFOLD_PIPE_LENGTH", Job.SupplyManifoldPipeLength
-    SetAttribFromBox Block, "SUPPLY_MANIFOLD_PIPE_TYPE", Job.SupplyManifoldPipeType
-    SetAttribFromBox Block, "SUPPLY_MANIFOLD_PIPE_SIZE", Job.SupplyManifoldPipeSize
-    SetAttribFromBox Block, "SUPPLY_MANIFOLD_PIPE_INTERNAL_DIAMETER", Job.SupplyManifoldPipeInternalDiameter
-    SetAttribFromBox Block, "SUPPLY_MANIFOLD_FITTINGS_SUMMARY", Job.SupplyManifoldFittingsSummary
-    SetAttribFromBox Block, "SUPPLY_MANIFOLD_FITTINGS_EQUIV_LENGTH", Job.SupplyManifoldFittingsEquivLength
-    SetAttribFromBox Block, "SUPPLY_MANIFOLD_WATER_FLOW_PRESSURE_LOSS", Job.SupplyManifoldWaterFlowPressureLoss
-    SetAttribFromBox Block, "WATER_FLOW_MAKE_MODEL", Job.WaterFlowMakeModel
+    SetAttribFromBox Block, "SUPPLY_PIPE_LENGTH", Job.SupplyPipeLength
+    SetAttribFromBox Block, "SUPPLY_PIPE_TYPE", Job.SupplyPipeType
+    SetAttribFromBox Block, "SUPPLY_PIPE_SIZE", Job.SupplyPipeSize
+    SetAttribFromBox Block, "SUPPLY_PIPE_INTERNAL_DIAMETER", Job.SupplyPipeInternalDiameter
+    SetAttribFromBox Block, "SUPPLY_PIPE_FITTINGS_SUMMARY", Job.SupplyPipeFittingsSummary
+    SetAttribFromBox Block, "SUPPLY_PIPE_FITTINGS_EQUIV_LENGTH", Job.SupplyPipeFittingsEquivLength
+    SetAttribFromBox Block, "SUPPLY_PIPE_ADD_PRESSURE_LOSS", Job.SupplyPipeAddPressureLoss
+    SetAttribFromBox Block, "WATER_FLOW_SWITCH_MAKE_MODEL", Job.WaterFlowSwitchMakeModel
+    SetAttribFromBox Block, "WATER_FLOW_SWITCH_PRESSURE_LOSS", Job.WaterFlowSwitchPressureLoss
     SetAttribFromBox Block, "DOMESTIC_FLOW_ADDED", Job.DomesticFlowAdded
-    
-    'SetAttribFromBox block, "STATIC_PRESSURE", Job.StaticPressure
-    'SetAttribFromBox block, "RESIDUAL_PRESSURE", Job.ResidualPressure
-    'SetAttribFromBox block, "AVAILABLE_FLOW", Job.AvailableFlow
-    'SetAttribFromBox block, "METER_ELEVATION", Job.MeterElevation
-    'SetAttribFromBox block, "METER_PIPE_LENGTH", Job.MeterPipeLength
-    'SetAttribFromBox block, "METER_PIPE_INTERNAL_DIAMETER", Job.MeterPipeInternalDiameter
     
     CheckAddLayer "Job Data", Colors.vicMagenta, False, True
     Block.layer = "Job Data"
     
-    
-
 ExitProc:
     Exit Sub
 
@@ -69,7 +58,7 @@ ErrTrap:
 End Sub
 
 Public Sub ScanJobData()
-Dim entit As IntelliCAD.entity
+Dim Entit As IntelliCAD.entity
 Dim blk As IntelliCAD.blockInsert
 Dim strJobName As String
 Dim strLeadNumber As String
@@ -85,70 +74,35 @@ Dim strCalculatedByCompany As String
 Dim i As Integer
     
     For i = 0 To (ActiveDocument.ModelSpace.Count - 1)
-        Set entit = ActiveDocument.ModelSpace(i)
-        If entit.EntityName = "BlockInsert" Then
-            Set blk = entit
+        Set Entit = ActiveDocument.ModelSpace(i)
+        If Entit.EntityName = "BlockInsert" Then
+            Set blk = Entit
             If blk.Name = "JobData" Then
-              
-              
-'    SetAttrib block, "CALCULATED_BY_COMPANY", Job.CalculatedByCompany
-'    SetAttrib block, "JOB_NUMBER", Job.JobNumber
-'    SetAttrib block, "JOB_NAME", Job.JobName
-'    'SetAttrib block, "LEAD_NUMBER", Job.LeadN
-'    'SetAttrib block, "SITE_LOCATION", Job.SiteLocation
-'    SetAttrib block, "JOB_SITE_LOCATION", Job.JobSiteLocation
-'
-'    SetAttribFromBox block, "SPRINKER_PIPE_TYPE", Job.SprinklerPipeType
-'    SetAttribFromBox block, "SPRINKLER_FITTING_TYPE", Job.SprinklerFittingType
-'    SetAttribFromBox block, "SUPPLY_NAME", Job.SupplyName
-'    SetAttribFromBox block, "SUPPLY_AVAILABLE_FLOW", Job.SupplyAvailableFlow
-'    SetAttribFromBox block, "SUPPLY_STATIC_PRESSURE", Job.SupplyStaticPressure
-'    SetAttribFromBox block, "SUPPLY_RESIDUAL_PRESSURE", Job.SupplyResidualPressure
-'    SetAttribFromBox block, "SUPPLY_ELEVATION", Job.SupplyElevation
-'    SetAttribFromBox block, "SUPPLY_MANIFOLD_PIPE_LENGTH", Job.SupplyManifoldPipeLength
-'    SetAttribFromBox block, "SUPPLY_MANIFOLD_PIPE_TYPE", Job.SupplyManifoldPipeType
-'    SetAttribFromBox block, "SUPPLY_MANIFOLD_PIPE_SIZE", Job.SupplyManifoldPipeSize
-'    SetAttribFromBox block, "SUPPLY_MANIFOLD_PIPE_INTERNAL_DIAMETER", Job.SupplyManifoldPipeInternalDiameter
-'    SetAttribFromBox block, "SUPPLY_MANIFOLD_FITTINGS_SUMMARY", Job.SupplyManifoldFittingsSummary
-'    SetAttribFromBox block, "SUPPLY_MANIFOLD_FITTINGS_EQUIV_LENGTH", Job.SupplyManifoldFittingsEquivLength
-'    SetAttribFromBox block, "SUPPLY_MANIFOLD_WATER_FLOW_PRESSURE_LOSS", Job.SupplyManifoldWaterFlowPressureLoss
-'    SetAttribFromBox block, "WATER_FLOW_MAKE_MODEL", Job.WaterFlowMakeModel
-'    SetAttribFromBox block, "DOMESTIC_FLOW_ADDED", Job.DomesticFlowAdded
-'
-'    'SetAttribFromBox block, "STATIC_PRESSURE", Job.StaticPressure
-'    'SetAttribFromBox block, "RESIDUAL_PRESSURE", Job.ResidualPressure
-'    'SetAttribFromBox block, "AVAILABLE_FLOW", Job.AvailableFlow
-'    'SetAttribFromBox block, "METER_ELEVATION", Job.MeterElevation
-'    'SetAttribFromBox block, "METER_PIPE_LENGTH", Job.MeterPipeLength
-'    'SetAttribFromBox block, "METER_PIPE_INTERNAL_DIAMETER", Job.MeterPipeInternalDiameter
-'
-    
-                strJobName = GetAttrib(blk, "JOB_NAME")
-                strLeadNumber = GetAttrib(blk, "JOB_NUMBER") 'LEAD_NUMBER
-                
-                strSiteLocation = GetFirstAttrib(blk, "JOB_SITE_LOCATION")
-                strStaticPressure = GetFirstAttrib(blk, "SUPPLY_STATIC_PRESSURE")
-                strResidualPressure = GetFirstAttrib(blk, "SUPPLY_RESIDUAL_PRESSURE")
-                strAvailableFlow = GetFirstAttrib(blk, "SUPPLY_AVAILABLE_FLOW")
-                strMeterElevation = GetFirstAttrib(blk, "SUPPLY_ELEVATION")
-                strMeterPipeLength = GetFirstAttrib(blk, "SUPPLY_MANIFOLD_PIPE_LENGTH")
-                strMeterPipeInternalDiameter = GetFirstAttrib(blk, "SUPPLY_MANIFOLD_PIPE_INTERNAL_DIAMETER")
-                strCalculatedByCompany = GetFirstAttrib(blk, "CALCULATED_BY_COMPANY")
-                
+                        
                 Set Job = New Job
                 Set Job.BlockReference = blk
-                Job.JobName = strJobName
-                Job.JobNumber = strLeadNumber
-                Job.JobSiteLocation = strSiteLocation
-                Job.SupplyStaticPressure = EmptyDefault(strStaticPressure, 0)
-                Job.SupplyResidualPressure = EmptyDefault(strResidualPressure, 0)
-                Job.SupplyAvailableFlow = EmptyDefault(strAvailableFlow, 0)
-                Job.SupplyElevation = EmptyDefault(strMeterElevation, 0)
-                Job.SupplyManifoldPipeLength = EmptyDefault(strMeterPipeLength, 0)
-                Job.SupplyManifoldPipeInternalDiameter = EmptyDefault(strMeterPipeInternalDiameter, 0)
-                Job.CalculatedByCompany = EmptyDefault(strCalculatedByCompany, 0)
-
-               
+                Job.CalculatedByCompany = GetAttribOrDefault(blk, "0", "CALCULATED_BY_COMPANY")
+                Job.JobName = GetAttribOrDefault(blk, "", "JOB_NAME")
+                Job.JobNumber = GetAttribOrDefault(blk, "", "JOB_NUMBER")
+                Job.JobSiteLocation = GetAttribOrDefault(blk, "", "JOB_SITE_LOCATION")
+                Job.SprinklerPipeType = GetAttribOrDefault(blk, "", "SPRINKLER_PIPE_TYPE")
+                Job.SprinklerFittingType = GetAttribOrDefault(blk, "", "SPRINKLER_FITTING_TYPE")
+                Job.SupplyName = GetAttribOrDefault(blk, "0", "SUPPLY_NAME")
+                Job.SupplyStaticPressure = GetAttribOrDefault(blk, "0", "SUPPLY_STATIC_PRESSURE")
+                Job.SupplyResidualPressure = GetAttribOrDefault(blk, "0", "SUPPLY_RESIDUAL_PRESSURE")
+                Job.SupplyAvailableFlow = GetAttribOrDefault(blk, "0", "SUPPLY_AVAILABLE_FLOW")
+                Job.SupplyElevation = GetAttribOrDefault(blk, "0", "SUPPLY_ELEVATION")
+                Job.SupplyPipeLength = GetAttribOrDefault(blk, "0", "SUPPLY_PIPE_LENGTH")
+                Job.SupplyPipeSize = GetAttribOrDefault(blk, "0", "SUPPLY_PIPE_SIZE")
+                Job.SupplyPipeType = GetAttribOrDefault(blk, "0", "SUPPLY_PIPE_TYPE")
+                Job.SupplyPipeInternalDiameter = GetAttribOrDefault(blk, "0", "SUPPLY_PIPE_INTERNAL_DIAMETER")
+                Job.SupplyPipeFittingsSummary = GetAttribOrDefault(blk, "0", "SUPPLY_PIPE_FITTINGS_SUMMARY")
+                Job.SupplyPipeFittingsEquivLength = GetAttribOrDefault(blk, "0", "SUPPLY_PIPE_FITTINGS_EQUIV_LENGTH")
+                Job.SupplyPipeAddPressureLoss = GetAttribOrDefault(blk, "0", "SUPPLY_PIPE_ADD_PRESSURE_LOSS")
+                Job.WaterFlowSwitchMakeModel = GetAttribOrDefault(blk, "0", "WATER_FLOW_SWITCH_MAKE_MODEL")
+                Job.WaterFlowSwitchPressureLoss = GetAttribOrDefault(blk, "0", "WATER_FLOW_SWITCH_PRESSURE_LOSS")
+                Job.DomesticFlowAdded = GetAttribOrDefault(blk, "0", "DOMESTIC_FLOW_ADDED")
+    
                 blockCount = blockCount + 1
             End If
         End If
@@ -157,21 +111,49 @@ Dim i As Integer
     If blockCount = 0 Then Set Job = Nothing
     
 End Sub
-Public Function GetFirstAttrib(blk As IntelliCAD.blockInsert, ParamArray tags())
-Dim v As String
-Dim tag As Variant
+Public Function GetAttribOrDefault(blk As IntelliCAD.blockInsert, def As String, ParamArray TagStrings())
+    
+    'Debug.Print "GetAttribOrDefault: " & UBound(TagStrings)
+    'GetAttribOrDefault = EmptyDefault(GetFirstAttrib(blk, TagStrings), Default)
+    
+Dim val As String
+Dim i As Integer
+Dim s As String
 
-    For Each tag In tags
-        v = GetAttrib(blk, tag)
-        If Len(v) > 0 Then
-            GetFirstAttrib = v
+    Debug.Print "GetAttribOrDefault: " & UBound(TagStrings)
+    For i = LBound(TagStrings) To UBound(TagStrings)
+        s = TagStrings(i)
+        val = GetAttrib(blk, s)
+        If Len(val) > 0 Then
+            GetAttribOrDefault = val
             Exit Function
         End If
-    Next tag
+    Next i
+    
+    GetAttribOrDefault = def
     
 End Function
-Public Function EmptyDefault(value As String, default As String)
-    EmptyDefault = IIf(Trim(value) = "", default, value)
+Public Function GetFirstAttrib( _
+    blk As IntelliCAD.blockInsert, _
+    TagStrings() As Variant) As Variant
+    
+Dim val As String
+Dim i As Integer
+
+    Debug.Print "GetFirstAttrib: " & UBound(TagStrings)
+    For i = LBound(TagStrings) To UBound(TagStrings)
+        val = GetAttrib(blk, TagStrings(i))
+        If Len(v) > 0 Then
+            GetFirstAttrib = val
+            Exit Function
+        End If
+    Next i
+    
+End Function
+Public Function EmptyDefault(value As String, Default As Variant) As Variant
+
+    EmptyDefault = IIf(Trim(value) = "", Default, value)
+    
 End Function
 
 Public Sub EditJobData()
@@ -210,6 +192,7 @@ On Error GoTo ErrTrap
     
     Set Block = Job.BlockReference
     
+    strCalculatedByCompany = GetAttrib(Block, "CALCULATED_BY_COMPANY")
     strJobNameOld = GetAttrib(Block, "JOB_NAME")
     strLeadNumberOld = GetAttrib(Block, "LEAD_NUMBER")
     strSiteLocationOld = GetAttrib(Block, "SITE_LOCATION")
@@ -219,7 +202,7 @@ On Error GoTo ErrTrap
     strMeterElevationOld = GetAttrib(Block, "METER_ELEVATION")
     strMeterPipeLengthOld = GetAttrib(Block, "METER_PIPE_LENGTH")
     strMeterPipeInternalDiameterOld = GetAttrib(Block, "METER_PIPE_INTERNAL_DIAMETER")
-    strCalculatedByCompany = GetAttrib(Block, "CALCULATED_BY_COMPANY")
+
     
     strJobNameNew = InputBox("Input Job Name", , strJobNameOld)
     If strJobNameNew = "" Then Exit Sub

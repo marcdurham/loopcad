@@ -1,7 +1,7 @@
 Attribute VB_Name = "ElevationBoxes"
 Public Function GetElevationBoxFloorTag(testPoint As Variant) As FloorTag
 Dim eBox As ElevationBox
-Dim tag As FloorTag
+Dim Tag As FloorTag
     
     If FloorTags Is Nothing Then
         ScanEntities
@@ -17,16 +17,16 @@ Dim tag As FloorTag
     If eBox Is Nothing Then
         Exit Function
     
-    For Each tag In FloorTags
-        If InBox(eBox.Box, tag.insertionPoint) Then
-            Set GetElevationBoxFloorTag = tag
+    For Each Tag In FloorTags
+        If InBox(eBox.Box, Tag.insertionPoint) Then
+            Set GetElevationBoxFloorTag = Tag
             Exit Function
         End If
     Next xFloorTag
 
 End Function
 Public Sub ScanFor()
-    Dim entit As IntelliCAD.entity
+    Dim Entit As IntelliCAD.entity
     Dim Boxes As New Collection
     Dim Labels As New Collection
     Dim Box As IntelliCAD.lwPolyline
@@ -40,12 +40,12 @@ Public Sub ScanFor()
     Dim BoxUpperLeft(0 To 1) As Double
 
     'See which Boxes exist
-    For Each entit In ActiveDocument.ModelSpace
+    For Each Entit In ActiveDocument.ModelSpace
         'Debug.Print "Elevation Box Layer = "; Entit.Layer
-        If UCase(entit.layer) = UCase("ElevationBox") Then
+        If UCase(Entit.layer) = UCase("ElevationBox") Then
             'Debug.Print "Elevation Box Layer! Entity.EntityName = " & Entit.EntityName
-            If UCase(entit.EntityName) = UCase("Polyline") Then
-                Set Box = entit
+            If UCase(Entit.EntityName) = UCase("Polyline") Then
+                Set Box = Entit
                 Coordinates = Box.Coordinates
                 If (Coordinates.Count - 1) = 7 Then ' an upper bound of 7 means it's a rectangle
                     'Debug.Print "Box!"
@@ -53,13 +53,13 @@ Public Sub ScanFor()
                     Set eBox.Box = Box
                     Boxes.Add eBox
                 End If
-            ElseIf UCase(entit.EntityName) = UCase("MText") Then
-                Set ElevMLable = entit
+            ElseIf UCase(Entit.EntityName) = UCase("MText") Then
+                Set ElevMLable = Entit
                 Labels.Add ElevMLable
                 
             End If
         End If
-    Next entit
+    Next Entit
     
     'get inner boxes
     For Each eBox In Boxes
