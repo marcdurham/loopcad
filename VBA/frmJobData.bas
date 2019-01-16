@@ -23,7 +23,7 @@ Private Sub cmdCancel_Click()
 End Sub
 
 Private Sub cmdOK_Click()
-
+    ScanJobData
     SaveJobData
     Me.Hide
     
@@ -35,14 +35,14 @@ Public Sub SaveJobData()
     End If
     
     Scanner.Job.JobName = Me.txtJobName
-    Scanner.Job.SiteLocation = Me.txtSiteLocation
-    Scanner.Job.LeadN = Me.txtLeadN
-    Scanner.Job.StaticPressure = Me.txtStaticPressure
-    Scanner.Job.ResidualPressure = Me.txtResidualPressure
-    Scanner.Job.AvailableFlow = Me.txtAvailableFlow
-    Scanner.Job.MeterElevation = Me.txtMeterElevation
-    Scanner.Job.MeterPipeLength = Me.txtMeterPipeLength
-    Scanner.Job.MeterPipeInternalDiameter = Me.txtMeterPipeInternalDiameter
+    Scanner.Job.JobSiteLocation = Me.txtSiteLocation
+    Scanner.Job.JobNumber = Me.txtLeadN
+    Scanner.Job.SupplyStaticPressure = Me.txtStaticPressure
+    Scanner.Job.SupplyResidualPressure = Me.txtResidualPressure
+    Scanner.Job.SupplyAvailableFlow = Me.txtAvailableFlow
+    Scanner.Job.SupplyElevation = Me.txtMeterElevation
+    Scanner.Job.SupplyManifoldPipeLength = Me.txtMeterPipeLength
+    Scanner.Job.SupplyManifoldPipeInternalDiameter = Me.txtMeterPipeInternalDiameter
     Scanner.Job.CalculatedByCompany = Me.txtCalculatedByCompany
         
     JobData.SetJobData
@@ -70,14 +70,14 @@ Public Sub LoadJobData()
         Set Scanner.Job = New Job
     Else
         Me.txtJobName = Scanner.Job.JobName
-        Me.txtSiteLocation = Scanner.Job.SiteLocation
-        Me.txtLeadN = Scanner.Job.LeadN
-        Me.txtStaticPressure = Scanner.Job.StaticPressure
-        Me.txtResidualPressure = Scanner.Job.ResidualPressure
-        Me.txtAvailableFlow = Scanner.Job.AvailableFlow
-        Me.txtMeterElevation = Scanner.Job.MeterElevation
-        Me.txtMeterPipeLength = Scanner.Job.MeterPipeLength
-        Me.txtMeterPipeInternalDiameter = Scanner.Job.MeterPipeInternalDiameter
+        Me.txtSiteLocation = Scanner.Job.JobSiteLocation
+        Me.txtLeadN = Scanner.Job.JobNumber
+        Me.txtStaticPressure = Scanner.Job.SupplyStaticPressure
+        Me.txtResidualPressure = Scanner.Job.SupplyResidualPressure
+        Me.txtAvailableFlow = Scanner.Job.SupplyAvailableFlow
+        Me.txtMeterElevation = Scanner.Job.SupplyElevation
+        Me.txtMeterPipeLength = Scanner.Job.SupplyManifoldPipeLength
+        Me.txtMeterPipeInternalDiameter = Scanner.Job.SupplyManifoldPipeInternalDiameter
         Me.txtCalculatedByCompany = Scanner.Job.CalculatedByCompany
     End If
     

@@ -18,7 +18,7 @@ ErrTrap:
 End Sub
 Public Sub ChangeHeadModel(FromModel As String, ToModel As String)
     Dim entity As IntelliCAD.entity
-    Dim block As IntelliCAD.blockInsert
+    Dim Block As IntelliCAD.blockInsert
     Dim newBlock As IntelliCAD.blockInsert
     Dim i As Long
     
@@ -26,11 +26,11 @@ Public Sub ChangeHeadModel(FromModel As String, ToModel As String)
     
     For Each entity In ActiveDocument.ModelSpace
         If entity.EntityName = "BlockInsert" Then
-            Set block = entity
-            If block.Name = FromModel Then
-                Set newBlock = ActiveDocument.ModelSpace.InsertBlock(block.insertionPoint, ToModel, 1, 1, 1, 0)
+            Set Block = entity
+            If Block.Name = FromModel Then
+                Set newBlock = ActiveDocument.ModelSpace.InsertBlock(Block.insertionPoint, ToModel, 1, 1, 1, 0)
                 newBlock.layer = "0a__Heads"
-                block.Delete
+                Block.Delete
                 
                 Debug.Print "Head Replaced " & i & " " & FromModel & " to " & ToModel
                 i = i + 1
@@ -43,7 +43,7 @@ Public Sub ChangeHeadModel(FromModel As String, ToModel As String)
 End Sub
 Public Sub listHeadModels(model As String)
     Dim entity As IntelliCAD.entity
-    Dim block As IntelliCAD.blockInsert
+    Dim Block As IntelliCAD.blockInsert
     Dim newBlock As IntelliCAD.blockInsert
     Dim i As Long
     
@@ -51,9 +51,9 @@ Public Sub listHeadModels(model As String)
     
     For Each entity In ActiveDocument.ModelSpace
         If entity.EntityName = "BlockInsert" Then
-            Set block = entity
-            If UCase(block.Name) Like UCase(model) Then
-                Debug.Print "Head " & i & " " & block.Name
+            Set Block = entity
+            If UCase(Block.Name) Like UCase(model) Then
+                Debug.Print "Head " & i & " " & Block.Name
                 i = i + 1
             End If
         End If

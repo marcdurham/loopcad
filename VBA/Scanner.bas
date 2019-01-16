@@ -98,7 +98,7 @@ Dim pfSS As AcadSelectionSet  'pickfirst
 Dim ssObject As IntelliCAD.entity
 Dim msg As String
 Dim newLabel As String
-Dim block As IntelliCAD.blockInsert
+Dim Block As IntelliCAD.blockInsert
 Dim strHeadNumber As String
     msg = vbCrLf
     
@@ -107,7 +107,7 @@ Dim strHeadNumber As String
         If UCase(ssObject.layer) = UCase("HeadLabels") Then
             'MsgBox "You picked a head label!"
             If ssObject.EntityName = "BlockInsert" Then
-                Set block = ssObject
+                Set Block = ssObject
                 strHeadNumber = GetAttrib(ssObject, "HEADNUMBER")
                 newLabel = InputBox("What would you like to label this head?", "ChangeHead", strHeadNumber)
                 If newLabel <> "" Then
@@ -724,7 +724,7 @@ Public Sub LabelHeadsTees()
     Dim xNode As Node
     Dim dblErrorElevation As Double
     Dim newNodeID As NodeID
-    Dim block As IntelliCAD.blockInsert
+    Dim Block As IntelliCAD.blockInsert
     Dim indexHead As Long
     Dim indexTee As Long
     Dim bHasTeeLabelLayer As Boolean
@@ -745,11 +745,11 @@ Public Sub LabelHeadsTees()
     For Each xNode In nodes
         Debug.Print "Labeling node " & xNode.NodeNumber & "..."
         If xNode.NodeTypeID = NODE_TYPE_HEAD Then
-            Set block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, "HeadLabel.dwg", 1, 1, 1, 0)
-            block.layer = "HeadLabels"
+            Set Block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, "HeadLabel.dwg", 1, 1, 1, 0)
+            Block.layer = "HeadLabels"
             
             indexHead = indexHead + 1
-            SetAttrib block, "HEADNUMBER", "H." & indexHead
+            SetAttrib Block, "HEADNUMBER", "H." & indexHead
             
             
 '        ElseIf xNode.NodeTypeID = NODE_TYPE_TEE Then
@@ -777,11 +777,11 @@ Public Sub LabelHeadsTees()
     For Each xNode In nodes
         Debug.Print "Labeling node " & xNode.NodeNumber & "..."
         If xNode.NodeTypeID = NODE_TYPE_TEE Then
-            Set block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, "TeeLabel.dwg", 1, 1, 1, 0)
-            block.layer = "TeeLabels"
+            Set Block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, "TeeLabel.dwg", 1, 1, 1, 0)
+            Block.layer = "TeeLabels"
             
             indexTee = indexTee + 1
-            SetAttrib block, "TEENUMBER", "T." & indexTee
+            SetAttrib Block, "TEENUMBER", "T." & indexTee
                 
             
         End If
@@ -804,7 +804,7 @@ End Sub
 Public Function LabelHeads(Optional StartNodeNumber As Variant) As Long
 'Returns last or highest head number
     Dim xNode As Node
-    Dim block As IntelliCAD.blockInsert
+    Dim Block As IntelliCAD.blockInsert
     Dim indexHead As Long
     Dim layerheadlabels As IntelliCAD.layer
   
@@ -816,9 +816,9 @@ Public Function LabelHeads(Optional StartNodeNumber As Variant) As Long
     For Each xNode In nodes
         Debug.Print "Labeling Head " & xNode.NodeNumber & "..."
         If xNode.NodeTypeID = NODE_TYPE_HEAD Then
-            Set block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, "HeadLabel.dwg", 1, 1, 1, 0)
-            block.layer = "HeadLabels"
-            SetAttrib block, "HEADNUMBER", "H." & indexHead
+            Set Block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, "HeadLabel.dwg", 1, 1, 1, 0)
+            Block.layer = "HeadLabels"
+            SetAttrib Block, "HEADNUMBER", "H." & indexHead
             indexHead = indexHead + 1
         End If
     Next xNode
@@ -830,7 +830,7 @@ End Function
 Public Function LabelNodesByType(NodeTypeID As Long, layerName As String, BlockDwgName As String, NumberAttributeName As String, NodeNumberPrefix As String, Optional StartNodeNumber As Variant) As Long
 'Returns last or highest head number
     Dim xNode As Node
-    Dim block As IntelliCAD.blockInsert
+    Dim Block As IntelliCAD.blockInsert
     Dim indexNode As Long
     Dim layerheadlabels As IntelliCAD.layer
   
@@ -844,9 +844,9 @@ Public Function LabelNodesByType(NodeTypeID As Long, layerName As String, BlockD
     For Each xNode In nodes
         Debug.Print "Labeling Node " & xNode.NodeNumber & "..."
         If xNode.NodeTypeID = NodeTypeID Then
-            Set block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, BlockDwgName, 1, 1, 1, 0)
-            block.layer = layerName
-            SetAttrib block, NumberAttributeName, NodeNumberPrefix & indexNode
+            Set Block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, BlockDwgName, 1, 1, 1, 0)
+            Block.layer = layerName
+            SetAttrib Block, NumberAttributeName, NodeNumberPrefix & indexNode
             xNode.NodeNumber = indexNode
             indexNode = indexNode + 1
         End If
@@ -858,7 +858,7 @@ End Function
 Public Function LabelTees(Optional StartNodeNumber As Variant) As Long
 'Returns highest tee node number
     Dim xNode As Node
-    Dim block As IntelliCAD.blockInsert
+    Dim Block As IntelliCAD.blockInsert
     Dim indexTee As Long
   
     Set Risers = New Collection
@@ -869,9 +869,9 @@ Public Function LabelTees(Optional StartNodeNumber As Variant) As Long
     For Each xNode In nodes
         Debug.Print "Labeling Tee " & xNode.NodeNumber & "..."
         If xNode.NodeTypeID = NODE_TYPE_TEE Then
-            Set block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, "TeeLabel.dwg", 1, 1, 1, 0)
-            block.layer = "TeeLabels"
-            SetAttrib block, "TEENUMBER", "T." & indexTee
+            Set Block = ActiveDocument.ModelSpace.InsertBlock(xNode.insertionPoint, "TeeLabel.dwg", 1, 1, 1, 0)
+            Block.layer = "TeeLabels"
+            SetAttrib Block, "TEENUMBER", "T." & indexTee
             indexTee = indexTee + 1
         End If
     Next xNode
@@ -1727,7 +1727,7 @@ End Function
 Public Sub ScanEntities() '(OutputFormat As String)
 
 Dim entity As IntelliCAD.entity
-Dim block As IntelliCAD.blockInsert
+Dim Block As IntelliCAD.blockInsert
 
 Dim newNode As Node
 Dim newHead As Head
@@ -1857,34 +1857,34 @@ Dim strHeadModelCode As String
                     
         'Heads, Tees, Risers, & NodeIDs ... are all blocks.
         ElseIf entity.EntityName = "BlockInsert" Then    'BlockRef If Block
-            Set block = entity
+            Set Block = entity
             
             'Fittings, Risers
-            If block.Name = "PipeFitting" _
-                Or block.Name = "vpilc" _
-                Or block.Name = "PlbgFix" _
-                Or block.Name = "Tee" _
-                Or block.Name = "FloorConnector" Then
+            If Block.Name = "PipeFitting" _
+                Or Block.Name = "vpilc" _
+                Or Block.Name = "PlbgFix" _
+                Or Block.Name = "Tee" _
+                Or Block.Name = "FloorConnector" Then
                 Set newNode = New Node
                 Set newTee = New Tee
                 
-                Set newNode.insertionPoint = block.insertionPoint
+                Set newNode.insertionPoint = Block.insertionPoint
                 newNode.NodeNumber = nodeIndex
                 
-                If block.Name = "vpilc" Then
-                    newNode.Name = "R." & riserIndex & "." & GetAttrib(block, "VPIPE")
+                If Block.Name = "vpilc" Then
+                    newNode.Name = "R." & riserIndex & "." & GetAttrib(Block, "VPIPE")
                     newNode.NodeTypeID = NODE_TYPE_RISER
                     riserIndex = riserIndex + 1     'Since these are numbered by this Scanner, we want to make sure they are unique
                 
-                ElseIf block.Name = "FloorConnector" Then
+                ElseIf Block.Name = "FloorConnector" Then
                     newNode.Name = "R." & riserIndex
                     newNode.NodeTypeID = NODE_TYPE_RISER
                     riserIndex = riserIndex + 1     'Since these are numbered by this Scanner, we want to make sure they are unique
                     
-                ElseIf block.Name = "PlbgFix" Then
+                ElseIf Block.Name = "PlbgFix" Then
                     Set newNodeID = New NodeID
-                    newNodeID.Name = GetAttrib(block, "SHOWVALUE")
-                    newNodeID.insertionPoint = block.insertionPoint
+                    newNodeID.Name = GetAttrib(Block, "SHOWVALUE")
+                    newNodeID.insertionPoint = Block.insertionPoint
                     NodeIDs.Add newNodeID
 
                     newNode.NodeTypeID = NODE_TYPE_FIXTURE
@@ -1904,10 +1904,10 @@ Dim strHeadModelCode As String
             ElseIf UCase(entity.layer) = UCase("Heads") Then
                 Set newNode = New Node
 
-                Set newNode.insertionPoint = block.insertionPoint
+                Set newNode.insertionPoint = Block.insertionPoint
                 
                 newNode.NodeNumber = nodeIndex
-                strHeadModelCode = GetAttrib(block, "MODEL")
+                strHeadModelCode = GetAttrib(Block, "MODEL")
                 newNode.model = strHeadModelCode
                 
                 newNode.NodeTypeID = NODE_TYPE_HEAD
@@ -1956,30 +1956,30 @@ Dim strHeadModelCode As String
                 NodeIDs.Add newNodeID
                 
             'HeadLabels (New replacement for nodeid)
-            ElseIf UCase(block.Name) = UCase("HeadLabel") Then
+            ElseIf UCase(Block.Name) = UCase("HeadLabel") Then
                 Set newNodeID = New NodeID
                 newNodeID.Name = GetAttrib(entity, "HEADNUMBER")
-                Set newNodeID.insertionPoint = block.insertionPoint
+                Set newNodeID.insertionPoint = Block.insertionPoint
                 NodeIDs.Add newNodeID
                 If UCase(entity.layer) <> UCase("HeadLabels") Then
                     '2014'ErrorCircle block.InsertionPoint, Colors.vicRed, "Layer not HeadLabels", 1, 0.5, 0.4
                 End If
                 
             'TeeLabels (New replacement for nodeid)
-            ElseIf UCase(block.Name) = UCase("TeeLabel") Then
+            ElseIf UCase(Block.Name) = UCase("TeeLabel") Then
                 Set newNodeID = New NodeID
                 newNodeID.Name = GetAttrib(entity, "TEENUMBER")
-                Set newNodeID.insertionPoint = block.insertionPoint
+                Set newNodeID.insertionPoint = Block.insertionPoint
                 NodeIDs.Add newNodeID
                 If UCase(entity.layer) <> UCase("TeeLabels") Then
                     '2014'ErrorCircle block.InsertionPoint, Colors.vicRed, "Layer not TeeLabels", 11, 21, 121
                 End If
                 
             'RiserLabels (New replacement for nodeid)
-            ElseIf UCase(block.Name) = UCase("RiserLabel") Then
+            ElseIf UCase(Block.Name) = UCase("RiserLabel") Then
                 Set newNodeID = New NodeID
                 newNodeID.Name = GetAttrib(entity, "RISERNUMBER")
-                Set newNodeID.insertionPoint = block.insertionPoint
+                Set newNodeID.insertionPoint = Block.insertionPoint
                 NodeIDs.Add newNodeID
                 If UCase(entity.layer) <> UCase("RiserLabels") Then
                     '2014'ErrorCircle block.InsertionPoint, Colors.vicRed, "Layer not RiserLabels", 12, 22, 122
@@ -1992,19 +1992,19 @@ Dim strHeadModelCode As String
 '                Job.LeadN = GetAttrib(entity, "LEAD_NUMBER")
                 
             'Floor Tags
-            ElseIf UCase(block.Name) = UCase("FloorTag") Then
+            ElseIf UCase(Block.Name) = UCase("FloorTag") Then
                 Set newFloorTag = New FloorTag
-                Set newFloorTag.insertionPoint = block.insertionPoint
+                Set newFloorTag.insertionPoint = Block.insertionPoint
                 newFloorTag.Name = GetAttrib(entity, "NAME")
                 newFloorTag.elevation = GetAttrib(entity, "ELEVATION")
                 FloorTags.Add newFloorTag
             
             'Floor Connector
-            ElseIf UCase(block.Name) = UCase("FloorConnector") Then
+            ElseIf UCase(Block.Name) = UCase("FloorConnector") Then
                 Set newFloorConnector = New FloorConnector
                 FloorConnectors.Add newFloorConnector
             
-            ElseIf UCase(block.layer) = UCase("0g_Fixtures") Then
+            ElseIf UCase(Block.layer) = UCase("0g_Fixtures") Then
                 
             
             End If  'BockRef If Block
@@ -2034,15 +2034,15 @@ Dim entitIndex As Long
     Next entit
 
 End Function
-Public Function GetAttrib(entit As IntelliCAD.entity, AttribName As String) As Variant
+Public Function GetAttrib(entit As IntelliCAD.entity, AttribName As Variant) As Variant
 'Scan Attributes
 Dim att As IntelliCAD.Attributes
 Dim att_no As Long
-Dim block As IntelliCAD.blockInsert
+Dim Block As IntelliCAD.blockInsert
     
     If TypeOf entit Is IntelliCAD.blockInsert Then
-        Set block = entit
-        Set att = block.GetAttributes()
+        Set Block = entit
+        Set att = Block.GetAttributes()
         For att_no = 0 To (att.Count - 1)
             If att(att_no).EntityName = "Attribute" Then
                 If att(att_no).TagString = AttribName Then
@@ -2053,13 +2053,13 @@ Dim block As IntelliCAD.blockInsert
     End If
 
 End Function
-Public Function SetAttrib(block As IntelliCAD.blockInsert, AttribName As String, value As String) As Variant
+Public Function SetAttrib(Block As IntelliCAD.blockInsert, AttribName As String, value As String) As Variant
 'Public Function SetAttrib(entit As AcadEntity, AttribName As String, Value As String) As Variant
 'Scan Attributes
 Dim att As IntelliCAD.Attributes
 Dim att_no As Long
     
-    Set att = block.GetAttributes()
+    Set att = Block.GetAttributes()
     For att_no = 0 To (att.Count - 1)
         'If att.Item(att_no).EntityName = "Attribute" Then
             If att(att_no).TagString = AttribName Then
@@ -4771,7 +4771,7 @@ Public Sub InsertFloorConnector()
     Dim closestFloorTag As FloorTag
     Dim closestDistance As Double
     Dim eBox As ElevationBox
-    Dim block As IntelliCAD.blockInsert
+    Dim Block As IntelliCAD.blockInsert
     Dim testPoint As IntelliCAD.point
 
     Set testPoint = ActiveDocument.Utility.GetPoint(, "Click where you want the test point.")
@@ -4804,9 +4804,9 @@ Public Sub InsertFloorConnector()
     relative = RelativeCoordinates(closestFloorTag.insertionPoint, testPoint)
     For Each xFloorTag In FloorTags
         absolute = AddCoordinates(xFloorTag.insertionPoint, relative)
-        Set block = ActiveDocument.ModelSpace.InsertBlock(absolute, "FloorConnector.dwg", 1, 1, 1, 0)
+        Set Block = ActiveDocument.ModelSpace.InsertBlock(absolute, "FloorConnector.dwg", 1, 1, 1, 0)
         CheckAddLayer "Floor Connectors", PipeColors.Cyan, True, True
-        block.layer = "Floor Connectors"
+        Block.layer = "Floor Connectors"
     Next xFloorTag
     
     'I need one floor tag per elevation box...
@@ -4822,13 +4822,13 @@ Public Sub SetAttribFromBox(BlockRef As IntelliCAD.blockInsert, AttribName As St
     
 End Sub
 Public Sub CheckAddBlock()
-    Dim block As AcadBlock
-    Set block = ActiveDocument.Blocks.Add(0, "Test")
+    Dim Block As AcadBlock
+    Set Block = ActiveDocument.Blocks.Add(0, "Test")
     
 End Sub
 Public Sub ScanPipesAndBreakAtNodes()
 Dim Pipe As IntelliCAD.lwPolyline
-Dim block As IntelliCAD.blockInsert
+Dim Block As IntelliCAD.blockInsert
 Dim entity As IntelliCAD.entity
 Dim nodes As New Collection
 Dim pipeIndex As Long
@@ -4836,13 +4836,13 @@ Dim pipeIndex As Long
     For Each entity In ActiveDocument.ModelSpace
         If entity.EntityName = "BlockInsert" Then
             
-            Set block = entity
-            If UCase(block.Name) = UCase("FakeHead") _
-                Or UCase(block.layer) = UCase("Heads") _
-                Or UCase(block.layer) = UCase("0a__Heads") _
-                Or UCase(block.Name) = UCase("Tee") Then
+            Set Block = entity
+            If UCase(Block.Name) = UCase("FakeHead") _
+                Or UCase(Block.layer) = UCase("Heads") _
+                Or UCase(Block.layer) = UCase("0a__Heads") _
+                Or UCase(Block.Name) = UCase("Tee") Then
             
-                nodes.Add block
+                nodes.Add Block
                 
                 'CircleLabelBlock block.InsertionPoint, "HH", Colors.vicRed, 0.5, 10
                 
@@ -4872,7 +4872,7 @@ Dim pipeIndex As Long
 End Sub
 Public Sub BreakPipe(Pipe As IntelliCAD.lwPolyline, Blocks As Collection)
     'Dim pipe As IntelliCAD.LWPolyline
-    Dim block As IntelliCAD.blockInsert
+    Dim Block As IntelliCAD.blockInsert
     Dim entity As IntelliCAD.entity
     
     Dim p As Variant
@@ -4962,16 +4962,16 @@ Public Sub BreakPipe(Pipe As IntelliCAD.lwPolyline, Blocks As Collection)
             
             
             
-            For Each block In Blocks
-                blockX = block.insertionPoint.x
-                blockY = block.insertionPoint.y
+            For Each Block In Blocks
+                blockX = Block.insertionPoint.x
+                blockY = Block.insertionPoint.y
     
                 blockIsOnLine = LinePointXY(ThisX, ThisY, NextX, NextY, blockX, blockY)
                 If blockIsOnLine Then
                     'CircleLabelBlock block.InsertionPoint, "HOSeg", Colors.vicRed, 0.5
-                    headsOnSegment.Add block
+                    headsOnSegment.Add Block
                 End If
-            Next block
+            Next Block
 
         Else
             segmentEndPoint(0) = segmentStartPoint(0)
@@ -5034,13 +5034,13 @@ Public Sub BreakPipe(Pipe As IntelliCAD.lwPolyline, Blocks As Collection)
         End If
         
         If orderedNonVertextSegmentHeads.Count > 0 Then
-            For Each block In orderedNonVertextSegmentHeads
+            For Each Block In orderedNonVertextSegmentHeads
                 'CircleLabelBlock block.InsertionPoint, "Point " & newPointIndex & " H", Colors.vicMagenta, 0.12, DegreesToRadians(15)
                 newPointIndex = newPointIndex + 1
 
-                AddNewVertex newPipeVertices, block.insertionPoint
-                DrawNewPipe Pipe, newPipeVertices, block.insertionPoint, PipeWidth
-            Next block
+                AddNewVertex newPipeVertices, Block.insertionPoint
+                DrawNewPipe Pipe, newPipeVertices, Block.insertionPoint, PipeWidth
+            Next Block
         End If
         
         segmentIndex = segmentIndex + 1
@@ -5056,7 +5056,7 @@ End Sub
 Public Function GetRemoveNearestBlock(FromPoint As Variant, Blocks As Collection) As IntelliCAD.blockInsert
 Dim closestBlockSoFar As IntelliCAD.blockInsert
 Dim closestDistanceSoFar As Double
-Dim block As IntelliCAD.blockInsert
+Dim Block As IntelliCAD.blockInsert
 Dim thisBlockDist As Double
 Dim closestBlockIndex As Long
 Dim index As Long
@@ -5066,15 +5066,15 @@ Dim index As Long
         closestDistanceSoFar = MeasureBetween(FromPoint, Blocks(1).insertionPoint)
         Set closestBlockSoFar = Blocks(1)
         index = 1
-        For Each block In Blocks
-            thisBlockDist = MeasureBetween(FromPoint, block.insertionPoint)
+        For Each Block In Blocks
+            thisBlockDist = MeasureBetween(FromPoint, Block.insertionPoint)
             If thisBlockDist <= closestDistanceSoFar Then
                 closestDistanceSoFar = thisBlockDist
-                Set closestBlockSoFar = block
+                Set closestBlockSoFar = Block
                 closestBlockIndex = index
             End If
             index = index + 1
-        Next block
+        Next Block
         
         
     End If
@@ -5202,7 +5202,7 @@ Dim UpperBound As Long
 End Sub
 Public Sub RemoveZeroLengthPipes()
 Dim Pipe As IntelliCAD.lwPolyline
-Dim block As IntelliCAD.blockInsert
+Dim Block As IntelliCAD.blockInsert
 Dim entity As IntelliCAD.entity
 Dim Pipes As New Collection
 Dim pipeIndex As Long

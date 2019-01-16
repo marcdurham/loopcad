@@ -13,9 +13,9 @@ Public Sub BuildFromTemp()
     
 End Sub
 Public Sub Build(Optional inputFilePath As Variant)
-    Dim objDoc As MSXML2.DOMDocument60
+    Dim ObjDoc As MSXML2.DOMDocument60
     Dim objNode As MSXML2.IXMLDOMNode
-    Dim objRoot As MSXML2.IXMLDOMElement
+    Dim ObjRoot As MSXML2.IXMLDOMElement
     Dim documentElem As MSXML2.IXMLDOMElement
     Dim blockInsertsElem As MSXML2.IXMLDOMElement
     Dim lwPolylinesElem As MSXML2.IXMLDOMElement
@@ -33,8 +33,8 @@ Public Sub Build(Optional inputFilePath As Variant)
     
     Dim loaded As Boolean
     
-    Set objDoc = New MSXML2.DOMDocument60
-    loaded = objDoc.Load(inputFilePath)
+    Set ObjDoc = New MSXML2.DOMDocument60
+    loaded = ObjDoc.Load(inputFilePath)
     
     Set newDocument = IntelliCAD.Application.Documents.Add
     newDocument.Activate
@@ -42,10 +42,10 @@ Public Sub Build(Optional inputFilePath As Variant)
     If loaded Then
         Debug.Print "Loaded"
         
-        objDoc.setProperty "SelectionLanguage", "XPath"
-        BuildTextStyles objDoc
-        BuildLayers objDoc
-        BuildBlocks objDoc
+        ObjDoc.setProperty "SelectionLanguage", "XPath"
+        BuildTextStyles ObjDoc
+        BuildLayers ObjDoc
+        BuildBlocks ObjDoc
         
         ActiveDocument.Application.ZoomExtents
     Else
@@ -53,8 +53,8 @@ Public Sub Build(Optional inputFilePath As Variant)
     End If
 
 End Sub
-Public Sub BuildLWPolylines(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
-    Dim objDoc As MSXML2.DOMDocument60
+Public Sub BuildLWPolylines(Node As MSXML2.IXMLDOMNode, Block As IntelliCAD.Block)
+    Dim ObjDoc As MSXML2.DOMDocument60
     Dim lineNodes As MSXML2.IXMLDOMNodeList
     Dim lineNode As MSXML2.IXMLDOMNode
     Dim pointNodes As MSXML2.IXMLDOMNodeList
@@ -65,7 +65,7 @@ Public Sub BuildLWPolylines(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.bloc
     Dim points As IntelliCAD.points
     Dim lwPolyline As IntelliCAD.lwPolyline
         
-    Set objDoc = Node.ownerDocument
+    Set ObjDoc = Node.ownerDocument
         
     Set lineNodes = Node.selectNodes("LWPolylines/LWPolyline")
     
@@ -80,7 +80,7 @@ Public Sub BuildLWPolylines(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.bloc
                 pointNode.selectSingleNode("@Z").text
         Next pointNode
         
-        Set lwPolyline = block.AddLightWeightPolyline(points)
+        Set lwPolyline = Block.AddLightWeightPolyline(points)
         lwPolyline.Color.ColorIndex = lineNode.selectSingleNode("@Color").text
         lwPolyline.layer = lineNode.selectSingleNode("@Layer").text
         lwPolyline.Thickness = lineNode.selectSingleNode("@Thickness").text
@@ -102,8 +102,8 @@ Public Sub BuildLWPolylines(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.bloc
     Next lineNode
     
 End Sub
-Public Sub BuildAttributeDef(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
-    Dim objDoc As MSXML2.DOMDocument60
+Public Sub BuildAttributeDef(Node As MSXML2.IXMLDOMNode, Block As IntelliCAD.Block)
+    Dim ObjDoc As MSXML2.DOMDocument60
     Dim nodes As MSXML2.IXMLDOMNodeList
     Dim nodeItem As MSXML2.IXMLDOMNode
     Dim attrDefNode As MSXML2.IXMLDOMNode
@@ -113,7 +113,7 @@ Public Sub BuildAttributeDef(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.blo
     Dim insertPoint As IntelliCAD.point
     Dim mText As IntelliCAD.mText
     
-    Set objDoc = Node.ownerDocument
+    Set ObjDoc = Node.ownerDocument
     Set nodes = Node.selectNodes("AttributeDefs/AttributeDef")
     
     For Each nodeItem In nodes
@@ -121,7 +121,7 @@ Public Sub BuildAttributeDef(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.blo
         Set insertPointNode = nodeItem.selectSingleNode("InsertionPoint")
         Set insertPoint = BuildPoint(insertPointNode)
         
-        Set attrDef = block.AddAttributeDef( _
+        Set attrDef = Block.AddAttributeDef( _
             nodeItem.selectSingleNode("@Height").text, _
             nodeItem.selectSingleNode("@Mode").text, _
             "No Prompt", _
@@ -135,8 +135,8 @@ Public Sub BuildAttributeDef(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.blo
     Next nodeItem
     
 End Sub
-Public Sub BuildCircle(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
-    Dim objDoc As MSXML2.DOMDocument60
+Public Sub BuildCircle(Node As MSXML2.IXMLDOMNode, Block As IntelliCAD.Block)
+    Dim ObjDoc As MSXML2.DOMDocument60
     Dim circ As IntelliCAD.Circle
     Dim center As IntelliCAD.point
     Dim mText As IntelliCAD.mText
@@ -146,7 +146,7 @@ Public Sub BuildCircle(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
     Dim circleNode As MSXML2.IXMLDOMNode
     Dim centerNode As MSXML2.IXMLDOMNode
         
-    Set objDoc = Node.ownerDocument
+    Set ObjDoc = Node.ownerDocument
     Set nodes = Node.selectNodes("Circles/Circle")
     
     For Each nodeItem In nodes
@@ -154,7 +154,7 @@ Public Sub BuildCircle(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
         Set centerNode = nodeItem.selectSingleNode("Center")
         Set center = BuildPoint(centerNode)
         
-        Set circ = block.AddCircle( _
+        Set circ = Block.AddCircle( _
             center, _
             nodeItem.selectSingleNode("@Radius").text)
         
@@ -164,8 +164,8 @@ Public Sub BuildCircle(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
     Next nodeItem
     
 End Sub
-Public Sub BuildMText(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
-    Dim objDoc As MSXML2.DOMDocument60
+Public Sub BuildMText(Node As MSXML2.IXMLDOMNode, Block As IntelliCAD.Block)
+    Dim ObjDoc As MSXML2.DOMDocument60
     Dim nodes As MSXML2.IXMLDOMNodeList
     Dim nodeItem As MSXML2.IXMLDOMNode
     Dim pointNode As MSXML2.IXMLDOMNode
@@ -173,7 +173,7 @@ Public Sub BuildMText(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
     Dim point As IntelliCAD.point
     Dim mText As IntelliCAD.mText
     
-    Set objDoc = Node.ownerDocument
+    Set ObjDoc = Node.ownerDocument
     Set nodes = Node.selectNodes("MTexts/MText")
     
     For Each nodeItem In nodes
@@ -181,7 +181,7 @@ Public Sub BuildMText(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
         Set pointNode = nodeItem.selectSingleNode("InsertionPoint")
         Set point = BuildPoint(pointNode)
         
-        Set mText = block.AddMText( _
+        Set mText = Block.AddMText( _
             point, _
             nodeItem.selectSingleNode("@Width").text, _
             nodeItem.selectSingleNode("@TextString").text)
@@ -194,8 +194,8 @@ Public Sub BuildMText(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
     Next nodeItem
     
 End Sub
-Public Sub BuildText(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
-    Dim objDoc As MSXML2.DOMDocument60
+Public Sub BuildText(Node As MSXML2.IXMLDOMNode, Block As IntelliCAD.Block)
+    Dim ObjDoc As MSXML2.DOMDocument60
     Dim nodes As MSXML2.IXMLDOMNodeList
     Dim nodeItem As MSXML2.IXMLDOMNode
     Dim pointNode As MSXML2.IXMLDOMNode
@@ -203,14 +203,14 @@ Public Sub BuildText(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
     Dim point As IntelliCAD.point
     Dim text As IntelliCAD.text
     
-    Set objDoc = Node.ownerDocument
+    Set ObjDoc = Node.ownerDocument
     Set nodes = Node.selectNodes("Texts/Text")
     
     For Each nodeItem In nodes
         Set pointNode = nodeItem.selectSingleNode("InsertionPoint")
         Set point = BuildPoint(pointNode)
         
-        Set text = block.AddText( _
+        Set text = Block.AddText( _
             nodeItem.selectSingleNode("@TextString").text, _
             point, _
             CDbl(nodeItem.selectSingleNode("@Height").text))
@@ -224,8 +224,8 @@ Public Sub BuildText(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
     Next nodeItem
     
 End Sub
-Public Sub BuildBlockInsert(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
-    Dim objDoc As MSXML2.DOMDocument60
+Public Sub BuildBlockInsert(Node As MSXML2.IXMLDOMNode, Block As IntelliCAD.Block)
+    Dim ObjDoc As MSXML2.DOMDocument60
     Dim point As IntelliCAD.point
     Dim blockInsert As IntelliCAD.blockInsert
     
@@ -249,7 +249,7 @@ Public Sub BuildBlockInsert(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.bloc
     Dim attrName As String
     Dim blockName As String
             
-    Set objDoc = Node.ownerDocument
+    Set ObjDoc = Node.ownerDocument
     Set nodes = Node.selectNodes("BlockInserts/BlockInsert")
     
     For Each nodeItem In nodes
@@ -257,7 +257,7 @@ Public Sub BuildBlockInsert(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.bloc
         Set point = BuildPoint(pointNode)
         blockName = nodeItem.selectSingleNode("@Name").text
         
-        If block.Name = "*Model_Space" Then
+        If Block.Name = "*Model_Space" Then
             Set blockInsert = ActiveDocument.ModelSpace.InsertBlock( _
             point, _
             blockName, _
@@ -266,7 +266,7 @@ Public Sub BuildBlockInsert(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.bloc
             nodeItem.selectSingleNode("@ZScaleFactor").text, _
             nodeItem.selectSingleNode("@Rotation").text)
         Else
-            Set blockInsert = block.InsertBlock( _
+            Set blockInsert = Block.InsertBlock( _
                 point, _
                 blockName, _
                 nodeItem.selectSingleNode("@XScaleFactor").text, _
@@ -332,8 +332,8 @@ Public Function BuildPoint(pointNode As MSXML2.IXMLDOMNode) As IntelliCAD.point
     
 End Function
 
-Public Sub BuildLines(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
-    Dim objDoc As MSXML2.DOMDocument60
+Public Sub BuildLines(Node As MSXML2.IXMLDOMNode, Block As IntelliCAD.Block)
+    Dim ObjDoc As MSXML2.DOMDocument60
     Dim lineNodes As MSXML2.IXMLDOMNodeList
     Dim lineNode As MSXML2.IXMLDOMNode
     Dim startPointNode As MSXML2.IXMLDOMNode
@@ -343,7 +343,7 @@ Public Sub BuildLines(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
     Dim startPoint As IntelliCAD.point
     Dim endPoint As IntelliCAD.point
     
-    Set objDoc = Node.ownerDocument
+    Set ObjDoc = Node.ownerDocument
     Set lineNodes = Node.selectNodes("Lines/Line")
     
     For Each lineNode In lineNodes
@@ -353,7 +353,7 @@ Public Sub BuildLines(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
         Set endPointNode = lineNode.selectSingleNode("EndPoint")
         Set endPoint = BuildPoint(endPointNode)
         
-        Set line = block.AddLine(startPoint, endPoint)
+        Set line = Block.AddLine(startPoint, endPoint)
         line.Color.ColorIndex = lineNode.selectSingleNode("@Color").text
         line.layer = lineNode.selectSingleNode("@Layer").text
         line.Thickness = lineNode.selectSingleNode("@Thickness").text
@@ -364,14 +364,14 @@ Public Sub BuildLines(Node As MSXML2.IXMLDOMNode, block As IntelliCAD.block)
     
 End Sub
 
-Public Sub BuildTextStyles(objDoc As MSXML2.DOMDocument60)
+Public Sub BuildTextStyles(ObjDoc As MSXML2.DOMDocument60)
     Dim styleNodes As MSXML2.IXMLDOMNodeList
     Dim styleNode As MSXML2.IXMLDOMNode
     
     Dim textStyle As IntelliCAD.textStyle
     Dim styleName As String
         
-    Set styleNodes = objDoc.selectNodes("/CadData/TextStyles/TextStyle")
+    Set styleNodes = ObjDoc.selectNodes("/CadData/TextStyles/TextStyle")
     
     For Each styleNode In styleNodes
         styleName = styleNode.selectSingleNode("@Name").text
@@ -387,13 +387,13 @@ Public Sub BuildTextStyles(objDoc As MSXML2.DOMDocument60)
     
 End Sub
 
-Public Sub BuildLayers(objDoc As MSXML2.DOMDocument60)
+Public Sub BuildLayers(ObjDoc As MSXML2.DOMDocument60)
     Dim layerNodes As MSXML2.IXMLDOMNodeList
     Dim layerNode As MSXML2.IXMLDOMNode
     
     Dim layer As IntelliCAD.layer
         
-    Set layerNodes = objDoc.selectNodes("/CadData/Layers/Layer")
+    Set layerNodes = ObjDoc.selectNodes("/CadData/Layers/Layer")
     
     For Each layerNode In layerNodes
         Set layer = ActiveDocument.Layers.Add(layerNode.selectSingleNode("@Name").text)
@@ -415,18 +415,18 @@ Public Sub BuildLayers(objDoc As MSXML2.DOMDocument60)
     Next layerNode
     
 End Sub
-Public Sub BuildBlocks(objDoc As MSXML2.DOMDocument60)
+Public Sub BuildBlocks(ObjDoc As MSXML2.DOMDocument60)
     Dim blockNodes As MSXML2.IXMLDOMNodeList
     Dim blockNode As MSXML2.IXMLDOMNode
     Dim modelSpaceBlockNode As MSXML2.IXMLDOMNode
     Dim originNode As MSXML2.IXMLDOMNode
     
-    Dim block As IntelliCAD.block
-    Dim modelSpaceBlock As IntelliCAD.block
+    Dim Block As IntelliCAD.Block
+    Dim modelSpaceBlock As IntelliCAD.Block
     Dim insertionPoint As IntelliCAD.point
     Dim blockName As String
         
-    Set blockNodes = objDoc.selectNodes("/CadData/Blocks/Block")
+    Set blockNodes = ObjDoc.selectNodes("/CadData/Blocks/Block")
     
     For Each blockNode In blockNodes
         Set originNode = blockNode.selectSingleNode("Origin")
@@ -436,19 +436,19 @@ Public Sub BuildBlocks(objDoc As MSXML2.DOMDocument60)
             Set modelSpaceBlock = ActiveDocument.Blocks.Item(blockName)
             Set modelSpaceBlockNode = blockNode
         ElseIf Not blockName Like "[*]*" Then
-            Set block = ActiveDocument.Blocks.Add(insertionPoint, blockName)
+            Set Block = ActiveDocument.Blocks.Add(insertionPoint, blockName)
         Else
-            Set block = Nothing
+            Set Block = Nothing
         End If
         
-        If Not block Is Nothing Then
-            BuildLWPolylines blockNode, block
-            BuildMText blockNode, block
-            BuildText blockNode, block
-            BuildLines blockNode, block
-            BuildCircle blockNode, block
-            BuildAttributeDef blockNode, block
-            BuildBlockInsert blockNode, block
+        If Not Block Is Nothing Then
+            BuildLWPolylines blockNode, Block
+            BuildMText blockNode, Block
+            BuildText blockNode, Block
+            BuildLines blockNode, Block
+            BuildCircle blockNode, Block
+            BuildAttributeDef blockNode, Block
+            BuildBlockInsert blockNode, Block
         End If
         
     Next blockNode
