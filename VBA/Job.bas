@@ -19,13 +19,14 @@ Public SupplyAvailableFlow As Double
 Public SupplyStaticPressure As Double
 Public SupplyResidualPressure As Double
 Public SupplyElevation As Double
-Public SupplyManifoldPipeLength As Double
-Public SupplyManifoldPipeType As String
-Public SupplyManifoldPipeSize As Double
-Public SupplyManifoldPipeInternalDiameter As Double
-Public SupplyManifoldFittingsSummary As String
-Public SupplyManifoldFittingsEquivLength As Double
-Public SupplyManifoldWaterFlowPressureLoss As Double
-Public WaterFlowMakeModel As String
+Public SupplyPipeLength As Double
+Public SupplyPipeType As String
+Public SupplyPipeSize As Double
+Public SupplyPipeInternalDiameter As Double
+Public SupplyPipeFittingsSummary As String
+Public SupplyPipeFittingsEquivLength As Double
+Public SupplyPipeAddPressureLoss As Double
+Public WaterFlowSwitchMakeModel As String
+Public WaterFlowSwitchPressureLoss As String
 Public DomesticFlowAdded As Double
 
