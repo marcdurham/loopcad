@@ -19,15 +19,15 @@
 			(prompt "\nClick a location, to insert job data.\n")
 			(command "-INSERT" "JobData.dwg" 0 0 0 1.0 1.0 0
 			  ; These attributes are in a strange, as-created, order
-			  "Enter Job Name"         ; JOB_NAME
-			  "Enter Job Number"       ; JOB_NUMBER
-			  "0"                      ; SUPPLY_STATIC_PRESSURE
-			  "Enter Job Site Address" ; JOB_SITE_ADDRESS
-			  "0"       ; SUPPLY_RESIDUAL_PRESSURE
-			  "0"       ; SUPPLY_AVAILABLE_FLOW
-			  "0"       ; SUPPLY_ELEVATION
-			  "0"       ; SUPPLY_PIPE_LENGTH
-			  "0"       ; SUPPLY_PIPE_INTERNAL_DIAMETER
+			  ""  ; JOB_NAME
+			  ""  ; JOB_NUMBER
+			  "0" ; SUPPLY_STATIC_PRESSURE
+			  ""  ; JOB_SITE_ADDRESS
+			  "0" ; SUPPLY_RESIDUAL_PRESSURE
+			  "0" ; SUPPLY_AVAILABLE_FLOW
+			  "0" ; SUPPLY_ELEVATION
+			  "0" ; SUPPLY_PIPE_LENGTH
+			  "0" ; SUPPLY_PIPE_INTERNAL_DIAMETER
 			  "X-Fire"  ; CALCULATED_BY_COMPANY
 			  ""    ; SPRINKLER_PIPE_TYPE
 			  ""    ; SPRINKLER_FITTING_TYPE
