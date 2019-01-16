@@ -34,17 +34,27 @@ Public Sub SaveJobData()
     If Scanner.Job Is Nothing Then
         Set Scanner.Job = New Job
     End If
-    
+           
+    Scanner.Job.CalculatedByCompany = Me.CalculatedByCompany
+    Scanner.Job.JobNumber = Me.JobNumber
     Scanner.Job.JobName = Me.JobName
     Scanner.Job.JobSiteLocation = Me.JobSiteLocation
-    Scanner.Job.JobNumber = Me.JobNumber
+    Scanner.Job.SprinklerPipeType = Me.SprinklerPipeType
+    Scanner.Job.SprinklerFittingType = Me.SprinklerFittingType
+    Scanner.Job.SupplyName = Me.SupplyName
+    Scanner.Job.SupplyAvailableFlow = Me.SupplyAvailableFlow
     Scanner.Job.SupplyStaticPressure = Me.SupplyStaticPressure
     Scanner.Job.SupplyResidualPressure = Me.SupplyResidualPressure
-    Scanner.Job.SupplyAvailableFlow = Me.SupplyAvailableFlow
     Scanner.Job.SupplyElevation = Me.SupplyElevation
-    Scanner.Job.SupplyManifoldPipeLength = Me.SupplyPipeLength
-    Scanner.Job.SupplyManifoldPipeInternalDiameter = Me.SupplyPipeInternalDiameter
-    Scanner.Job.CalculatedByCompany = Me.CalculatedByCompany
+    Scanner.Job.SupplyPipeLength = Me.SupplyManifoldPipeLength
+    Scanner.Job.SupplyPipeType = Me.SupplyManifoldPipeType
+    Scanner.Job.SupplyPipeSize = Me.SupplyManifoldPipeSize
+    Scanner.Job.SupplyPipeInternalDiameter = Me.SupplyPipeInternalDiameter
+    Scanner.Job.SupplyPipeFittingsSummary = Me.SupplyPipeFittingsSummary
+    Scanner.Job.SupplyPipeFittingsEquivLength = Me.SupplyPipeFittingsEquivLength
+    Scanner.Job.SupplyPipeWaterFlowPressureLoss = Me.SupplyPipeWaterFlowPressureLoss
+    Scanner.Job.WaterFlowMakeModel = Me.WaterFlowMakeModel
+    Scanner.Job.DomesticFlowAdded = Me.DomesticFlowAdded
         
     JobData.SetJobData
     
@@ -73,16 +83,27 @@ Public Sub LoadJobData()
     If Scanner.Job Is Nothing Then
         Set Scanner.Job = New Job
     Else
+        Me.CalculatedByCompany = Scanner.Job.CalculatedByCompany
+        Me.JobNumber = Scanner.Job.JobNumber
         Me.JobName = Scanner.Job.JobName
         Me.JobSiteLocation = Scanner.Job.JobSiteLocation
-        Me.JobNumber = Scanner.Job.JobNumber
+        Me.SprinklerPipeType = Scanner.Job.SprinklerPipeType
+        Me.SprinklerFittingType = Scanner.Job.SprinklerFittingType
+        Me.SupplyName = Scanner.Job.SupplyName
+        Me.SupplyAvailableFlow = Scanner.Job.SupplyAvailableFlow
         Me.SupplyStaticPressure = Scanner.Job.SupplyStaticPressure
         Me.SupplyResidualPressure = Scanner.Job.SupplyResidualPressure
-        Me.SupplyAvailableFlow = Scanner.Job.SupplyAvailableFlow
         Me.SupplyElevation = Scanner.Job.SupplyElevation
         Me.SupplyPipeLength = Scanner.Job.SupplyManifoldPipeLength
-        Me.SupplyPipeInternalDiameter = Scanner.Job.SupplyManifoldPipeInternalDiameter
-        Me.CalculatedByCompany = Scanner.Job.CalculatedByCompany
+        Me.SupplyPipeType = Scanner.Job.SupplyManifoldPipeType
+        Me.SupplyPipeSize = Scanner.Job.SupplyManifoldPipeSize
+        Me.SupplyPipeInternalDiameter = Scanner.Job.SupplyPipeInternalDiameter
+        Me.SupplyPipeFittingsSummary = Scanner.Job.SupplyPipeFittingsSummary
+        Me.SupplyPipeFittingsEquivLength = Scanner.Job.SupplyPipeFittingsEquivLength
+        Me.SupplyPipeWaterFlowPressureLoss = Scanner.Job.SupplyPipeWaterFlowPressureLoss
+        Me.WaterFlowMakeModel = Scanner.Job.WaterFlowMakeModel
+        Me.DomesticFlowAdded = Scanner.Job.DomesticFlowAdded
+       
     End If
     
 End Sub
