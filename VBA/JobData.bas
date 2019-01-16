@@ -124,15 +124,15 @@ Dim i As Integer
 '
     
                 strJobName = GetAttrib(blk, "JOB_NAME")
-                strLeadNumber = GetAttrib(blk, "LEAD_NUMBER")
+                strLeadNumber = GetAttrib(blk, "JOB_NUMBER") 'LEAD_NUMBER
                 
-                strSiteLocation = GetFirstAttrib(blk, "SITE_LOCATION")
-                strStaticPressure = GetFirstAttrib(blk, "STATIC_PRESSURE")
-                strResidualPressure = GetFirstAttrib(blk, "RESIDUAL_PRESSURE")
-                strAvailableFlow = GetFirstAttrib(blk, "AVAILABLE_FLOW")
-                strMeterElevation = GetFirstAttrib(blk, "METER_ELEVATION")
-                strMeterPipeLength = GetFirstAttrib(blk, "METER_PIPE_LENGTH")
-                strMeterPipeInternalDiameter = GetFirstAttrib(blk, "METER_PIPE_INTERNAL_DIAMETER")
+                strSiteLocation = GetFirstAttrib(blk, "JOB_SITE_LOCATION")
+                strStaticPressure = GetFirstAttrib(blk, "SUPPLY_STATIC_PRESSURE")
+                strResidualPressure = GetFirstAttrib(blk, "SUPPLY_RESIDUAL_PRESSURE")
+                strAvailableFlow = GetFirstAttrib(blk, "SUPPLY_AVAILABLE_FLOW")
+                strMeterElevation = GetFirstAttrib(blk, "SUPPLY_ELEVATION")
+                strMeterPipeLength = GetFirstAttrib(blk, "SUPPLY_MANIFOLD_PIPE_LENGTH")
+                strMeterPipeInternalDiameter = GetFirstAttrib(blk, "SUPPLY_MANIFOLD_PIPE_INTERNAL_DIAMETER")
                 strCalculatedByCompany = GetFirstAttrib(blk, "CALCULATED_BY_COMPANY")
                 
                 Set Job = New Job

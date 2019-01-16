@@ -9,7 +9,7 @@ Attribute VB_Name = "SourceCode"
 ' You do not need to use the RemoveCodeModules when
 ' you use SourceCode.bas
 '
-Public Sub SaveCodeModules()
+Public Sub ExportCodeModules()
 'This code Exports all VBA modules
 Dim i As Integer
 Dim moduleName As String
