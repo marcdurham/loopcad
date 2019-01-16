@@ -1,5 +1,5 @@
 (defun job-data-insert ( / old-osmode)
-	(if (> (length (get-blocks (list "JobData" "Job Data"))) 0)
+	(if (= (length (get-blocks (list "JobData" "Job Data"))) 0)
 		(progn
 			(setq old-osmode (getvar "OSMODE"))
 			(defun *error* (message)
@@ -17,8 +17,30 @@
 			(command "-LAYER" "ON" "JobData" "")
 			(command "-LAYER" "SET" "JobData" "")
 			(prompt "\nClick a location, to insert job data.\n")
-			(command "-INSERT" "JobData.dwg" pause 1.0 1.0 0)
+			(command "-INSERT" "JobData.dwg" 0 0 0 1.0 1.0 0
+			  ""
+			  "Job Number"
+			  "Job Name"
+			  "Location"
+			  ""
+			  ""
+			  "MTR"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			  "0"
+			)
 		)
 	)
+	(vl-vbarun "ScanJobData")
 	(vl-vbarun "EditJobData")
 )
