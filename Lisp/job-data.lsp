@@ -18,26 +18,28 @@
 			(command "-LAYER" "SET" "JobData" "")
 			(prompt "\nClick a location, to insert job data.\n")
 			(command "-INSERT" "JobData.dwg" 0 0 0 1.0 1.0 0
-			  ""
-			  "Job Number"
-			  "Job Name"
-			  "Location"
-			  ""
-			  ""
-			  "MTR"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
-			  "0"
+			  ; These attributes are in a strange, as-created, order
+			  "Enter Job Name"         ; JOB_NAME
+			  "Enter Job Number"       ; JOB_NUMBER
+			  "0"                      ; SUPPLY_STATIC_PRESSURE
+			  "Enter Job Site Address" ; JOB_SITE_ADDRESS
+			  "0"       ; SUPPLY_RESIDUAL_PRESSURE
+			  "0"       ; SUPPLY_AVAILABLE_FLOW
+			  "0"       ; SUPPLY_ELEVATION
+			  "0"       ; SUPPLY_PIPE_LENGTH
+			  "0"       ; SUPPLY_PIPE_INTERNAL_DIAMETER
+			  "X-Fire"  ; CALCULATED_BY_COMPANY
+			  ""    ; SPRINKLER_PIPE_TYPE
+			  ""    ; SPRINKLER_FITTING_TYPE
+			  ""    ; SUPPLY_PIPE_TYPE
+			  "0"   ; SUPPLY_PIPE_SIZE
+			  "MTR" ; SUPPLY_NAME
+			  "0"   ; DOMESTIC_FLOW_ADDED
+			  ""    ; WATER_FLOW_SWITCH_MAKE_MODEL
+			  ""    ; SUPPLY_PIPE_FITTINGS_SUMMARY
+			  "0"   ; SUPPLY_PIPE_FITTINGS_EQUIV_LENGTH
+			  "0"   ; SUPPLY_PIPE_ADD_PRESSURE_LOSS
+			  "0"   ; WATER_FLOW_SWITCH_PRESSURE_LOSS
 			)
 		)
 	)
