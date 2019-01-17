@@ -2,7 +2,6 @@
 ; Global Variables
 (setq *failed-to-load* 0)
 
-
 ; Load LoopCAD LISP module files (*.lsp)
 (load ".\\Lisp\\load-safely.lsp")
 
@@ -12,7 +11,6 @@
 	)
 )
 (princ "\n")
-
 
 ; Check if files all loaded
 (load-safely-check)
