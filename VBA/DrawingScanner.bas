@@ -82,7 +82,7 @@ Public Sub Scan(Optional outputFilePath As Variant)
     ObjDoc.Save outputFilePath
 
 End Sub
-Public Sub ScanBlock(Block As IntelliCAD.blockInsert, ObjDoc As MSXML2.DOMDocument60, ObjRoot As MSXML2.IXMLDOMElement)
+Public Sub ScanBlock(Block As IntelliCAD.Block, ObjDoc As MSXML2.DOMDocument60, ObjRoot As MSXML2.IXMLDOMElement)
     Dim objNode As MSXML2.IXMLDOMNode
     Dim documentElem As MSXML2.IXMLDOMElement
     Dim layersElem As MSXML2.IXMLDOMElement
