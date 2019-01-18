@@ -14,7 +14,7 @@ On Error GoTo ErrTrap
     SetAttrib Block, "JOB_NUMBER", Job.JobNumber
     SetAttrib Block, "JOB_NAME", Job.JobName
     SetAttrib Block, "JOB_SITE_LOCATION", Job.JobSiteLocation
-    SetAttribFromBox Block, "SPRINKER_PIPE_TYPE", Job.SprinklerPipeType
+    SetAttribFromBox Block, "SPRINKLER_PIPE_TYPE", Job.SprinklerPipeType
     SetAttribFromBox Block, "SPRINKLER_FITTING_TYPE", Job.SprinklerFittingType
     SetAttribFromBox Block, "SUPPLY_NAME", Job.SupplyName
     SetAttribFromBox Block, "SUPPLY_AVAILABLE_FLOW", Job.SupplyAvailableFlow
