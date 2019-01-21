@@ -1,14 +1,27 @@
-; Head label properties
+; Head Label Properties
 (setq head-label:tag-string "HEADNUMBER")
 (setq head-label:prompt "Head number label")
 (setq head-label:label-color color-blue)
 (setq head-label:layer "HeadLabels")
+(setq head-label:x-offset 9.132)
+(setq head-label:y-offset 0.0)
 
-; Tee label properties
+; Tee Label Properties
 (setq tee-label:tag-string "TEENUMBER")
 (setq tee-label:prompt "Tee number label")
 (setq tee-label:label-color color-blue)
 (setq tee-label:layer "TeeLabels")
+(setq tee-label:x-offset 4.0)
+(setq tee-label:y-offset 4.0)
+
+; Riser Label Properties
+(setq riser-label:tag-string "RISERNUMBER")
+(setq riser-label:layer "RiserLabels")
+
+; Head Model Properties
+; Insert Point: 9.132, 8.395 copied from old block so it looks the same
+(setq head-block:model-x-offset 9.132)
+(setq head-block:model-y-offset 8.395)
 
 (defun define-labels ()
 	; These two block definitions are not used by any functions but they are defined so that
@@ -20,6 +33,8 @@
 		"H.0" 
 		head-label:label-color 
 		head-label:layer
+		head-block:model-x-offset    ; Label X Offset
+		0 							 ; Label Y Offset
 	)
 	(define-label-block 
 		"TeeLabel" 
@@ -28,6 +43,8 @@
 		"T.0" 
 		tee-label:label-color
 		tee-label:layer
+		head-block:model-x-offset    ; Label X Offset
+		0 							 ; Label Y Offset
 	)
 	(define-head-coverage 12)
 	(define-head-coverage 14)
@@ -42,7 +59,7 @@
     (define-head-block coverage "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
 )
 
-(defun define-label-block (block-name tag-string prompt default label-color layer)
+(defun define-label-block (block-name tag-string prompt default label-color layer label-x-offset label-y-offset)
 	(entmake 
 		(list
 			(cons 0 "BLOCK")
@@ -52,7 +69,7 @@
 	(entmake 
 		(list
 			(cons 0 "ATTDEF")
-			(cons 10 (list 9.132 0 0))
+			(cons 10 (list label-x-offset label-y-offset 0))
 			(cons 1 default)      ; Text value
 			(cons 2 tag-string)   ; Tag string
 			(cons 3 prompt)       ; Prompt string
@@ -81,8 +98,13 @@
 	(entmake 
 		(list
 			(cons 0 "ATTDEF")
-			; Insert Point: 9.132, 8.395 copied from old block so it looks the same
-			(cons 10 (list 9.132 8.395 0.0))
+			(cons 10 
+				(list 
+					head-block:model-x-offset 
+					head-block:model-y-offset 
+					0.0
+				)
+			)
 			(cons 1 default)      ; Text value
 			(cons 2 tag-string)   ; Tag string
 			(cons 3 prompt)       ; Prompt string

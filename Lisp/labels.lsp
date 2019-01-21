@@ -62,6 +62,8 @@
 		head-label:layer       ; layer
 		head-label:tag-string  ; tag-string
 		head-label:label-color ; label-color
+		head-label:x-offset
+		head-label:y-offset
 	)
 )
 
@@ -73,6 +75,8 @@
 		tee-label:layer        ; layer
 		tee-label:tag-string   ; tag-string
 		tee-label:label-color  ; label-color
+		tee-label:x-offset
+		tee-label:y-offset
 	)
 )
 
@@ -80,10 +84,12 @@
 	(insert-node-label 
 		point 
 		text 
-		"TeeLabel"             ; block-name
-		head-label:layer       ; layer
-		head-label:tag-string  ; tag-string
-		head-label:label-color ; label-color
+		"TeeLabel"            ; block-name
+		tee-label:layer       ; layer
+		tee-label:tag-string  ; tag-string
+		tee-label:label-color ; label-color
+		tee-label:x-offset
+		tee-label:y-offset
 	)
 )
 
@@ -92,13 +98,15 @@
 		point 
 		text 
 		"RiserLabel"  ; block-name
-		"RiserLabels" ; layer
-		"RISERNUMBER" ; tag-string
-		color-green ; label-color
+		riser-label:layer       ; layer
+		riser-label:tag-string  ; tag-string
+		tee-label:label-color ; label-color
+		tee-label:x-offset
+		tee-label:y-offset
 	)
 )
 
-(defun insert-node-label (point text block-name layer-name tag-string label-color / e p)
+(defun insert-node-label (point text block-name layer-name tag-string label-color label-x-offset label-y-offset / e p)
 	(entmake
 		(list 
 			(cons 0 "INSERT")
@@ -112,7 +120,7 @@
 	(entmake
 		(list 
 			(cons 0 "ATTRIB") ; Entity type
-			(cons 10 (point-offset point 3.0 4.0)) ; Insertion point
+			(cons 10 (point-offset point label-x-offset label-y-offset)) ; Label insertion point
 			(cons 1 text)          ; Text value
 			(cons 2 tag-string)    ; Tag string
 			(cons 3 "Node number:")        ; Prompt string
