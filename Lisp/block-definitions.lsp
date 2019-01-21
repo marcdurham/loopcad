@@ -198,18 +198,6 @@
 	)
 )
 
-(defun head-props (block-name tag-string prompt text label-color layer-name)
-	(list 
-		(cons 1 text) 
-		(cons 2 tag-string) ; Tag string
-		(cons 3 prompt) ; Prompt string
-		(cons 40 5.0) ; Text height
-		(cons 7 "ARIAL") ; Text style
-		(cons 62 label-color) ; Color
-		(cons 8 layer-name) ; Layer
-	)
-)
-
 (setq head-label:tag-string "HEADNUMBER")
 (setq head-label:prompt "")
 (setq head-label:color color-green)
