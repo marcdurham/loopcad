@@ -13,7 +13,7 @@
 (defun define-labels ()
 	; These two block definitions are not used by any functions but they are defined so that
 	; a user can use the "INSERT" command to insert them manually if they want.
-	(define-label-block "HeadLabel" "HEADNUMBER" "Head number label" "H.0" color-green "HeadLabels")
+	(define-label-block "HeadLabel" "HEADNUMBER" "Head number label" "H.0" color-blue "HeadLabels")
 	(define-label-block "TeeLabel" "TEENUMBER" "Tee number label" "T.0" color-blue "TeeLabels")
 	(princ "\nLabels defined.\n")
 	(princ)
