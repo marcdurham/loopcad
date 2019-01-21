@@ -58,10 +58,10 @@
 	(insert-node-label 
 		point 
 		text 
-		"HeadLabel"  ; block-name
-		"HeadLabels" ; layer
-		"HEADNUMBER" ; tag-string
-		color-green ; label-color
+		"HeadLabel"            ; block-name
+		head-label:layer       ; layer
+		head-label:tag-string  ; tag-string
+		head-label:label-color ; label-color
 	)
 )
 
@@ -69,10 +69,10 @@
 	(insert-node-label 
 		point 
 		text 
-		"TeeLabel"  ; block-name
-		"TeeLabels" ; layer
-		"TEENUMBER" ; tag-string
-		color-green ; label-color
+		"TeeLabel"             ; block-name
+		tee-label:layer        ; layer
+		tee-label:tag-string   ; tag-string
+		tee-label:label-color  ; label-color
 	)
 )
 
@@ -80,10 +80,10 @@
 	(insert-node-label 
 		point 
 		text 
-		"TeeLabel"  ; block-name
-		"TeeLabels" ; layer
-		"TEENUMBER" ; tag-string
-		color-green ; label-color
+		"TeeLabel"             ; block-name
+		head-label:layer       ; layer
+		head-label:tag-string  ; tag-string
+		head-label:label-color ; label-color
 	)
 )
 
@@ -110,20 +110,16 @@
 	)
 	(setq e (entlast))
 	(entmake
-		(append 
-			(list 
-				(cons 0 "ATTRIB") ; Entity type
-				(cons 10 (point-offset point 3.0 4.0)) ; Insertion point
-			)
-			;block-name tag-string prompt text label-color layer)
-			(node-label-props 
-				block-name
-				tag-string
-				"Node Number:" ; prompt
-				text 
-				label-color 
-				layer-name
-			)
+		(list 
+			(cons 0 "ATTRIB") ; Entity type
+			(cons 10 (point-offset point 3.0 4.0)) ; Insertion point
+			(cons 1 text)          ; Text value
+			(cons 2 tag-string)    ; Tag string
+			(cons 3 "Node number:")        ; Prompt string
+			(cons 40 5.0)          ; Text height
+			(cons 7 "ARIAL")       ; Text style
+			(cons 62 label-color)  ; Color
+			(cons 8 layer-name)    ; Layer
 		)
 	)
 	(entmake

@@ -50,19 +50,16 @@
 		)
 	)
 	(entmake 
-		(append
-			(list
-				(cons 0 "ATTDEF")
-				(cons 10 (list 9.132 0 0))
-			)
-			(node-label-props 
-				block-name
-				tag-string
-				prompt
-				default ; Text
-				label-color
-				layer
-			)
+		(list
+			(cons 0 "ATTDEF")
+			(cons 10 (list 9.132 0 0))
+			(cons 1 default)      ; Text value
+			(cons 2 tag-string)   ; Tag string
+			(cons 3 prompt)       ; Prompt string
+			(cons 40 5.0)         ; Text height
+			(cons 7 "ARIAL")      ; Text style
+			(cons 62 color-yellow) ; Color
+			(cons 8 layer)        ; Layer
 		)
 	)
 	(entmake 
@@ -82,20 +79,17 @@
 	
 	; Head Model Number
 	(entmake 
-		(append
-			(list
-				(cons 0 "ATTDEF")
-				; Insert Point: 9.132, 8.395 copied from old block so it looks the same
-				(cons 10 (list 9.132 8.395 0.0))
-			)
-			(node-label-props 
-				block-name
-				tag-string
-				prompt
-				default ; Text
-				label-color
-				layer
-			)
+		(list
+			(cons 0 "ATTDEF")
+			; Insert Point: 9.132, 8.395 copied from old block so it looks the same
+			(cons 10 (list 9.132 8.395 0.0))
+			(cons 1 default)      ; Text value
+			(cons 2 tag-string)   ; Tag string
+			(cons 3 prompt)       ; Prompt string
+			(cons 40 5.0)         ; Text height
+			(cons 7 "ARIAL")      ; Text style
+			(cons 62 label-color) ; Color
+			(cons 8 layer)        ; Layer
 		)
 	)
 	
@@ -197,18 +191,3 @@
 (defun feet->inches (feet)
     (* feet 12)
 )
-
-; Append this list to an (0 . "ATTRIB") or (0 . "ATTDEF") 
-; Example:  (append (list (cons 0 "ATTRIB") point) (head-label-props text))
-(defun node-label-props (block-name tag-string prompt text label-color layer-name)
-	(list 
-		(cons 1 text) 
-		(cons 2 tag-string) ; Tag string
-		(cons 3 prompt) ; Prompt string
-		(cons 40 5.0) ; Text height
-		(cons 7 "ARIAL") ; Text style
-		(cons 62 label-color) ; Color
-		(cons 8 layer-name) ; Layer
-	)
-)
-
