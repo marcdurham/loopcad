@@ -15,13 +15,17 @@
 	; a user can use the "INSERT" command to insert them manually if they want.
 	(define-label-block "HeadLabel" "HEADNUMBER" "Head number label" "H.0" color-blue "HeadLabels")
 	(define-label-block "TeeLabel" "TEENUMBER" "Tee number label" "T.0" color-blue "TeeLabels")
-	(define-head-block 12 "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
-	(define-head-block 14 "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
-	(define-head-block 16 "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
-	(define-head-block 18 "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
-	(define-head-block 20 "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
+	(define-head-coverage 12)
+	(define-head-coverage 14)
+	(define-head-coverage 16)
+	(define-head-coverage 18)
+	(define-head-coverage 20)
 	(princ "\nLabels defined.\n")
 	(princ)
+)
+
+(defun define-head-coverage (coverage)
+    (define-head-block coverage "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
 )
 
 (defun define-label-block (block-name tag-string prompt default label-color layer)
@@ -61,11 +65,14 @@
 			(cons 2 (strcat block-name (itoa coverage))) ; Block name
 		)
 	)
+	
+	; Head Model Number
 	(entmake 
 		(append
 			(list
 				(cons 0 "ATTDEF")
-				(cons 10 (list 8.0 8.0 0.0))
+				; Insert Point: 9.132, 8.395 copied from old block so it looks the same
+				(cons 10 (list 9.132 8.395 0.0))
 			)
 			(node-label-props 
 				block-name
@@ -77,24 +84,32 @@
 			)
 		)
 	)
+	
+	; Head
+	; Inner Circle
 	(entmake
 		(list
-			(cons 0 "CIRCLE")      ; Inner Circle
+			(cons 0 "CIRCLE")     
 			(cons 10 (list 0 0 0)) ; Center Point
-			(cons 40 3.0)          ; Radius
+			; Radius: 2.278 copeid from old block so it looks the same
+			(cons 40 2.278)        ; Radius
 			(cons 62 color-red)    ; Color
 			(cons 8 layer)         ; Layer
 		)
 	)
+	; Outer Circle
 	(entmake
 		(list
-			(cons 0 "CIRCLE")      ; Outer Circle
+			(cons 0 "CIRCLE")      
 			(cons 10 (list 0 0 0)) ; Center Point
-			(cons 40 6.0)          ; Radius
+			; Radius: 6.653 copeid from old block so it looks the same
+			(cons 40 6.653)        ; Radius
 			(cons 62 color-red)    ; Color
 			(cons 8 layer)         ; Layer
 		)
 	)
+	
+	; Head Coverage Box
 	(setq span (feet->inches coverage))
 	(setq -span (- 0 span))
 	(setq halfway (/ span 2))
@@ -138,13 +153,11 @@
 			(cons 0 "SEQEND")
 		)
 	)
+	
+	; Coverage Text 
+	; Example: 12' x 12'
 	(setq coverage-text 
-		(strcat 
-			(itoa coverage)
-			"'  X  "
-			(itoa coverage)
-			"'"
-		)
+		(strcat (itoa coverage) "'  X  " (itoa coverage) "'")
 	)
 	(entmake
 		(list
@@ -166,13 +179,10 @@
 	)
 )
 
+; Convert feet to inches
 (defun feet->inches (feet)
     (* feet 12)
 )
-(defun inches->feet (inches)
-	(/ inches 12)
-)
-
 
 ; Append this list to an (0 . "ATTRIB") or (0 . "ATTDEF") 
 ; Example:  (append (list (cons 0 "ATTRIB") point) (head-label-props text))
