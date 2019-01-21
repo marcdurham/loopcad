@@ -1,20 +1,34 @@
 ; Head label properties
 (setq head-label:tag-string "HEADNUMBER")
 (setq head-label:prompt "Head number label")
-(setq head-label:label-color color-green)
+(setq head-label:label-color color-blue)
 (setq head-label:layer "HeadLabels")
 
 ; Tee label properties
 (setq tee-label:tag-string "TEENUMBER")
 (setq tee-label:prompt "Tee number label")
-(setq tee-label:label-color color-green)
+(setq tee-label:label-color color-blue)
 (setq tee-label:layer "TeeLabels")
 
 (defun define-labels ()
 	; These two block definitions are not used by any functions but they are defined so that
 	; a user can use the "INSERT" command to insert them manually if they want.
-	(define-label-block "HeadLabel" "HEADNUMBER" "Head number label" "H.0" color-blue "HeadLabels")
-	(define-label-block "TeeLabel" "TEENUMBER" "Tee number label" "T.0" color-blue "TeeLabels")
+	(define-label-block 
+		"HeadLabel" 
+		head-label:tag-string 
+		head-label:prompt 
+		"H.0" 
+		head-label:label-color 
+		head-label:layer
+	)
+	(define-label-block 
+		"TeeLabel" 
+		tee-label:tag-string
+		tee-label:prompt 
+		"T.0" 
+		tee-label:label-color
+		tee-label:layer
+	)
 	(define-head-coverage 12)
 	(define-head-coverage 14)
 	(define-head-coverage 16)
@@ -39,7 +53,7 @@
 		(append
 			(list
 				(cons 0 "ATTDEF")
-				(cons 10 (list 2.0 2.0 0.0))
+				(cons 10 (list 9.132 0 0))
 			)
 			(node-label-props 
 				block-name
@@ -197,9 +211,4 @@
 		(cons 8 layer-name) ; Layer
 	)
 )
-
-(setq head-label:tag-string "HEADNUMBER")
-(setq head-label:prompt "")
-(setq head-label:color color-green)
-(setq head-label:layer "HeadLabels")
 
