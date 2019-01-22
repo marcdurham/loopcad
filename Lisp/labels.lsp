@@ -4,6 +4,7 @@
 )
 
 (defun label-all-nodes ( / n node label)
+	(princ "\nLabeling nodes...\n")
 	(setq n 1)
     (delete-blockrefs (get-all-head-labels))
 	(foreach node (get-all-heads)
@@ -46,6 +47,10 @@
 			(setq n (1+ n))
 		)
 	)
+	(princ "\n")
+	(princ (strcat (itoa n) " nodes were labeled."))
+	(princ "\n")
+	(princ)
 )
 
 (defun delete-blockrefs (blockrefs)
