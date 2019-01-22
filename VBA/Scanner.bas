@@ -3699,7 +3699,7 @@ ReScan:
     End If
 
     If Not OpenIt Then
-        strFilePath = ShowSave("Save Fire Sprinkler System File As...", strDefaultFilePath, "File Sprinkler System (*.fss)", "*.fss", ActiveDocument.path)
+        strFilePath = ShowSave("Save Fire Sprinkler System File As...", strDefaultFilePath, "File Sprinkler System (*.fss)", "*.fss", ActiveDocument.Path)
     Else
         strFilePath = strDefaultFilePath
     End If
@@ -3755,9 +3755,9 @@ Dim xmlContents As String
     End If
 
     If Not OpenIt Then
-        strFilePath = ShowSave("Save Fire Sprinkler Data File As...", strDefaultFilePath, "File Sprinkler Data (*.fsdx)", "*.fsdx", ActiveDocument.path)
+        strFilePath = ShowSave("Save Fire Sprinkler Data File As...", strDefaultFilePath, "File Sprinkler Data (*.fsdx)", "*.fsdx", ActiveDocument.Path)
     Else
-        strFilePath = ShowSave("Save Fire Sprinkler Data File As...", strDefaultFilePath, "File Sprinkler Data (*.fsdx)", "*.fsdx", ActiveDocument.path)
+        strFilePath = ShowSave("Save Fire Sprinkler Data File As...", strDefaultFilePath, "File Sprinkler Data (*.fsdx)", "*.fsdx", ActiveDocument.Path)
         'strFilePath = strDefaultFilePath
     End If
     If strFilePath = "" Then
@@ -3792,7 +3792,7 @@ Dim xmlContents As String
 End Sub
 
 Public Function GetFolder() As String
-    GetFolder = ActiveDocument.path
+    GetFolder = ActiveDocument.Path
 End Function
 
 Public Sub ShowObjectCountOnLayer(layerName As String)

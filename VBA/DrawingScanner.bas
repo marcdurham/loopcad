@@ -24,13 +24,21 @@ Public Sub Scan(Optional outputFilePath As Variant)
     Dim mTextsElem As MSXML2.IXMLDOMElement
     Dim textsElem As MSXML2.IXMLDOMElement
     Dim imagesElem As MSXML2.IXMLDOMElement
-    
     Dim layer As IntelliCAD.layer
     Dim Block As IntelliCAD.Block
     Dim entity As IntelliCAD.entity
+    Dim defaultFileName As String
+    
+    defaultFileName = FileNameOnly(ActiveDocument.FullName)
     
     If IsMissing(outputFilePath) Then
-        outputFilePath = ShowSave("Save Scan File As...", "CadDrawingScan", "Cad Drawing Scan (*.cds)", "*.cds", ActiveDocument.path)
+        outputFilePath = ShowSave( _
+            "Save Scan File As...", _
+            defaultFileName, _
+            "Cad Drawing Scan (*.cds)", _
+            "*.cds", _
+            ActiveDocument.Path)
+            
         If outputFilePath = "" Then
             Exit Sub
         End If
@@ -48,7 +56,7 @@ Public Sub Scan(Optional outputFilePath As Variant)
     ObjRoot.appendChild documentElem
     documentElem.setAttribute "FullName", ActiveDocument.FullName
     documentElem.setAttribute "Name", ActiveDocument.Name
-    documentElem.setAttribute "Path", ActiveDocument.path
+    documentElem.setAttribute "Path", ActiveDocument.Path
     
     Set layersElem = ObjDoc.createElement("Layers")
     ObjRoot.appendChild layersElem
@@ -555,5 +563,18 @@ Public Sub CheckAttributeDef(ent As IntelliCAD.entity, ObjDoc As MSXML2.DOMDocum
     End If
 
 End Sub
+Public Function FileNameOnly(Path As String)
+    Dim fileExtLength As Integer
+    
+    fileExtLength = Len(Path) _
+                - InStrRev(Path, "\") _
+                - (Len(Path) - InStrRev(Path, ".")) _
+                - 1
+                
+    If InStrRev(Path, ".") > 0 And InStrRev(Path, "\") > 0 Then
+        FileNameOnly = Mid(Path, InStrRev(Path, "\") + 1, fileExtLength)
+    End If
+
+End Function
 
 

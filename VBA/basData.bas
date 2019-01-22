@@ -738,7 +738,7 @@ Dim xmlString As String
             "<fsdx_version>" & FSDX_VERSION & "</fsdx_version>" & vbCrLf & vbTab & vbTab & _
             "<computer_name>" & VBA.Environ("COMPUTERNAME") & "</computer_name>" & vbCrLf & vbTab & vbTab & _
             "<dwg_file_path>" & ActiveDocument.FullName & "</dwg_file_path>" & vbCrLf & vbTab & vbTab & _
-            "<dwg_folder_path>" & ActiveDocument.path & "</dwg_folder_path>" & vbCrLf & vbTab & _
+            "<dwg_folder_path>" & ActiveDocument.Path & "</dwg_folder_path>" & vbCrLf & vbTab & _
         "</creation> " & vbCrLf & vbTab & _
             InputString & vbCrLf & _
     "</fsdx_file>" & vbCrLf
@@ -902,7 +902,7 @@ Dim strJobDataRow As String
         'strJobDataRow = vbTab & "<FireSprinklerSystems>" & vbCrLf
         strJobDataRow = strJobDataRow & vbTab & vbTab & "<JobName>" & InputJob.JobName & "</JobName>" & vbCrLf
         strJobDataRow = strJobDataRow & vbTab & vbTab & "<LeadNo>" & InputJob.LeadN & "</LeadNo>" & vbCrLf
-        strJobDataRow = strJobDataRow & vbTab & vbTab & "<DWGFileFolder>" & ActiveDocument.path & "</DWGFileFolder>" & vbCrLf
+        strJobDataRow = strJobDataRow & vbTab & vbTab & "<DWGFileFolder>" & ActiveDocument.Path & "</DWGFileFolder>" & vbCrLf
         strJobDataRow = strJobDataRow & vbTab & vbTab & "<DWGFilePath>" & ActiveDocument.FullName & "</DWGFilePath>" & vbCrLf
         'strJobDataRow = strJobDataRow & vbTab & "</FireSprinklerSystems>" & vbCrLf
         strXMLDoc = strJobDataRow

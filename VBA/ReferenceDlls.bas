@@ -1,7 +1,7 @@
 Attribute VB_Name = "ReferenceDlls"
 Option Explicit
 
-Sub AddReference(path As String, Name As String)
+Sub AddReference(Path As String, Name As String)
     Dim VBAEditor As VBIDE.VBE
     Dim vbProj As VBIDE.VBProject
     Dim chkRef As VBIDE.Reference
@@ -18,7 +18,7 @@ Sub AddReference(path As String, Name As String)
         End If
     Next
 
-    vbProj.References.AddFromFile path
+    vbProj.References.AddFromFile Path
     'vbProj.References.AddFromFile "LoopCAD.dll"
     'vbProj.References.AddFromFile "FileConverter.dll"
     'vbProj.References.AddFromFile "LoopCalc.Core.dll"
