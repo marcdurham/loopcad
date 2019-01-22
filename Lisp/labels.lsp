@@ -1,6 +1,9 @@
-(defun label-all-pipes ()
+(defun label-all-pipes ( / p )
+	(princ "\nLabeling pipes...\n")
 	(delete-all-pipe-labels)
-	(make-pipe-labels)
+	(setq p (make-pipe-labels))
+	(princ (strcat "\n" (itoa p) " pipes were labeled.\n"))
+	(princ)
 )
 
 (defun label-all-nodes ( / n node label)
@@ -47,9 +50,7 @@
 			(setq n (1+ n))
 		)
 	)
-	(princ "\n")
-	(princ (strcat (itoa n) " nodes were labeled."))
-	(princ "\n")
+	(princ (strcat "\n" (itoa n) " nodes were labeled.\n"))
 	(princ)
 )
 
@@ -162,7 +163,7 @@
 		)
 		(setq p (1+ p))
 	)
-	(princ)
+	p ; Return number of pipes labled
 )
 
 (defun insert-pipe-label (point text)
