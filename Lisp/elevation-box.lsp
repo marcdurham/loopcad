@@ -27,15 +27,70 @@
 	(setq p3 (list right bottom))
 	(setq p4 (list left bottom))
 	
-	(command "-COLOR" "BYLAYER" "")
-	(command "-LINETYPE" "SET" "Continuous" "")
-	(command "-LAYER" "NEW" "ElevationBox" "")
-	(command "-LAYER" "COLOR" "Magenta" "ElevationBox" "")
-	(command "-LAYER" "SET" "ElevationBox" "")
-	(command "-PLINE" p1 p2 p3 p4 p1 "")
-	(command "-MTEXT" p1 p3 (strcat "Elevation " (itoa elevation)) "") 
-	(command "-COLOR" "BYLAYER")
-	(command "-LAYER" "SET" "0" "")
+	;(command "-COLOR" "BYLAYER" "")
+	;(command "-LINETYPE" "SET" "Continuous" "")
+	;(command "-LAYER" "NEW" "ElevationBox" "")
+	;(command "-LAYER" "COLOR" "Magenta" "ElevationBox" "")
+	;(command "-LAYER" "SET" "ElevationBox" "")
+	;(command "-PLINE" p1 p2 p3 p4 p1 "")
+	;(command "-MTEXT" p1 p3 (strcat "Elevation " (itoa elevation)) "") 
+	;(command "-COLOR" "BYLAYER")
+	;(command "-LAYER" "SET" "0" "")
+	
+	(entmake
+		(list
+			(cons 0 "POLYLINE")
+			(cons 10 (list 0 0 0))  ; Point is always zero
+			(cons 70 1)             ; 1 = Closed Polyline
+			(cons 62 color-magenta)  ; Color
+			(cons 8 "ElevationBox") ; Layer
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 p1) ; Lower Left
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 p2)	; Lower Right
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 p3)	; Upper Right
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 p4)	; Upper Left
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "SEQEND")
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "MTEXT")
+			(cons 10 p1)
+			(cons 40 10.0) ; Text Height
+			(cons 41 1000.0) ; Reference Width 
+			(cons 11 (list 1.0 0.0 0.0))
+			(cons 71 1)    ; Attachment point: 1 = Top left
+			(cons 72 1)    ; Drawing direction: 1 = Left to right
+			;(cons 73 1)    ; MText line spacing style: 1 = At least
+			(cons 1 (strcat "Elevation " (itoa elevation))) ; Text Value
+			(cons 62 color-magenta) ; Color
+			(cons 8 "ElevationBox")  ; Layer
+		)
+	)
+	
 	(setq *error* temperror)
 	(princ)
 )
