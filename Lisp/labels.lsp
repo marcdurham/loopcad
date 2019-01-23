@@ -50,7 +50,7 @@
 			(setq n (1+ n))
 		)
 	)
-	(princ (strcat "\n" (itoa n) " nodes were labeled.\n"))
+	(princ (strcat "\n" (itoa (- n 1)) " nodes were labeled.\n"))
 	(princ)
 )
 

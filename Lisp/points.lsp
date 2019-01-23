@@ -1,5 +1,5 @@
 
 (defun point-offset (point x y)
-	(list (+ x (getx point)) (+ y (gety point)))
+	(list (+ x (getx point)) (+ y (gety point)) 0)
 )
  
