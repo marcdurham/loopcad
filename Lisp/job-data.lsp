@@ -14,7 +14,7 @@
 			(setvar "OSMODE" 0)
 			(command "-LAYER" "NEW" "JobData" "")
 			(command "-LAYER" "COLOR" "140" "JobData" "")
-			(command "-LAYER" "ON" "JobData" "")
+			(command "-LAYER" "OFF" "JobData" "")
 			(command "-LAYER" "SET" "JobData" "")
 			(prompt "\nClick a location, to insert job data.\n")
 			(command "-INSERT" "JobData.dwg" 0 0 0 1.0 1.0 0
