@@ -33,3 +33,27 @@
     (command "-LAYER" "SET" "FloorConnectors" "")
     (command "-INSERT" "FloorConnector.dwg" pause 1.0 1.0 0)  
 )
+
+
+(defun get-floor-tags ( / en ent tags layer) 
+	(setq tags '())
+	(setq en (entnext))
+    (while en
+	    (setq ent (entget en))
+		(if (and (or (str= "FloorTags" (get-layer en))
+					(str= "Floor Tags" (get-layer en))
+				)
+		        (str= "INSERT" (get-etype en))
+				(str= "FloorTag" (get-block-name en))
+			)
+			(setq tags (cons ent tags))
+		)
+		(setq en (entnext en))
+	)
+	tags
+)
+
+(defun in-elevation-box ( point box / )
+	
+    (in-box point 
+)

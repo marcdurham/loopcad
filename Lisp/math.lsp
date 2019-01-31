@@ -78,9 +78,19 @@
 ; (command "-PLINE" (get-vertices (car (get-all-pipes))) "")
 (defun get-vertices (polyline / vertex remaining)
 	(setq vertices '())
-	(foreach property polyline
-	    (if (= 10 (car property)) 
-		    (setq vertices (cons (cdr property) vertices))
+	(cond 
+		((str= "LWPOLYLINE" (cdr (assoc 0 polyline)))
+			(foreach property polyline
+				(if (= 10 (car property)) 
+					(setq vertices (cons (cdr property) vertices))
+				)
+			)
+		)
+		((str= "POLYLINE" (cdr (assoc 0 polyline)))
+			(princ "\nNOT an LW Polyline box\n")
+			(princ (entget (cdr (assoc -1 polyline))))
+			(princ (entget (entnext (cdr (assoc -1 polyline)))))
+			; TODO: Get the rest of the vertices
 		)
 	)
 	(remove-repeated-points vertices)
