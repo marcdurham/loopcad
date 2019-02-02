@@ -54,6 +54,6 @@
 )
 
 (defun in-elevation-box ( point box / )
-	
-    (in-box point 
+	(princ "\n Not Implemented\n")
+    ;(in-box point 
 )
