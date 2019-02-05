@@ -69,6 +69,13 @@
 	)
 )
 
+; Area of a rectangle, input opposite corners a and b
+(defun area (a b / xdiff ydiff)
+	(setq xdiff (- (getx a) (getx b)))
+	(setq ydiff (- (gety a) (gety b)))
+	(* xdiff ydiff)
+)
+
 ; Negative reciprocal, used with slope to find perpendicular slope
 (defun negative-reciprocal (x) (- 0 (/ 1 x)))
 

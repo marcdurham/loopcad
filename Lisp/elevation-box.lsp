@@ -135,13 +135,18 @@
 	vertices
 )
 
-(defun test-ebox ( p / box result )
+(defun test-ebox ( p / box result a b ar )
 	(princ "\ntest-ebox: before: foreach box\n")
 	(foreach box (get-elevation-boxes)
 		(if (in-ebox p box)
 			(progn 
 				(setq result box)
-				(princ "\nBox\n")
+				(princ "\nBox Area: ")
+				(setq a (car (corners box)))
+				(setq b (cadr (corners box)))
+				(setq ar (area a b))
+				(princ (rtos ar 2 1))
+				(princ "\n")
 			)
 		)
 	)
@@ -149,17 +154,27 @@
 )
 
 (defun in-ebox ( p box / a b vertices )
-	(princ "\nStarting..\nbox:\n")
-	(setq vertices (get-polyline-vertices box))
-	(setq a (cdr (nth 0 vertices))) ; First corner
-	(setq b (cdr (nth 2 vertices))) ; Second corner
-	
+	;;;;;(princ "\nStarting..\nbox:\n")
+	;(setq vertices (get-polyline-vertices box))
+	;(setq a (cdr (nth 0 vertices))) ; First corner
+	;(setq b (cdr (nth 2 vertices))) ; Second corner
+	(setq a (car (corners box)))
+	(setq b (cadr (corners box)))
 	;(princ "\na: ")
 	;(princ a)
 	;(princ "\nb: ")
 	;(princ b)
+	
 	;(make-circle (list (nth 0 a) (nth 1 a) 0) 10.0 color-red "0")
 	;(make-circle (list (nth 0 b) (nth 1 b) 0) 10.0 color-green "0")
 	
 	(in-box p a b)
+)
+
+(defun corners ( rectangle / a b vertices )
+	;(princ "\nCorners:\n")
+	(setq vertices (get-polyline-vertices rectangle))
+	(setq a (cdr (nth 0 vertices))) ; First corner
+	(setq b (cdr (nth 2 vertices))) ; Second corner	
+	(list a b )
 )
