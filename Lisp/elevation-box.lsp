@@ -135,22 +135,29 @@
 	vertices
 )
 
-(defun test-ebox ( p / box result a b ar )
+(defun test-ebox ( p / box boxes result a b i _area areas)
 	(princ "\ntest-ebox: before: foreach box\n")
-	(foreach box (get-elevation-boxes)
+	(setq areas '())
+	(setq boxes (get-elevation-boxes))
+	(foreach box boxes
 		(if (in-ebox p box)
 			(progn 
 				(setq result box)
-				(princ "\nBox Area: ")
+				(princ "\nBox Area:: ")
 				(setq a (car (corners box)))
 				(setq b (cadr (corners box)))
-				(setq ar (area a b))
-				(princ (rtos ar 2 1))
+				(setq _area (area a b))
+				(princ (rtos _area 2 1))
 				(princ "\n")
+				(setq areas (append areas (list _area)))
 			)
 		)
 	)
-	result
+	; Compare areas and return the smallest
+	; then return the elevation box;
+	; then return the text box
+	; then return the elevation number
+	areas
 )
 
 (defun in-ebox ( p box / a b vertices )
