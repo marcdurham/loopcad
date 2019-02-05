@@ -134,3 +134,18 @@
 	)
 	vertices
 )
+
+(defun test-ebox ( p / a b vertices)
+	(setq vertices (get-polyline-vertices (car (get-elevation-boxes))))
+	(setq a (cdr (nth 0 vertices)))
+	(setq b (cdr (nth 2 vertices)))
+	
+	(princ "\na: ")
+	(princ a)
+	(princ "\nb: ")
+	(princ b)
+	(make-circle (list (nth 0 a) (nth 1 a) 0) 10.0 color-red "0")
+	(make-circle (list (nth 0 b) (nth 1 b) 0) 10.0 color-green "0")
+	
+	(in-box p a b)
+)
