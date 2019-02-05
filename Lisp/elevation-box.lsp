@@ -135,10 +135,10 @@
 	vertices
 )
 
-(defun test-ebox (p / box result)
+(defun test-ebox ( p / box result )
 	(princ "\ntest-ebox: before: foreach box\n")
 	(foreach box (get-elevation-boxes)
-		(if (in-elevation-box p box)
+		(if (in-ebox p box)
 			(progn 
 				(setq result box)
 				(princ "\nBox\n")
@@ -148,7 +148,8 @@
 	result
 )
 
-(defun in-elevation-box ( p box / a b vertices )
+(defun in-ebox ( p box / a b vertices )
+	(princ "\nStarting..\nbox:\n")
 	(setq vertices (get-polyline-vertices box))
 	(setq a (cdr (nth 0 vertices))) ; First corner
 	(setq b (cdr (nth 2 vertices))) ; Second corner
