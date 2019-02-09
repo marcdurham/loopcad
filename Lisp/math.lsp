@@ -76,6 +76,12 @@
 	(* xdiff ydiff)
 )
 
+; Index of a member of a list
+(defun index-of (item  lst / )
+    (member item lst)
+	(- (length lst) (length (member item lst)))
+)
+
 ; Negative reciprocal, used with slope to find perpendicular slope
 (defun negative-reciprocal (x) (- 0 (/ 1 x)))
 

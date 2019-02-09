@@ -116,6 +116,27 @@
 	boxes
 )
 
+(defun get-elevation-text ( / en ent boxes layer) 
+	(setq boxes '())
+	(setq en (entnext))
+    (while en
+	    (setq ent (entget en))
+		(if (and (or (str= "ElevationBox" (get-layer en))
+					(str= "ElevationBoxes" (get-layer en))
+					(str= "Elevation Box" (get-layer en))
+					(str= "Elevation Boxes" (get-layer en))
+				)
+		        (or (str= "MTEXT"(get-etype en))
+					(str= "TEXT" (get-etype en))
+				)
+			)
+			(setq boxes (cons ent boxes))
+		)
+		(setq en (entnext en))
+	)
+	boxes
+)
+
 (defun get-polyline-vertices ( ent / en vertex vertices) 
 	(setq vertices '())
 	(setq en (cdr (assoc -1 ent)))
@@ -135,53 +156,61 @@
 	vertices
 )
 
-(defun test-ebox ( p / box boxes result a b i _area areas)
-	(princ "\ntest-ebox: before: foreach box\n")
+(defun test-ebox ( / )
+	;(princ "\nTesting: test-ebox\n")
+	; TODO: Add some elevation boxes, 2 at least
+	(find-ebox (list 4342.29 1633.89 0.000000))
+)
+
+(defun find-ebox ( p / box boxes result a b i ar areas m vertex vertices text-box text-boxes)
 	(setq areas '())
 	(setq boxes (get-elevation-boxes))
 	(foreach box boxes
 		(if (in-ebox p box)
 			(progn 
 				(setq result box)
-				(princ "\nBox Area:: ")
+				;;(princ "\nBox Area:: ")
 				(setq a (car (corners box)))
 				(setq b (cadr (corners box)))
-				(setq _area (area a b))
-				(princ (rtos _area 2 1))
-				(princ "\n")
-				(setq areas (append areas (list _area)))
+				(setq ar (area a b))
+				;;(princ (rtos ar 2 1))
+				;;(princ "\n")
+				(setq areas (append areas (list ar)))
 			)
 		)
 	)
-	; Compare areas and return the smallest
+	; Compare areas and return the smallest: done
 	; then return the elevation box;
+	; get the four vertices from elevation box polyine
+	; compare each vertex with all text boxes on ElevationBox layer
 	; then return the text box
 	; then return the elevation number
-	areas
+	;;(princ "\nAreas:")
+	;(princ areas)
+	;(terpri)
+	;(min areas)
+	(setq m (apply 'min areas))
+	(setq i (index-of m areas))
+	(setq vertices (get-polyline-vertices (nth i boxes)))
+	(setq text-boxes (get-elevation-text))
+	(foreach vertex vertices
+		(progn
+			(foreach text-box text-boxes
+				
+			)
+		)
+	)
 )
 
 (defun in-ebox ( p box / a b vertices )
-	;;;;;(princ "\nStarting..\nbox:\n")
-	;(setq vertices (get-polyline-vertices box))
-	;(setq a (cdr (nth 0 vertices))) ; First corner
-	;(setq b (cdr (nth 2 vertices))) ; Second corner
-	(setq a (car (corners box)))
-	(setq b (cadr (corners box)))
-	;(princ "\na: ")
-	;(princ a)
-	;(princ "\nb: ")
-	;(princ b)
-	
-	;(make-circle (list (nth 0 a) (nth 1 a) 0) 10.0 color-red "0")
-	;(make-circle (list (nth 0 b) (nth 1 b) 0) 10.0 color-green "0")
-	
+	(setq a (car (corners box))) ; First corner
+	(setq b (cadr (corners box))) ; Opposite corner
 	(in-box p a b)
 )
 
 (defun corners ( rectangle / a b vertices )
-	;(princ "\nCorners:\n")
 	(setq vertices (get-polyline-vertices rectangle))
 	(setq a (cdr (nth 0 vertices))) ; First corner
-	(setq b (cdr (nth 2 vertices))) ; Second corner	
+	(setq b (cdr (nth 2 vertices))) ; Opposite corner	
 	(list a b )
 )
