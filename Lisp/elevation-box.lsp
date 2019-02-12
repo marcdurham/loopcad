@@ -145,7 +145,7 @@
     (while en
 		(cond ((str= "VERTEX" (cdr (assoc 0 ent)))
 				(setq ent (entget en))
-				(setq vertex (assoc 10 ent))
+				(setq vertex (cdr (assoc 10 ent)))
 				(setq vertices (cons vertex vertices))
 				(setq en (entnext en))
 				(setq ent (entget en))
@@ -162,7 +162,7 @@
 	(find-ebox (list 4342.29 1633.89 0.000000))
 )
 
-(defun find-ebox ( p / box boxes result a b i ar areas m vertex vertices text-box text-boxes)
+(defun find-ebox ( p / box boxes result a b i ar areas m vertex vertices text-box text-boxes output)
 	(setq areas '())
 	(setq boxes (get-elevation-boxes))
 	(foreach box boxes
@@ -196,10 +196,24 @@
 	(foreach vertex vertices
 		(progn
 			(foreach text-box text-boxes
-				
+				; TODO: check if box is on a vertex	
+				(if (= vertex (cdr (assoc 10 text-box)))
+					(progn 
+						;(princ "\nVertex: ")
+						;(princ vertex)
+						;(princ "\nMatch")
+						;(princ "\nBox Ins Pt: ")
+						;(princ (cdr (assoc 10 text-box)))
+						;(princ "\n")
+						(setq output (cdr (assoc 1 text-box)))
+						
+						(setq output (substr output 11)) ; Elevation 999 ; Number starts at 11
+					)
+				)
 			)
 		)
 	)
+	output
 )
 
 (defun in-ebox ( p box / a b vertices )
