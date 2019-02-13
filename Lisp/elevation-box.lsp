@@ -166,8 +166,11 @@
 	(princ "\n")
 )
 
-(defun find-ebox ( p / box boxes a b i ar areas all-areas m vertex vertices text-box text-boxes output)
-	(setq areas '())
+; Find the smallets elevation box point 'p' is in, 
+; return the elevation.
+(defun find-ebox ( p / box boxes a b i ar in-areas all-areas m vertex vertices text-box text-boxes output)
+	; Get areas of all boxes that p is in, it may be in more than one
+	(setq in-areas '())
 	(setq boxes (get-elevation-boxes))
 	(foreach box boxes
 		(progn 
@@ -176,11 +179,11 @@
 			(setq ar (area a b))
 			(setq all-areas (append all-areas (list ar)))	
 			(if (in-ebox p box)
-				(setq areas (append areas (list ar)))
+				(setq in-areas (append in-areas (list ar)))
 			)
 		)
 	)
-	(setq m (apply 'min areas))
+	(setq m (apply 'min in-areas))
 	(setq i (index-of m all-areas))
 	(setq vertices (get-polyline-vertices (nth i boxes)))
 	(setq text-boxes (get-elevation-text))
