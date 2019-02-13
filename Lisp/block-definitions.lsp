@@ -51,6 +51,7 @@
 	(define-head-coverage 16)
 	(define-head-coverage 18)
 	(define-head-coverage 20)
+	(define-floor-tag)
 	(princ "\nLabels defined.\n")
 	(princ)
 )
@@ -209,6 +210,120 @@
 	)
 )
 
+; Floor Tag
+(defun define-floor-tag ( / label-color layer )
+	(setq layer "FloorTags")
+	(entmake 
+		(list
+			(cons 0 "BLOCK")
+			(cons 2 "FloorTag") ; Block name
+		)
+	)
+	
+	; Name
+	(entmake 
+		(list
+			(cons 0 "ATTDEF")
+			(cons 10 (list 10.0 -10.0 0.0))
+			(cons 1 "")       ; Text value
+			(cons 2 "NAME")   ; Tag string
+			(cons 3 "Enter floor name") ; Prompt string
+			(cons 40 5.0)         ; Text height
+			(cons 7 "ARIAL")      ; Text style
+			(cons 62 color-cyan)  ; Color
+			(cons 8 layer) ; Layer
+		)
+	)
+	
+	; Elevation
+	(entmake 
+		(list
+			(cons 0 "ATTDEF")
+			(cons 10 (list 10.0 -20.0 0.0))	
+			(cons 1 "0")           ; Text value
+			(cons 2 "ELEVATION")   ; Tag string
+			(cons 3 "Enter elevation") ; Prompt string
+			(cons 40 5.0)         ; Text height
+			(cons 7 "ARIAL")      ; Text style
+			(cons 62 color-cyan)  ; Color
+			(cons 8 layer) ; Layer
+		)
+	)
+	
+	; Outer Circle
+	(entmake
+		(list
+			(cons 0 "CIRCLE")      
+			(cons 10 (list 0 0 0)) ; Center Point
+			; Radius: 7.71 copied from old block so it looks the same
+			(cons 40 7.71)        ; Radius
+			(cons 62 color-cyan)  ; Color
+			(cons 8 layer) 		  ; Layer
+		)
+	)
+	
+	; Vertical Line
+	(entmake
+		(list
+			(cons 0 "POLYLINE")
+			(cons 10 (list 0 0 0))  ; Point is always zero
+			(cons 70 1)             ; 1 = Closed Polyline
+			(cons 62 color-cyan)  	; Color
+			(cons 8 layer) 			; Layer
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list 7.71 0 0)) ; Top
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list -7.71 0 0))	; Bottom
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "SEQEND")
+		)
+	)
+	
+	; Horizontal Line
+	(entmake
+		(list
+			(cons 0 "POLYLINE")
+			(cons 10 (list 0 0 0))  ; Point is always zero
+			(cons 70 1)             ; 1 = Closed Polyline
+			(cons 62 color-cyan)  ; Color
+			(cons 8 "FloorTags") ; Layer
+		)
+	)	
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list 0 -7.71 0)) ; Left
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list 0 7.71 0))	; Right
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "SEQEND")
+		)
+	)
+	
+	(entmake 
+		(list
+			(cons 0 "ENDBLK")
+		)
+	)
+)
 ; Convert feet to inches
 (defun feet->inches (feet)
     (* feet 12)
