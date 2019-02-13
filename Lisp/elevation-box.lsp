@@ -156,7 +156,7 @@
 	vertices
 )
 
-(defun test-ebox ( / )
+(defun test-get-elevation ( / )
 	;(princ "\nTesting: test-ebox\n")
 	; TODO: Add some elevation boxes, 2 at least
 	(princ "\nShould return 102: ")
@@ -168,7 +168,8 @@
 
 ; Find the smallets elevation box point 'p' is in, 
 ; return the elevation.
-(defun get-elevation ( p / box boxes a b i ar in-areas all-areas m vertex vertices text-box text-boxes smallest-box output)
+(defun get-elevation ( p / box boxes a b i ar in-areas all-areas m vertex vertices text-box text-boxes smallest-box elevation)
+	(setq elevation "0")
 	; Get areas of all boxes that p is in, it may be in more than one
 	(setq in-areas '())
 	(setq boxes (get-elevation-boxes))
@@ -187,18 +188,22 @@
 	(setq i (index-of m all-areas))
 	(setq smallest-box (nth i boxes))
 	
-	; Match the smallest (elevation) box to it's MText containing the elevation text
-	(setq vertices (get-polyline-vertices smallest-box))
-	(setq text-boxes (get-elevation-text))
-	(foreach vertex vertices
-		(foreach text-box text-boxes
-			(if (= vertex (get-ins-point text-box))
-				; This text-box belongs to this elevation box
-				(setq output (elevation-from text-box))								     
+	(if (not (null smallest-box))
+		(progn
+			; Match the smallest (elevation) box to it's MText containing the elevation text
+			(setq vertices (get-polyline-vertices smallest-box))
+			(setq text-boxes (get-elevation-text))
+			(foreach vertex vertices
+				(foreach text-box text-boxes
+					(if (= vertex (get-ins-point text-box))
+						; This text-box belongs to this elevation box
+						(setq elevation (elevation-from text-box))								     
+					)
+				)
 			)
 		)
 	)
-	output
+	elevation
 )
 
 ; Get numeric elevation value from MText entity

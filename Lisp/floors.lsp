@@ -1,4 +1,4 @@
-(defun floor-tag-insert ( / old-osmode)
+(defun floor-tag-insert ( / p old-osmode)
 	(setq old-osmode (getvar "OSMODE"))
     (defun *error* (message)
         (princ)
@@ -7,16 +7,18 @@
         (setvar "OSMODE" old-osmode)
         (setvar "LWDISPLAY" 1)
     )
+	(setq p (getpoint))
+	(setq elevation (get-elevation p))
     (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having a different scale, being 12 time bigger than they should be
     (setvar "OSMODE" 0)
     (command "-LAYER" "NEW" "FloorTags" "")
     (command "-LAYER" "COLOR" "White" "FloorTags" "")
     (setvar "LWDISPLAY" 0)
     (command "-LAYER" "SET" "FloorTags" "")
-    (command "-INSERT" "FloorTag.dwg" pause 1.0 1.0 0)  
+    (command "-INSERT" "FloorTag.dwg" p 1.0 1.0 0 elevation)  
 )
 
-(defun floor-connector-insert ( / old-osmode)
+(defun floor-connector-insert ( / old-osmode elevation)
 	(setq old-osmode (getvar "OSMODE"))
     (defun *error* (message)
         (princ)
@@ -25,7 +27,7 @@
         (setvar "OSMODE" old-osmode)
         (setvar "LWDISPLAY" 1)
     )
-    (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having a different scale, being 12 time bigger than they should be
+    (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having a different scale, being 12 time bigger than they should be
     (setvar "OSMODE" 0)
     (command "-LAYER" "NEW" "FloorConnectors" "")
     (command "-LAYER" "COLOR" "White" "FloorConnectors" "")
