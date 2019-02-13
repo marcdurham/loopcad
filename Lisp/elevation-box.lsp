@@ -186,6 +186,8 @@
 	(setq m (apply 'min in-areas))
 	(setq i (index-of m all-areas))
 	(setq vertices (get-polyline-vertices (nth i boxes)))
+	
+	; Match the smallest box to it's MText containing the elevation text
 	(setq text-boxes (get-elevation-text))
 	(foreach vertex vertices
 		(foreach text-box text-boxes
