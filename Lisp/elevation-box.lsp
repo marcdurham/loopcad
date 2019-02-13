@@ -160,15 +160,15 @@
 	;(princ "\nTesting: test-ebox\n")
 	; TODO: Add some elevation boxes, 2 at least
 	(princ "\nShould return 102: ")
-	(princ (find-ebox (list 4342.29 1633.89 0.000000)))
+	(princ (get-elevation (list 4342.29 1633.89 0.000000)))
 	(princ "\nShould return 109: ")
-	(princ (find-ebox (list 4224.10 1672.70 0.000000)))
+	(princ (get-elevation (list 4224.10 1672.70 0.000000)))
 	(princ "\n")
 )
 
 ; Find the smallets elevation box point 'p' is in, 
 ; return the elevation.
-(defun find-ebox ( p / box boxes a b i ar in-areas all-areas m vertex vertices text-box text-boxes smallest-box output)
+(defun get-elevation ( p / box boxes a b i ar in-areas all-areas m vertex vertices text-box text-boxes smallest-box output)
 	; Get areas of all boxes that p is in, it may be in more than one
 	(setq in-areas '())
 	(setq boxes (get-elevation-boxes))

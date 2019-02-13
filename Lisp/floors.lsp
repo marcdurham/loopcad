@@ -52,8 +52,3 @@
 	)
 	tags
 )
-
-(defun in-elevation-box ( point box / )
-	(princ "\n Not Implemented\n")
-    ;(in-box point 
-)
