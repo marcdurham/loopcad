@@ -159,56 +159,104 @@
 (defun test-ebox ( / )
 	;(princ "\nTesting: test-ebox\n")
 	; TODO: Add some elevation boxes, 2 at least
-	(find-ebox (list 4342.29 1633.89 0.000000))
+	(princ "\nShould return 102: ")
+	(princ (find-ebox (list 4342.29 1633.89 0.000000)))
+	(princ "\nShould return 109: ")
+	(princ (find-ebox (list 4224.10 1672.70 0.000000)))
+	(princ "\n")
 )
 
-(defun find-ebox ( p / box boxes result a b i ar areas m vertex vertices text-box text-boxes output)
+(defun find-ebox ( p / box boxes result a b i ii ar areas all-areas m vertex vertices text-box text-boxes output)
 	(setq areas '())
+	(princ "\nGetting elevation boxes...")
 	(setq boxes (get-elevation-boxes))
+	(princ "\nElevation Boxes Count: ")
+	(princ (itoa (length boxes)))
+	(princ "\n")
 	(foreach box boxes
-		(if (in-ebox p box)
-			(progn 
-				(setq result box)
-				;;(princ "\nBox Area:: ")
-				(setq a (car (corners box)))
-				(setq b (cadr (corners box)))
-				(setq ar (area a b))
-				;;(princ (rtos ar 2 1))
-				;;(princ "\n")
-				(setq areas (append areas (list ar)))
+		(progn 
+			;;(princ "\nPoint: ")
+			;;(princ p)
+			;;(princ "\nBox: ")
+			;;(princ box)
+			;(princ "\na: ")
+			;(princ (car (corners box)))
+			;(princ "\nb: ")
+			;(princ (cadr (corners box)))
+			(princ "\nBox Area: ")
+			(setq a (car (corners box)))
+			(setq b (cadr (corners box)))
+			(setq ar (area a b))
+			(princ (rtos ar 2 1))
+			(princ "\n")
+			(setq all-areas (append all-areas (list ar)))
+			
+			(if (in-ebox p box)
+				(progn 
+					(princ "\np is in box: ")
+					(princ box)
+					(princ "\n")
+					(setq result box)
+					(setq areas (append areas (list ar)))
+				)
+				(progn 
+					(princ "\np NOT in box: ")
+					(princ box)
+					(princ "\n")
+				)
 			)
 		)
 	)
-	; Compare areas and return the smallest: done
-	; then return the elevation box;
-	; get the four vertices from elevation box polyine
-	; compare each vertex with all text boxes on ElevationBox layer
-	; then return the text box
-	; then return the elevation number
-	;;(princ "\nAreas:")
-	;(princ areas)
+	(princ "\nAll Areas: ")
+	(princ (itoa (length all-areas)))
+	(princ "  :")
+	(princ all-areas)
+	(princ "\n")
+	
+	(princ "\nIn Areas: ")
+	(princ (itoa (length areas)))
+	(princ "  :")
+	(princ areas)
+	(princ "\n")
 	;(terpri)
 	;(min areas)
 	(setq m (apply 'min areas))
+	(princ "\nSmallest Area: ")
+	(princ m)
+	(princ "\n")
 	(setq i (index-of m areas))
-	(setq vertices (get-polyline-vertices (nth i boxes)))
+	(princ "\nSmallest In-Area Index: ")
+	(princ (itoa i))
+	(princ "\n")
+	
+	(setq ii (index-of m all-areas))
+	(princ "\nSmallest All-Area Index: ")
+	(princ (itoa ii))
+	(princ "\n")
+	
+	(princ "\nSmallest Box: ")
+	(princ (nth ii boxes))
+	(setq vertices (get-polyline-vertices (nth ii boxes)))
+	(princ "\nSmallest Box Vertices: ")
+	(princ vertices)
+	(princ "\n")
+	
+	(princ "\nFinding elevation text for smallest box...\n")
 	(setq text-boxes (get-elevation-text))
 	(foreach vertex vertices
-		(progn
-			(foreach text-box text-boxes
-				; TODO: check if box is on a vertex	
-				(if (= vertex (cdr (assoc 10 text-box)))
-					(progn 
-						;(princ "\nVertex: ")
-						;(princ vertex)
-						;(princ "\nMatch")
-						;(princ "\nBox Ins Pt: ")
-						;(princ (cdr (assoc 10 text-box)))
-						;(princ "\n")
-						(setq output (cdr (assoc 1 text-box)))
-						
-						(setq output (substr output 11)) ; Elevation 999 ; Number starts at 11
-					)
+		(princ "\nVertex: ")
+		(princ vertex)
+		(foreach text-box text-boxes
+			(princ "\nBox Ins Pt: ")
+			(princ (get-ins-point text-box))
+			(princ " p: ")
+			(princ p)
+			(princ "\n")
+			; TODO: check if box is on a vertex	
+			(if (= vertex (get-ins-point text-box))
+				(progn 
+					(princ "\nMatch\n")			
+					(setq output (elevation-from text-box))								     
 				)
 			)
 		)
@@ -216,15 +264,29 @@
 	output
 )
 
+; Get numeric elevation value from MText entity
+(defun elevation-from ( text-box / )
+	; Input Example: "Elevation 999"
+	; Digits start at position 11
+	(substr (text-from text-box) 11)
+)
+
+; Get text from MText entity
+(defun text-from ( text-box / )
+	(cdr (assoc 1 text-box))					
+)
+
+; Is the point 'p' inside the polyline 'box'
 (defun in-ebox ( p box / a b vertices )
 	(setq a (car (corners box))) ; First corner
 	(setq b (cadr (corners box))) ; Opposite corner
 	(in-box p a b)
 )
 
+; Returns opposite corners of a box made of a four point polyline
 (defun corners ( rectangle / a b vertices )
 	(setq vertices (get-polyline-vertices rectangle))
-	(setq a (cdr (nth 0 vertices))) ; First corner
-	(setq b (cdr (nth 2 vertices))) ; Opposite corner	
+	(setq a (nth 0 vertices)) ; First corner
+	(setq b (nth 2 vertices)) ; Opposite corner	
 	(list a b )
 )
