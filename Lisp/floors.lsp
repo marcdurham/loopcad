@@ -40,44 +40,25 @@
     (command "-LAYER" "SET" "FloorConnectors" "")
     (command "-INSERT" "FloorConnector" pause 1.0 1.0 0) 
 	(setq p (cdr (assoc 10 (entget (entlast)))))	
-	;;(entdel (entlast))
-	
 	(setq tags (get-floor-tags))
 	(setq p-elevation (get-elevation p))
-	(princ "\nConnector Elevation: ")
-	(princ p-elevation)
 	(foreach tag tags
 		(progn
 			(setq tag-point (get-ins-point tag))
-			(princ "\nTag Elevation: ")
 			(setq tag-elevation (get-elevation (get-ins-point tag)))
-			(princ tag-elevation)
-			(princ "\n")
 			(if (= p-elevation tag-elevation)
-				(progn
-					(princ "\nMATCH ELEVATION OFFSET: ")
-					(setq offset (get-point-offset tag-point p))
-					(princ offset)
-					(princ "\n")
-				)
+				(setq offset (get-point-offset tag-point p))		
 			)
-			;;(insert-flr-con p)
 		)
 	)
 	(foreach tag tags
 		(progn
-			(princ "\nTAG: \n  p-elevation: ")
-			(princ p-elevation)
-			(princ "\n  tag-elevation: ")
 			(setq tag-elevation (get-elevation (get-ins-point tag)))
-			(princ tag-elevation)
-			(princ "\n")
 			(if (not (= p-elevation tag-elevation))
 				(progn 
-					(setq tag-offset (add-point-offset (get-ins-point tag) (- 0 (getx offset)) (- 0 (gety offset))))
-					(princ "\nTAG OFFSET: ")
-					(princ tag-offset)
-					(princ "\n")
+					(setq tag-offset 
+						(add-point-offset (get-ins-point tag) (- 0 (getx offset)) (- 0 (gety offset)))
+					)
 					(insert-flr-con tag-offset)
 				)
 			)
