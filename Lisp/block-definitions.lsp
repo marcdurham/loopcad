@@ -52,6 +52,7 @@
 	(define-head-coverage 18)
 	(define-head-coverage 20)
 	(define-floor-tag)
+	(define-floor-connector)
 	(princ "\nLabels defined.\n")
 	(princ)
 )
@@ -315,6 +316,35 @@
 	(entmake
 		(list
 			(cons 0 "SEQEND")
+		)
+	)
+	
+	(entmake 
+		(list
+			(cons 0 "ENDBLK")
+		)
+	)
+)
+
+; Floor Connector
+(defun define-floor-connector ( / label-color layer )
+	(setq layer "FloorConnectors")
+	(entmake 
+		(list
+			(cons 0 "BLOCK")
+			(cons 2 "FloorConnector") ; Block name
+		)
+	)
+	
+	; Outer Circle
+	(entmake
+		(list
+			(cons 0 "CIRCLE")      
+			(cons 10 (list 0 0 0)) ; Center Point
+			; Radius: 5.0 copied from old block so it looks the same
+			(cons 40 5.0)        ; Radius
+			(cons 62 color-cyan)  ; Color
+			(cons 8 layer) 		  ; Layer
 		)
 	)
 	

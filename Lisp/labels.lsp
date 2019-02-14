@@ -126,7 +126,7 @@
 	(entmake
 		(list 
 			(cons 0 "ATTRIB") ; Entity type
-			(cons 10 (point-offset point label-x-offset label-y-offset)) ; Label insertion point
+			(cons 10 (add-point-offset point label-x-offset label-y-offset)) ; Label insertion point
 			(cons 1 text)          ; Text value
 			(cons 2 tag-string)    ; Tag string
 			(cons 3 "Node number:")        ; Prompt string
