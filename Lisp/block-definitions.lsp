@@ -17,6 +17,7 @@
 ; Riser Label Properties
 (setq riser-label:tag-string "RISERNUMBER")
 (setq riser-label:layer "RiserLabels")
+(setq riser-label:label-color color-cyan)
 
 ; Head Model Properties
 ; Insert Point: 9.132, 8.395 copied from old block so it looks the same

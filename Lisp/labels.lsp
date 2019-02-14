@@ -39,9 +39,9 @@
 			(setq n (1+ n))
 		)
 	)
-	(delete-blockrefs (get-all-riser-labels))
+	(delete-blockrefs (get-all-riser-labels)) 
 	(foreach node (get-all-risers)
-		(progn		
+		(progn	
 			(insert-riser-label 
 				(get-ins-point node)
 				; Risers must be manually re-labeled for now
@@ -106,7 +106,7 @@
 		"RiserLabel"  ; block-name
 		riser-label:layer       ; layer
 		riser-label:tag-string  ; tag-string
-		tee-label:label-color ; label-color
+		riser-label:label-color ; label-color
 		tee-label:x-offset
 		tee-label:y-offset
 	)
