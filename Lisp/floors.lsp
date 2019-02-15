@@ -21,7 +21,7 @@
     (command "-INSERT" "FloorTag.dwg" p 1.0 1.0 0 floor-name elevation)  
 )
 
-(defun floor-connector-insert ( / p old-osmode elevation tag tags tag-point tag-elevation p-elevation offset tag-offset)
+(defun floor-connector-insert ( / p w old-osmode tag tags tag-elevation p-elevation offset tag-offset)
 	(setq old-osmode (getvar "OSMODE"))
     (defun *error* (message)
         (princ)
@@ -39,18 +39,12 @@
     (setvar "LWDISPLAY" 0)
     (command "-LAYER" "SET" "FloorConnectors" "")
     (command "-INSERT" "FloorConnector" pause 1.0 1.0 0) 
+	
 	(setq p (cdr (assoc 10 (entget (entlast)))))	
-	(setq tags (get-floor-tags))
 	(setq p-elevation (get-elevation p))
-	(foreach tag tags
-		(progn
-			(setq tag-point (get-ins-point tag))
-			(setq tag-elevation (get-elevation (get-ins-point tag)))
-			(if (= p-elevation tag-elevation)
-				(setq offset (get-point-offset tag-point p))		
-			)
-		)
-	)
+	(setq tags (get-floor-tags))
+	(setq offset (floor-tag-offset p p-elevation tags))
+	
 	(foreach tag tags
 		(progn
 			(setq tag-elevation (get-elevation (get-ins-point tag)))
@@ -64,6 +58,20 @@
 			)
 		)
 	)
+)
+
+; Get the nearest, in the same elevation box, floor tag
+(defun floor-tag-offset ( p p-elevation tags / tag tag-point tag-elevation offset )
+	(foreach tag tags
+		(progn
+			(setq tag-point (get-ins-point tag))
+			(setq tag-elevation (get-elevation (get-ins-point tag)))
+			(if (= p-elevation tag-elevation)
+				(setq offset (get-point-offset tag-point p))		
+			)
+		)
+	)
+	offset
 )
 
 (defun insert-flr-con ( p / )

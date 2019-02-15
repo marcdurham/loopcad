@@ -42,6 +42,7 @@
 	(delete-blockrefs (get-all-riser-labels)) 
 	(foreach node (get-all-risers)
 		(progn	
+			; Find riser friends
 			(insert-riser-label 
 				(get-ins-point node)
 				; Risers must be manually re-labeled for now
