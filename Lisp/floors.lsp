@@ -32,7 +32,7 @@
     )
     (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having
 						  ; a different scale, being 12 time bigger than they 
-						  ; should be
+					 f	  ; should be
     (setvar "OSMODE" 0)
     (command "-LAYER" "NEW" "FloorConnectors" "")
     (command "-LAYER" "COLOR" "White" "FloorConnectors" "")
@@ -43,8 +43,28 @@
 	(setq p (cdr (assoc 10 (entget (entlast)))))	
 	(setq p-elevation (get-elevation p))
 	(setq tags (get-floor-tags))
+	
 	(setq offset (floor-tag-offset p p-elevation tags))
 	
+	(insert-flr-cons offset p-elevation tags)
+)
+
+; Get the nearest floor tag, the one in the same elevation box
+(defun floor-tag-offset ( p p-elevation tags / tag tag-point tag-elevation offset )
+	(foreach tag tags
+		(progn
+			(setq tag-point (get-ins-point tag))
+			(setq tag-elevation (get-elevation (get-ins-point tag)))
+			(if (= p-elevation tag-elevation)
+				(setq offset (get-point-offset tag-point p))		
+			)
+		)
+	)
+	offset
+)
+
+; Insert corresponding floor tags
+(defun insert-flr-cons ( offset p-elevation tags / tag-elevation tag-offset )
 	(foreach tag tags
 		(progn
 			(setq tag-elevation (get-elevation (get-ins-point tag)))
@@ -58,20 +78,6 @@
 			)
 		)
 	)
-)
-
-; Get the nearest, in the same elevation box, floor tag
-(defun floor-tag-offset ( p p-elevation tags / tag tag-point tag-elevation offset )
-	(foreach tag tags
-		(progn
-			(setq tag-point (get-ins-point tag))
-			(setq tag-elevation (get-elevation (get-ins-point tag)))
-			(if (= p-elevation tag-elevation)
-				(setq offset (get-point-offset tag-point p))		
-			)
-		)
-	)
-	offset
 )
 
 (defun insert-flr-con ( p / )
