@@ -46,7 +46,7 @@
 	
 	(setq offset (floor-tag-offset p p-elevation tags))
 	
-	(insert-flr-cons offset p-elevation tags)
+	(insert-risers offset p-elevation tags)
 )
 
 ; Get the nearest floor tag, the one in the same elevation box
@@ -63,8 +63,8 @@
 	offset
 )
 
-; Insert corresponding floor tags
-(defun insert-flr-cons ( offset p-elevation tags / tag-elevation tag-offset )
+; Insert corresponding risers (floor connectors)
+(defun insert-risers ( offset p-elevation tags / tag-elevation tag-offset )
 	(foreach tag tags
 		(progn
 			(setq tag-elevation (get-elevation (get-ins-point tag)))
@@ -78,6 +78,63 @@
 			)
 		)
 	)
+)
+
+(defun riser-friends ( p / p-elevation tag-elevation riser-elevation tag-point tag tags offset tag-offset riser risers friends)
+	(princ "\nStarting riser-friends...\n")
+	(setq friends '())
+	(setq p-elevation (get-elevation p))
+	(setq tags (get-floor-tags))
+	(princ "\nTag Count: ")
+	(princ (itoa (length tags)))
+	
+	(setq offset (floor-tag-offset p p-elevation tags))
+	(princ "\nOffset: ")
+	(princ offset)
+	
+	(setq risers (get-all-risers))
+	(princ "\nRiser Count: ")
+	(princ (itoa (length risers)))
+	(foreach tag tags
+		(progn
+			(setq tag-point (get-ins-point tag))
+			(princ "\nTag Point: ")
+			(princ tag-point)
+			(setq tag-elevation (get-elevation  tag-point))
+			(if (not (= p-elevation tag-elevation))
+				(progn 
+					(foreach riser risers
+						(setq riser-point (get-ins-point riser))
+						; Which floor tag / elevation box does this riser-point belong to?
+						; What is the offset from the floor tag that it belongs to?
+						(princ "\n    Riser Point: ")
+						(princ riser-point)
+						(setq riser-elevation (get-elevation riser-point))
+						(princ "\n    Riser Elevation: ")
+						(princ riser-elevation)
+						(if (= riser-elevation tag-elevation)
+							(princ "\n    Elevation Match\n")
+							(princ "\n    no match\n")
+							(setq tag-offset (get-point-offset riser-point
+						)
+						;(setq tag-offset 
+							;(add-point-offset riser-point (- 0 (getx offset)) (- 0 (gety offset)))
+						;)
+						(princ "\n    Tag Offset: ")
+						(princ tag-offset)
+						
+						; Check distance of each tag-offset to original point 'p'
+						; if distance is small then add each tag to a group
+						; Assign a letter to each group chr(65 to 90)
+						; A-Z (setq x 65)(while (<= x 90)(princ (chr x))(setq x (1+ x)))
+						
+						;;;(insert-flr-con tag-offset)
+					)
+				)
+			)
+		)
+	)
+    friends
 )
 
 (defun insert-flr-con ( p / )
