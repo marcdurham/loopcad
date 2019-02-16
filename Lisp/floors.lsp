@@ -84,6 +84,7 @@
 	(list (- 0 (getx point)) (- 0 (gety point)))
 )
 
+; TODO: Instead of find 'friends' of one point we need to group all risers 
 (defun riser-friends ( p / p-elevation tag-elevation riser-elevation tag-point tag tags offset tag-offset riser risers friends)
 	(princ "\nStarting riser-friends...\n")
 	(setq friends '())
