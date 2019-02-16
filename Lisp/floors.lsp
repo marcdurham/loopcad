@@ -80,6 +80,10 @@
 	)
 )
 
+(defun invert-coordinates ( point )
+	(list (- 0 (getx point)) (- 0 (gety point)))
+)
+
 (defun riser-friends ( p / p-elevation tag-elevation riser-elevation tag-point tag tags offset tag-offset riser risers friends)
 	(princ "\nStarting riser-friends...\n")
 	(setq friends '())
@@ -107,21 +111,28 @@
 						(setq riser-point (get-ins-point riser))
 						; Which floor tag / elevation box does this riser-point belong to?
 						; What is the offset from the floor tag that it belongs to?
-						(princ "\n    Riser Point: ")
+						(princ "\n****Riser Point: ")
 						(princ riser-point)
 						(setq riser-elevation (get-elevation riser-point))
 						(princ "\n    Riser Elevation: ")
 						(princ riser-elevation)
 						(if (= riser-elevation tag-elevation)
-							(princ "\n    Elevation Match\n")
-							(princ "\n    no match\n")
-							(setq tag-offset (get-point-offset riser-point
+							(progn 
+								(princ "\n    Elevation Match\n    Tag Offset: ")
+								(setq tag-offset (get-point-offset riser-point tag-point))
+								(princ tag-offset)
+								(if (> 1.0 (distance tag-offset (invert-coordinates offset)))
+									(princ "\n    Tag Offset MATCH\n")
+									(princ "\n    No tag offset match\n")
+								)
+							)
+							(princ "\n    No elevation match\n")
 						)
 						;(setq tag-offset 
 							;(add-point-offset riser-point (- 0 (getx offset)) (- 0 (gety offset)))
 						;)
-						(princ "\n    Tag Offset: ")
-						(princ tag-offset)
+						;;(princ "\n    Tag Offset: ")
+						;;(princ tag-offset)
 						
 						; Check distance of each tag-offset to original point 'p'
 						; if distance is small then add each tag to a group
