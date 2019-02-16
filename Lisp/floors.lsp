@@ -95,6 +95,11 @@
 	(setq offset (floor-tag-offset p p-elevation tags))
 	(princ "\nOffset: ")
 	(princ offset)
+	(princ "\nP-Elevation: ")
+	(princ p-elevation)
+	
+	(princ "\nPoint: ")
+	(princ p)
 	
 	(setq risers (get-all-risers))
 	(princ "\nRiser Count: ")
@@ -105,8 +110,8 @@
 			(princ "\nTag Point: ")
 			(princ tag-point)
 			(setq tag-elevation (get-elevation  tag-point))
-			(if (not (= p-elevation tag-elevation))
-				(progn 
+			;;;(if (not (= p-elevation tag-elevation))
+			;;;	(progn 
 					(foreach riser risers
 						(setq riser-point (get-ins-point riser))
 						; Which floor tag / elevation box does this riser-point belong to?
@@ -122,7 +127,10 @@
 								(setq tag-offset (get-point-offset riser-point tag-point))
 								(princ tag-offset)
 								(if (> 1.0 (distance tag-offset (invert-coordinates offset)))
-									(princ "\n    Tag Offset MATCH\n")
+									(progn 
+										(princ "\n    Tag Offset MATCH\n")
+										(setq friends (append riser friends))
+									)
 									(princ "\n    No tag offset match\n")
 								)
 							)
@@ -141,8 +149,8 @@
 						
 						;;;(insert-flr-con tag-offset)
 					)
-				)
-			)
+			;;;	)
+			;;;)
 		)
 	)
     friends
