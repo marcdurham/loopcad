@@ -49,7 +49,8 @@
 	(insert-risers offset p-elevation tags)
 )
 
-; Get the nearest floor tag, the one in the same elevation box
+; Get the x,y coordinates offset to the nearest floor tag, 
+; the tag in the same elevation box.
 (defun floor-tag-offset ( p p-elevation tags / tag tag-point tag-elevation offset )
 	(foreach tag tags
 		(progn
@@ -84,6 +85,51 @@
 	(list (- 0 (getx point)) (- 0 (gety point)))
 )
 
+
+(defun test-riser-tag-offset ( )
+	(riser-tag-offset '(3906.95 1290.41 0.000000) (get-floor-tags))
+)
+
+; Find x,y offset of riser from it's floor tag
+; TODO: Optimize: Store these in a list?
+(defun riser-tag-offset (riser-point tags / tag tag-offset tag-point riser-elevation)
+	(setq riser-elevation (get-elevation riser-point))
+	(princ "\n***Riser Elevation: ")
+	; TODO: Get offset, then check if any risers already have that same (approx)
+	; offset, if yes then add to that riser/offset group;
+	; if no then make a new offset group
+	(princ riser-elevation)
+			
+	(foreach tag tags
+	
+		; Which floor tag / elevation box does this riser-point belong to?
+		; What is the offset from the floor tag that it belongs to?
+		
+		(setq tag-point (get-ins-point tag))
+		; TODO: Optimize: get tag elevations and store them in a list?
+		(setq tag-elevation (get-elevation  tag-point)) 
+		(princ "\nTag Elevation: ")
+		(princ tag-elevation)
+		
+		(if (= riser-elevation tag-elevation) ; Riser belongs to tag
+			(progn 
+				(princ "\n    Elevation Match\n    Tag Offset: ")
+				(setq tag-offset (get-point-offset riser-point tag-point))
+				(princ tag-offset)
+				;(if (> 1.0 (distance tag-offset (invert-coordinates offset)))
+				;	(progn 
+				;		(princ "\n    Tag Offset MATCH\n")
+				;		(setq friends (append riser friends))
+				;	)
+				;	(princ "\n    No tag offset match\n")
+				;)
+			)
+			(princ "\n    No elevation match\n")
+		)
+		tag-offset
+	)
+
+)
 ; TODO: Instead of find 'friends' of one point we need to group all risers 
 (defun riser-friends ( p / p-elevation tag-elevation riser-elevation tag-point tag tags offset tag-offset riser risers friends)
 	(princ "\nStarting riser-friends...\n")
