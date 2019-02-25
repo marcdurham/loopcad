@@ -92,7 +92,7 @@
 ; Riser groups: 
 ; Example Output: '(((123.45 43.21 0) (R.1.A R.2.A R.5.A)) ((22.22 33.33 0) (R.3.B R.4.B) ...
 ; Grouped by offset to tag/elevation box
-(defun riser-groups ( / p-elevation tag-elevation riser-elevation tag-point tag tags offset tag-offset riser-offset riser risers group groups)
+(defun riser-groups ( / p-elevation tag-elevation riser-elevation tag-point tag tags offset tag-offset riser-offset riser-name riser risers group groups existing-group)
 	(princ "\nStarting riser-groups...\n")
 	(setq groups '())
 	(setq p-elevation (get-elevation p))
@@ -133,16 +133,54 @@
 			(princ "\n")
 			
 			(setq group '())
-			
 			(setq group (append group (list riser-offset)))
-			(setq group (append group  (list (list 11 22 33))))
-			(princ "\nGROUP: ")
-			(princ group)
-			(princ "\n")
+			
+			(setq existing-group (assoc riser-offset groups))
+			(if (not existing-group)
+				(progn
+					(setq r (car (car groups)))
+					;(princ "\nR = ")
+					;(princ r)
+					;(princ "\n")
+					(if (and (approx (car riser-offset) (car r) 1.0) (approx (cadr riser-offset) (cadr r) 1.0))
+						;(princ "\nExisting Group: MISSING THEN FOUND\n")
+						(setq existing-group (cdr (car groups)))
+						;;;(setq existing-group (assoc-approx riser-offset groups 1.0))
+						;;(setq existing-group T)
+						;(princ "\nExisting Group: nothing done\n")
+					)
+				)
+				;(progn
+				;	(princ "\nExisting Group: ALREADY FOUND\n")
+				;)
+			)
+			;(princ "\nExisting Group: ")
+			;(princ existing-group)
+			
+			;(princ "\nRiser Entity Name: ")
+			(setq riser-name (cdr (assoc -1 riser)))
+			;(princ riser-name)
+			;(princ "\n")
+			
+			(if existing-group
+				(progn
+					;(princ "\nAdd to existing!!!!!!!\n")
+					(setq group (append group (list riser-name "EXISTING:" existing-group ":END"))) ; Add entity name to group
+					;;;(setq group (append group existing-group))
+				)
+				(progn
+					;(princ "\nNew group!!!!!!!\n")
+					(setq group (append group (list riser-name "NEW:" existing-group ":END"))) ; Add entity name to group
+				)
+			)
+		
+			;(princ "\nGROUP: ")
+			;(princ group)
+			;(princ "\n")
 			(setq groups (cons group groups))
-			(princ "\n    groups : ")
-			(princ (itoa (length groups)))
-			(princ "\n")
+			;(princ "\n    groups : ")
+			;(princ (itoa (length groups)))
+			;(princ "\n")
 			
 			;;;(if (not (= p-elevation tag-elevation))
 			;;;	(progn 
@@ -150,6 +188,33 @@
 					
 			;;;	)
 			;;;)
+		)
+	)
+    groups
+)
+
+; Riser offsets: 
+; Example Output: (
+;   ((-0.9906 56.8205 0) <Entity name: 354c6f30>) 
+;   ((-2.3058 -56.2903 0) <Entity name: 354c70c0>)
+;   ((-2.3058 -56.2903 0) <Entity name: 354c70e8>)
+; )
+(defun riser-offsets ( / p-elevation riser-elevation tags offset riser-offset riser-name riser risers group groups)
+	(setq groups '())
+	(setq p-elevation (get-elevation p))
+	(setq tags (get-floor-tags))	
+	(setq offset (floor-tag-offset p p-elevation tags))
+	(setq risers (get-all-risers))	
+	(foreach riser risers
+		(progn
+			(setq riser-point (get-ins-point riser))
+			(setq riser-elevation (get-elevation riser-point))
+			(setq riser-offset (riser-tag-offset riser-point tags))
+			(setq group '())
+			(setq group (append group (list riser-offset)))
+			(setq riser-name (cdr (assoc -1 riser)))
+			(setq group (append group (list riser-name)))
+			(setq groups (cons group groups))
 		)
 	)
     groups
