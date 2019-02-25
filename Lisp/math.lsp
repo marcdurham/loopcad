@@ -210,7 +210,32 @@
 	(not different)
 )
 
-(defun assoc-approx (items / item found)
+(defun test-assoc-approx ( / )
+	(princ "\ntest-assoc-approx: ")
+	(if (= 
+			(list (list 25 33.4 4) 66 77) ; Expected Output
+			(assoc-approx 				  ; Function Under Test
+				(list 25.5 33.0 4.0) 
+				(list 
+					(list (list 55 22 2.30) 55 66) 
+					(list (list 25.00 33.4 4.0) 66.0 77.0) 
+					(list (list 1.0 2.0) 11 22)
+				) 
+				1.0
+			)
+		)
+		(princ "PASS\n")
+		(princ "FAIL\n")
+	)
+	(princ)
+)
+
+; Same as the assoc function, but uses lists-approx and approx instead of =
+(defun assoc-approx (target items margin / item found)
 	(foreach item items
-		(if (approx 
+		(if (lists-approx (car item) target margin)
+			(setq found item)
+		)
+	)
+	found
 )
