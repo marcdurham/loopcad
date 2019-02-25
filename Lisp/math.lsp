@@ -188,5 +188,29 @@
 	result
 )
 
+; Finds if two numbers are almost the same, within the margin
+(defun approx (a b margin / )
+	(< (abs (- a b)) margin)
+)
 
+; Are all items in both lists almost the same, within the margin
+; Uses the approx function
+(defun lists-approx (a-list b-list margin / a b i a-length different)
+	(setq a-length (length a-list))
+	(setq i 0)
+	(if (not (= a-length (length b-list)))
+		(setq different T) ; List are of different lengths
+		(while (< i a-length)
+			(if (not (approx (nth i a-list) (nth i b-list) margin))
+				(setq different T)
+			)
+			(setq i (1+ i))
+		)	
+	)
+	(not different)
+)
 
+(defun assoc-approx (items / item found)
+	(foreach item items
+		(if (approx 
+)
