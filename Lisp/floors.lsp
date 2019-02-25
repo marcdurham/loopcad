@@ -85,9 +85,74 @@
 	(list (- 0 (getx point)) (- 0 (gety point)))
 )
 
-
 (defun test-riser-tag-offset ( )
 	(riser-tag-offset '(3906.95 1290.41 0.000000) (get-floor-tags))
+)
+
+; Riser groups: 
+; Example Output: '(((123.45 43.21 0) (R.1.A R.2.A R.5.A)) ((22.22 33.33 0) (R.3.B R.4.B) ...
+; Grouped by offset to tag/elevation box
+(defun riser-groups ( / p-elevation tag-elevation riser-elevation tag-point tag tags offset tag-offset riser-offset riser risers group groups)
+	(princ "\nStarting riser-groups...\n")
+	(setq groups '())
+	(setq p-elevation (get-elevation p))
+	(setq tags (get-floor-tags))
+	(princ "\nTag Count: ")
+	(princ (itoa (length tags)))
+	
+	(setq offset (floor-tag-offset p p-elevation tags))
+	(princ "\nOffset: ")
+	(princ offset)
+	(princ "\nP-Elevation: ")
+	(princ p-elevation)
+	
+	(princ "\nPoint: ")
+	(princ p)
+	
+	(setq risers (get-all-risers))
+	(princ "\nRiser Count: ")
+	(princ (itoa (length risers)))
+	; Get offset of all risers?
+	;(foreach tag tags
+	
+	(foreach riser risers
+		(progn
+			(princ "\n****Riser Point: ")
+			(setq riser-point (get-ins-point riser))
+			(princ riser-point)
+			(setq riser-elevation (get-elevation riser-point))
+			(princ "\n    Riser Elevation: ") 
+			; TODO: Get offset, then check if any risers already have that same (approx)
+			; offset, if yes then add to that riser/offset group;
+			; if no then make a new offset group
+			(princ riser-elevation)
+			
+			(princ "\nGet riser-tag-offset: ")
+			(setq riser-offset (riser-tag-offset riser-point tags))
+			(princ riser-offset)
+			(princ "\n")
+			
+			(setq group '())
+			
+			(setq group (append group (list riser-offset)))
+			(setq group (append group  (list (list 11 22 33))))
+			(princ "\nGROUP: ")
+			(princ group)
+			(princ "\n")
+			(setq groups (cons group groups))
+			(princ "\n    groups : ")
+			(princ (itoa (length groups)))
+			(princ "\n")
+			
+			;;;(if (not (= p-elevation tag-elevation))
+			;;;	(progn 
+					;(foreach riser risers
+					
+			;;;	)
+			;;;)
+		)
+	)
+    groups
 )
 
 ; Find x,y offset of riser from it's floor tag
