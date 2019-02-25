@@ -182,12 +182,6 @@
 			;(princ (itoa (length groups)))
 			;(princ "\n")
 			
-			;;;(if (not (= p-elevation tag-elevation))
-			;;;	(progn 
-					;(foreach riser risers
-					
-			;;;	)
-			;;;)
 		)
 	)
     groups
@@ -207,7 +201,7 @@
 	(foreach riser risers
 		(progn
 			(setq riser-point (get-ins-point riser))
-			(setq riser-offset (riser-tag-offset riser-point tags))
+			(setq riser-offset (floor-tag-offset riser-point tags))
 			(setq group '())
 			(setq group (append group (list riser-offset)))
 			(setq riser-name (cdr (assoc -1 riser)))
@@ -220,7 +214,7 @@
 
 ; Find x,y offset of riser from it's floor tag
 ; TODO: Optimize: Store these in a list?
-(defun riser-tag-offset (riser-point tags / tag tag-offset tag-point riser-elevation)
+(defun floor-tag-offset (riser-point tags / tag tag-offset tag-point riser-elevation)
 	(setq riser-elevation (get-elevation riser-point))
 	; TODO: Get offset, then check if any risers already have that same (approx)
 	; offset, if yes then add to that riser/offset group;
