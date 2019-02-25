@@ -193,22 +193,20 @@
     groups
 )
 
-; Riser offsets: 
+; Riser offsets: Associative list with offsets of riser to floor tag 
+; assocated with an entity name
 ; Example Output: (
 ;   ((-0.9906 56.8205 0) <Entity name: 354c6f30>) 
 ;   ((-2.3058 -56.2903 0) <Entity name: 354c70c0>)
 ;   ((-2.3058 -56.2903 0) <Entity name: 354c70e8>)
 ; )
-(defun riser-offsets ( / p-elevation riser-elevation tags offset riser-offset riser-name riser risers group groups)
+(defun riser-offsets ( / tags riser-offset riser-name riser risers group groups)
 	(setq groups '())
-	(setq p-elevation (get-elevation p))
 	(setq tags (get-floor-tags))	
-	(setq offset (floor-tag-offset p p-elevation tags))
 	(setq risers (get-all-risers))	
 	(foreach riser risers
 		(progn
 			(setq riser-point (get-ins-point riser))
-			(setq riser-elevation (get-elevation riser-point))
 			(setq riser-offset (riser-tag-offset riser-point tags))
 			(setq group '())
 			(setq group (append group (list riser-offset)))
