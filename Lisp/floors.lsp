@@ -40,28 +40,15 @@
     (command "-LAYER" "SET" "Risers" "")
     (command "-INSERT" "Riser" pause 1.0 1.0 0) 
 	
-	(setq p (cdr (assoc 10 (entget (entlast)))))	
+	(setq p (cdr (assoc 10 (entget (entlast))))) ; Get insertion point
 	(setq p-elevation (get-elevation p))
 	(setq tags (get-floor-tags))
 	
-	(setq offset (floor-tag-offset p p-elevation tags))
+	(setq offset (floor-tag-elevation-offset p p-elevation tags))
 	
 	(insert-risers offset p-elevation tags)
-)
-
-; Get the x,y coordinates offset to the nearest floor tag, 
-; the tag in the same elevation box.
-(defun floor-tag-offset ( p p-elevation tags / tag tag-point tag-elevation offset )
-	(foreach tag tags
-		(progn
-			(setq tag-point (get-ins-point tag))
-			(setq tag-elevation (get-elevation (get-ins-point tag)))
-			(if (= p-elevation tag-elevation)
-				(setq offset (get-point-offset tag-point p))		
-			)
-		)
-	)
-	offset
+	(princ "\nInsert Riser: Done\n")
+	(princ)
 )
 
 ; Insert corresponding risers (floor connectors)
@@ -162,7 +149,7 @@
 	(foreach riser risers
 		(progn
 			(setq riser-point (get-ins-point riser))
-			(setq riser-offset (floor-tag-offset riser-point tags))
+			(setq riser-offset (floor-tags-offset riser-point tags))
 			(setq group '())
 			(setq group (append group (list riser-offset)))
 			(setq riser-name (cdr (assoc -1 riser)))
@@ -175,21 +162,32 @@
 
 ; Find x,y offset of riser from it's floor tag
 ; TODO: Optimize: Store these in a list?
-(defun floor-tag-offset (riser-point tags / tag tag-offset tag-point riser-elevation)
+(defun floor-tags-offset (riser-point tags / tag tag-offset tag-point riser-elevation)
 	(setq riser-elevation (get-elevation riser-point))
-	; TODO: Get offset, then check if any risers already have that same (approx)
-	; offset, if yes then add to that riser/offset group;
-	; if no then make a new offset group
-
 	(foreach tag tags
 		(setq tag-point (get-ins-point tag))
 		; TODO: Optimize: get tag elevations and store them in a list?		
 		(if (= riser-elevation (get-elevation tag-point)) ; Riser belongs to tag
 			(setq tag-offset (get-point-offset riser-point tag-point))
 		)
-		tag-offset
 	)
+	tag-offset
+)
 
+; Get the x,y coordinates offset to the nearest floor tag, 
+; the tag in the same elevation box.
+; Almost the same as floor-tags-offset, but elevation is input
+(defun floor-tag-elevation-offset ( p p-elevation tags / tag tag-point tag-elevation offset )
+	(foreach tag tags
+		(progn
+			(setq tag-point (get-ins-point tag))
+			(setq tag-elevation (get-elevation (get-ins-point tag)))
+			(if (= p-elevation tag-elevation)
+				(setq offset (get-point-offset tag-point p))		
+			)
+		)
+	)
+	offset
 )
 
 (defun get-floor-tags ( / en ent tags layer) 
