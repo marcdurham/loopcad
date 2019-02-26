@@ -188,7 +188,7 @@
 )
 
 ; Group by the first list 
-(defun group-by ( items / item output offsets isinlist)
+(defun group-by ( items / item output offset offsets isinlist group)
 	(princ "\ngroup-by...\n")
 	(setq offsets '())
 	(foreach item items
@@ -200,11 +200,29 @@
 		)
 		;(setq offsets (cons item offsets))
 	)
+	(princ "\nAll Offsets: ")
+	(princ offsets)
 	(setq output '())
-	(foreach item items
-		(setq output (cons item output))
+	(foreach offset offsets
+		(setq group offset)
+		(princ "\n*Group: ")
+		(princ group)
+		(princ "\n  Car Offset: ")
+		(princ (car offset))
+		(foreach item items	
+			(princ "\n  Car Item: ")
+			(princ (car item))
+			(if (lists-approx (car offset) (car item) 1.0)
+				(progn
+					(setq group (append group (cdr item)))
+					(princ "\n  offset MATCH\n")
+				)
+				;(princ "\n  offset NOT match\n")
+			)
+		)
+		(setq output (cons group output))
 	)
-	offsets
+	output
 )
 
 ; Riser offsets: Associative list with offsets of riser to floor tag 
