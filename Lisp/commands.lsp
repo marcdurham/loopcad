@@ -21,7 +21,7 @@
 (defun C:LABEL-PIPES () (label-all-pipes))
 (defun C:BREAK-PIPES () (break-pipes-delete-old))
 (defun C:JOIN-HEADS () (head-join))
-(defun C:FLOOR-CONNECTOR () (floor-connector-insert))
+(defun C:RISER () (riser-insert))
 (defun C:FLOOR-TAG () (floor-tag-insert))
 (defun C:INSERT-JOB-DATA () (job-data-insert))
 

@@ -53,7 +53,7 @@
 	(define-head-coverage 18)
 	(define-head-coverage 20)
 	(define-floor-tag)
-	(define-floor-connector)
+	(define-riser)
 	(princ "\nLabels defined.\n")
 	(princ)
 )
@@ -327,13 +327,13 @@
 	)
 )
 
-; Floor Connector
-(defun define-floor-connector ( / label-color layer )
-	(setq layer "FloorConnectors")
+; Riser
+(defun define-riser ( / label-color layer )
+	(setq layer "Risers")
 	(entmake 
 		(list
 			(cons 0 "BLOCK")
-			(cons 2 "FloorConnector") ; Block name
+			(cons 2 "Risers") ; Block name
 		)
 	)
 	

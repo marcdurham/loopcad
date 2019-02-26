@@ -21,7 +21,7 @@
     (command "-INSERT" "FloorTag.dwg" p 1.0 1.0 0 floor-name elevation)  
 )
 
-(defun floor-connector-insert ( / p w old-osmode tag tags tag-elevation p-elevation offset tag-offset)
+(defun riser-insert ( / p w old-osmode tag tags tag-elevation p-elevation offset tag-offset)
 	(setq old-osmode (getvar "OSMODE"))
     (defun *error* (message)
         (princ)
@@ -32,13 +32,13 @@
     )
     (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having
 						  ; a different scale, being 12 time bigger than they 
-					 f	  ; should be
+					 	  ; should be
     (setvar "OSMODE" 0)
-    (command "-LAYER" "NEW" "FloorConnectors" "")
-    (command "-LAYER" "COLOR" "White" "FloorConnectors" "")
+    (command "-LAYER" "NEW" "Risers" "")
+    (command "-LAYER" "COLOR" "White" "Risers" "")
     (setvar "LWDISPLAY" 0)
-    (command "-LAYER" "SET" "FloorConnectors" "")
-    (command "-INSERT" "FloorConnector" pause 1.0 1.0 0) 
+    (command "-LAYER" "SET" "Risers" "")
+    (command "-INSERT" "Riser" pause 1.0 1.0 0) 
 	
 	(setq p (cdr (assoc 10 (entget (entlast)))))	
 	(setq p-elevation (get-elevation p))
@@ -264,12 +264,12 @@
     friends
 )
 
-(defun insert-flr-con ( p / )
-	(command "-LAYER" "NEW" "FloorConnectors" "")
-    (command "-LAYER" "COLOR" "White" "FloorConnectors" "")
+(defun insert-riser ( p / )
+	(command "-LAYER" "NEW" "Risers" "")
+    (command "-LAYER" "COLOR" "White" "Risers" "")
     (setvar "LWDISPLAY" 0)
-    (command "-LAYER" "SET" "FloorConnectors" "")
-    (command "-INSERT" "FloorConnector" p 1.0 1.0 0) 
+    (command "-LAYER" "SET" "Risers" "")
+    (command "-INSERT" "Riser" p 1.0 1.0 0) 
 )
 
 (defun get-floor-tags ( / en ent tags layer) 
