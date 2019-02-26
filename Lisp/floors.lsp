@@ -89,7 +89,7 @@
 	(riser-tag-offset '(3906.95 1290.41 0.000000) (get-floor-tags))
 )
 
-(defun riser-labels-go ( / offsets riser-groups riser risers  riser-entity i leter letters )
+(defun riser-labels-create ( last-i / offsets riser-groups r riser risers  riser-entity i leter letters )
 	(princ "\nScanning risers and creating labels...\n")
 	(setq letters (get-alphabet))
 	(setq risers (get-all-risers))
@@ -101,9 +101,10 @@
 	(princ (length riser-groups))
 	(princ "\n")
 	(setq i 0)
+	(setq r 0)
 	(while (< i (length riser-groups))
 		(princ "\nRiser: R.")
-		(princ i)
+		(princ r)
 		(princ ".")
 		(setq letter (nth i letters))
 		(princ letter)
@@ -113,13 +114,14 @@
 		(foreach riser (cdr riser-group)
 			(setq riser-entity (entget riser))
 			(insert-riser-label 
-					(get-ins-point riser-entity)
-					(strcat "R." (itoa i) "." letter)
+				(get-ins-point riser-entity)
+				(strcat "R." (itoa (+ r last-i)) "." letter)
 			)
+			(setq r (1+ r))
 		)
 		(setq i (1+ i))
 	)
-	i
+	(+ r last-i)
 )
 
 (defun get-alphabet ( / i letters)
