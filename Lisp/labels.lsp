@@ -40,17 +40,18 @@
 		)
 	)
 	(delete-blockrefs (get-all-riser-labels)) 
-	(foreach node (get-all-risers)
-		(progn	
+	(setq n (+ n (riser-labels-go)))
+	;(foreach node (get-all-risers)
+;		(progn	;
 			; TODO: Find riser friends...
-			(insert-riser-label 
-				(get-ins-point node)
-				; Risers must be manually re-labeled for now
-				(strcat "R." (itoa n))
-			)
-			(setq n (1+ n))
-		)
-	)
+		;	(insert-riser-label 
+		;		(get-ins-point node)
+		;		; Risers must be manually re-labeled for now
+		;		(strcat "R." (itoa n))
+		;	)
+		;	(setq n (1+ n))
+		;)
+	;)
 	(princ (strcat "\n" (itoa (- n 1)) " nodes were labeled.\n"))
 	(princ)
 )
