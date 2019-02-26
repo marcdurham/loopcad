@@ -333,7 +333,7 @@
 	(entmake 
 		(list
 			(cons 0 "BLOCK")
-			(cons 2 "Risers") ; Block name
+			(cons 2 "Riser") ; Block name
 		)
 	)
 	
