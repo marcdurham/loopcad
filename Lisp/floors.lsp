@@ -191,34 +191,14 @@
 (defun group-by ( items / item output offsets isinlist)
 	(princ "\ngroup-by...\n")
 	(setq offsets '())
-	(princ "\nOffsets done\nOffsets: ")
-	(princ (length offsets))
 	(foreach item items
-		;;(if (assoc-approx (car item) items)
 		(progn 
-			(princ "\nCar Item: ")
-			(princ (car item))
-			
 			(setq isinlist (assoc-approx (car item) offsets 1.0))
-			(if isinlist
-				(princ "\nCar Item: EXISTS\n")
-				(progn
-					(princ "\nCar Item: NEW\n")
-					(setq offsets (cons (list (car item)) offsets))
-					(princ "\nOffsets done\nOffsets: ")
-					(princ (length offsets))
-					(princ "\Offset list: ")
-					(princ offsets)
-				)
-				;
-				
-			)
-		
-		
-			
+			(if (not isinlist)
+				(setq offsets (cons (list (car item)) offsets))
+			)	
 		)
 		;(setq offsets (cons item offsets))
-		;;)	
 	)
 	(setq output '())
 	(foreach item items
