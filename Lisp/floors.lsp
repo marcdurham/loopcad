@@ -187,6 +187,46 @@
     groups
 )
 
+; Group by the first list 
+(defun group-by ( items / item output offsets isinlist)
+	(princ "\ngroup-by...\n")
+	(setq offsets '())
+	(princ "\nOffsets done\nOffsets: ")
+	(princ (length offsets))
+	(foreach item items
+		;;(if (assoc-approx (car item) items)
+		(progn 
+			(princ "\nCar Item: ")
+			(princ (car item))
+			
+			(setq isinlist (assoc-approx (car item) offsets 1.0))
+			(if isinlist
+				(princ "\nCar Item: EXISTS\n")
+				(progn
+					(princ "\nCar Item: NEW\n")
+					(setq offsets (cons (list (car item)) offsets))
+					(princ "\nOffsets done\nOffsets: ")
+					(princ (length offsets))
+					(princ "\Offset list: ")
+					(princ offsets)
+				)
+				;
+				
+			)
+		
+		
+			
+		)
+		;(setq offsets (cons item offsets))
+		;;)	
+	)
+	(setq output '())
+	(foreach item items
+		(setq output (cons item output))
+	)
+	offsets
+)
+
 ; Riser offsets: Associative list with offsets of riser to floor tag 
 ; assocated with an entity name
 ; Example Output: (
