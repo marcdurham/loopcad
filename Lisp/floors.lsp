@@ -89,107 +89,8 @@
 	(riser-tag-offset '(3906.95 1290.41 0.000000) (get-floor-tags))
 )
 
-; Riser groups: 
-; Example Output: '(((123.45 43.21 0) (R.1.A R.2.A R.5.A)) ((22.22 33.33 0) (R.3.B R.4.B) ...
-; Grouped by offset to tag/elevation box
-(defun riser-groups ( / p-elevation tag-elevation riser-elevation tag-point tag tags offset tag-offset riser-offset riser-name riser risers group groups existing-group)
-	(princ "\nStarting riser-groups...\n")
-	(setq groups '())
-	(setq p-elevation (get-elevation p))
-	(setq tags (get-floor-tags))
-	(princ "\nTag Count: ")
-	(princ (itoa (length tags)))
-	
-	(setq offset (floor-tag-offset p p-elevation tags))
-	(princ "\nOffset: ")
-	(princ offset)
-	(princ "\nP-Elevation: ")
-	(princ p-elevation)
-	
-	(princ "\nPoint: ")
-	(princ p)
-	
-	(setq risers (get-all-risers))
-	(princ "\nRiser Count: ")
-	(princ (itoa (length risers)))
-	; Get offset of all risers?
-	;(foreach tag tags
-	
-	(foreach riser risers
-		(progn
-			(princ "\n****Riser Point: ")
-			(setq riser-point (get-ins-point riser))
-			(princ riser-point)
-			(setq riser-elevation (get-elevation riser-point))
-			(princ "\n    Riser Elevation: ") 
-			; TODO: Get offset, then check if any risers already have that same (approx)
-			; offset, if yes then add to that riser/offset group;
-			; if no then make a new offset group
-			(princ riser-elevation)
-			
-			(princ "\nGet riser-tag-offset: ")
-			(setq riser-offset (riser-tag-offset riser-point tags))
-			(princ riser-offset)
-			(princ "\n")
-			
-			(setq group '())
-			(setq group (append group (list riser-offset)))
-			
-			(setq existing-group (assoc riser-offset groups))
-			(if (not existing-group)
-				(progn
-					(setq r (car (car groups)))
-					;(princ "\nR = ")
-					;(princ r)
-					;(princ "\n")
-					(if (and (approx (car riser-offset) (car r) 1.0) (approx (cadr riser-offset) (cadr r) 1.0))
-						;(princ "\nExisting Group: MISSING THEN FOUND\n")
-						(setq existing-group (cdr (car groups)))
-						;;;(setq existing-group (assoc-approx riser-offset groups 1.0))
-						;;(setq existing-group T)
-						;(princ "\nExisting Group: nothing done\n")
-					)
-				)
-				;(progn
-				;	(princ "\nExisting Group: ALREADY FOUND\n")
-				;)
-			)
-			;(princ "\nExisting Group: ")
-			;(princ existing-group)
-			
-			;(princ "\nRiser Entity Name: ")
-			(setq riser-name (cdr (assoc -1 riser)))
-			;(princ riser-name)
-			;(princ "\n")
-			
-			(if existing-group
-				(progn
-					;(princ "\nAdd to existing!!!!!!!\n")
-					(setq group (append group (list riser-name "EXISTING:" existing-group ":END"))) ; Add entity name to group
-					;;;(setq group (append group existing-group))
-				)
-				(progn
-					;(princ "\nNew group!!!!!!!\n")
-					(setq group (append group (list riser-name "NEW:" existing-group ":END"))) ; Add entity name to group
-				)
-			)
-		
-			;(princ "\nGROUP: ")
-			;(princ group)
-			;(princ "\n")
-			(setq groups (cons group groups))
-			;(princ "\n    groups : ")
-			;(princ (itoa (length groups)))
-			;(princ "\n")
-			
-		)
-	)
-    groups
-)
-
-; Group by the first list 
+; Group, using the lists-approx function, by the first item in a list of lists
 (defun group-by ( items / item output offset offsets isinlist group)
-	(princ "\ngroup-by...\n")
 	(setq offsets '())
 	(foreach item items
 		(progn 
@@ -198,26 +99,13 @@
 				(setq offsets (cons (list (car item)) offsets))
 			)	
 		)
-		;(setq offsets (cons item offsets))
 	)
-	(princ "\nAll Offsets: ")
-	(princ offsets)
 	(setq output '())
 	(foreach offset offsets
 		(setq group offset)
-		(princ "\n*Group: ")
-		(princ group)
-		(princ "\n  Car Offset: ")
-		(princ (car offset))
 		(foreach item items	
-			(princ "\n  Car Item: ")
-			(princ (car item))
 			(if (lists-approx (car offset) (car item) 1.0)
-				(progn
-					(setq group (append group (cdr item)))
-					(princ "\n  offset MATCH\n")
-				)
-				;(princ "\n  offset NOT match\n")
+				(setq group (append group (cdr item)))
 			)
 		)
 		(setq output (cons group output))
