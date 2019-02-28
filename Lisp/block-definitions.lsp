@@ -52,6 +52,11 @@
 	(define-head-coverage 16)
 	(define-head-coverage 18)
 	(define-head-coverage 20)
+	(define-sw-head-coverage 12)
+	(define-sw-head-coverage 14)
+	(define-sw-head-coverage 16)
+	(define-sw-head-coverage 18)
+	(define-sw-head-coverage 20)
 	(define-floor-tag)
 	(define-riser)
 	(princ "\nLabels defined.\n")
@@ -60,6 +65,10 @@
 
 (defun define-head-coverage (coverage)
     (define-head-block coverage "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
+)
+
+(defun define-sw-head-coverage (coverage)
+    (define-sw-head-block coverage "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
 )
 
 (defun define-label-block (block-name tag-string prompt default label-color layer label-x-offset label-y-offset)
@@ -89,6 +98,142 @@
 	)
 )
 
+; Side-wall Head Block
+(defun define-sw-head-block (coverage block-name tag-string prompt default label-color layer / span halfway quarter coverage-text)
+	(entmake 
+		(list
+			(cons 0 "BLOCK")
+			(cons 2 (strcat "Sw" block-name (itoa coverage))) ; Block name
+		)
+	)
+	
+	; Head Model Number
+	(entmake 
+		(list
+			(cons 0 "ATTDEF")
+			(cons 10 
+				(list 
+					head-block:model-x-offset 
+					head-block:model-y-offset 
+					0.0
+				)
+			)
+			(cons 1 default)      ; Text value
+			(cons 2 tag-string)   ; Tag string
+			(cons 3 prompt)       ; Prompt string
+			(cons 40 5.0)         ; Text height
+			(cons 7 "ARIAL")      ; Text style
+			(cons 62 label-color) ; Color
+			(cons 8 layer)        ; Layer
+		)
+	)
+	
+	; Head
+	; TODO: Triangle
+	(entmake
+		(list
+			(cons 0 "POLYLINE")
+			(cons 10 (list 0 0 0))  ; Point is always zero
+			(cons 70 1)             ; 1 = Closed Polyline
+			(cons 62 color-red)  ; Color
+			(cons 8 layer) ; Layer
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list -6.0 12.0 0)) ; Left
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list 6.0 12.0 0))	; Right
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list 0 0 0))	; Top
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "SEQEND")
+		)
+	)
+	
+	; Head Coverage Box
+	(setq span (feet->inches coverage))
+	(setq -span (- 0 span))
+	(setq halfway (/ span 2))
+	(setq -halfway (- 0 halfway))
+	(setq quarter (/ span 4))
+	(entmake
+		(list
+			(cons 0 "POLYLINE")
+			(cons 10 (list 0 0 0))  ; Point is always zero
+			(cons 70 1)             ; 1 = Closed Polyline
+			(cons 62 color-yellow)  ; Color
+			(cons 8 "HeadCoverage") ; Layer
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list -halfway 0 0)) ; Lower Left
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list halfway 0 0))	; Lower Right
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list halfway span 0))	; Upper Right
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "VERTEX")
+			(cons 10 (list -halfway span 0))	; Upper Left
+		)
+	)
+	(entmake
+		(list
+			(cons 0 "SEQEND")
+		)
+	)
+	
+	; Coverage Text 
+	; Example: 12' x 12'
+	(setq coverage-text 
+		(strcat (itoa coverage) "'  X  " (itoa coverage) "'")
+	)
+	(entmake
+		(list
+			(cons 0 "TEXT")
+			(cons 10 (list span span 0)) ; Upper left corner
+			(cons 11 (list 0 halfway 0)) ; Second alignment point, center of text
+			(cons 40 16.0)         ; Text height
+			(cons 1 coverage-text) ; Text value
+			(cons 72 1) ; Horizontal text justification: 1 = Center, 4 = Middle
+			(cons 73 2) ; Vertical text justification: 2 = Middle
+			(cons 62 color-yellow)  ; Color
+			(cons 8 "HeadCoverage") ; Layer
+		)
+	)
+	(entmake 
+		(list
+			(cons 0 "ENDBLK")
+		)
+	)
+)
+
+; Head Block (Normal)
 (defun define-head-block (coverage block-name tag-string prompt default label-color layer / span halfway quarter coverage-text)
 	(entmake 
 		(list
