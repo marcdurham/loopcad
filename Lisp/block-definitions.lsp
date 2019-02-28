@@ -52,11 +52,16 @@
 	(define-head-coverage 16)
 	(define-head-coverage 18)
 	(define-head-coverage 20)
-	(define-sw-head-coverage 12)
-	(define-sw-head-coverage 14)
-	(define-sw-head-coverage 16)
-	(define-sw-head-coverage 18)
-	(define-sw-head-coverage 20)
+	(define-sw-head-coverage 12 "U") ; Sprays Up
+	(define-sw-head-coverage 14 "U")
+	(define-sw-head-coverage 16 "U")
+	(define-sw-head-coverage 18 "U")
+	(define-sw-head-coverage 20 "U")
+	(define-sw-head-coverage 12 "D") ; Sprays  direDown
+	(define-sw-head-coverage 14 "D")
+	(define-sw-head-coverage 16 "D")
+	(define-sw-head-coverage 18 "D")
+	(define-sw-head-coverage 20 "D")
 	(define-floor-tag)
 	(define-riser)
 	(princ "\nLabels defined.\n")
@@ -67,8 +72,8 @@
     (define-head-block coverage "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
 )
 
-(defun define-sw-head-coverage (coverage)
-    (define-sw-head-block coverage "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
+(defun define-sw-head-coverage (coverage direction)
+    (define-sw-head-block direction coverage "Head" "MODEL" "Head model" "MODEL" color-red "Heads")
 )
 
 (defun define-label-block (block-name tag-string prompt default label-color layer label-x-offset label-y-offset)
@@ -99,11 +104,11 @@
 )
 
 ; Side-wall Head Block
-(defun define-sw-head-block (coverage block-name tag-string prompt default label-color layer / span halfway quarter coverage-text)
+(defun define-sw-head-block (direction coverage block-name tag-string prompt default label-color layer / span halfway quarter coverage-text)
 	(entmake 
 		(list
 			(cons 0 "BLOCK")
-			(cons 2 (strcat "Sw" block-name (itoa coverage))) ; Block name
+			(cons 2 (strcat "Sw" block-name (itoa coverage) direction)) ; Block name
 		)
 	)
 	
@@ -130,6 +135,11 @@
 	
 	; Head
 	; TODO: Triangle
+	(setq tvertical 1)
+	(if (= direction "D") (setq tvertical -1))
+	(setq tleftx (* tvertical -6.0))
+	(setq trightx (* tvertical 6.0))
+	(setq ttopy (* tvertical 12.0))
 	(entmake
 		(list
 			(cons 0 "POLYLINE")
@@ -142,13 +152,13 @@
 	(entmake
 		(list
 			(cons 0 "VERTEX")
-			(cons 10 (list -6.0 12.0 0)) ; Left
+			(cons 10 (list tleftx ttopy 0)) ; Left
 		)
 	)
 	(entmake
 		(list
 			(cons 0 "VERTEX")
-			(cons 10 (list 6.0 12.0 0))	; Right
+			(cons 10 (list trightx ttopy 0))	; Right
 		)
 	)
 	(entmake
