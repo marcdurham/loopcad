@@ -57,11 +57,21 @@
 	(define-sw-head-coverage 16 "U")
 	(define-sw-head-coverage 18 "U")
 	(define-sw-head-coverage 20 "U")
-	(define-sw-head-coverage 12 "D") ; Sprays  direDown
+	(define-sw-head-coverage 12 "D") ; Sprays Down
 	(define-sw-head-coverage 14 "D")
 	(define-sw-head-coverage 16 "D")
 	(define-sw-head-coverage 18 "D")
 	(define-sw-head-coverage 20 "D")
+	(define-sw-head-coverage 12 "L") ; Sprays Left
+	(define-sw-head-coverage 14 "L")
+	(define-sw-head-coverage 16 "L")
+	(define-sw-head-coverage 18 "L")
+	(define-sw-head-coverage 20 "L")
+	(define-sw-head-coverage 12 "R") ; Sprays Right
+	(define-sw-head-coverage 14 "R")
+	(define-sw-head-coverage 16 "R")
+	(define-sw-head-coverage 18 "R")
+	(define-sw-head-coverage 20 "R")	
 	(define-floor-tag)
 	(define-riser)
 	(princ "\nLabels defined.\n")
@@ -104,7 +114,7 @@
 )
 
 ; Side-wall Head Block
-(defun define-sw-head-block (direction coverage block-name tag-string prompt default label-color layer / span halfway quarter coverage-text)
+(defun define-sw-head-block (direction coverage block-name tag-string prompt default label-color layer / span halfway quarter coverage-text t-left-x t-left-y t-right-x t-right-y t-top-x t-top-y t-vertical c-ll-x c-ll-y c-lr-x c-lr-y c-ur-x c-ur-y c-ul-x c-ul-y text-center-x text-center-y model-label-x model-label-y)
 	(entmake 
 		(list
 			(cons 0 "BLOCK")
@@ -113,13 +123,20 @@
 	)
 	
 	; Head Model Number
+	(setq model-label-x head-block:model-x-offset)
+	(setq model-label-y head-block:model-y-offset)
+	;(cond ((= direction "D")
+	;		(setq model-label-y (- 0 model-label-y)))
+	;	((= direction "L")
+	;		(setq model-label-x (- 0 model-label-x)))
+	;)
 	(entmake 
 		(list
 			(cons 0 "ATTDEF")
 			(cons 10 
 				(list 
-					head-block:model-x-offset 
-					head-block:model-y-offset 
+					model-label-x
+					model-label-y
 					0.0
 				)
 			)
@@ -134,12 +151,31 @@
 	)
 	
 	; Head
-	; TODO: Triangle
-	(setq tvertical 1)
-	(if (= direction "D") (setq tvertical -1))
-	(setq tleftx (* tvertical -6.0))
-	(setq trightx (* tvertical 6.0))
-	(setq ttopy (* tvertical 12.0))
+	; Triangle
+	; Default direction "U" (not in the cond below)
+	(setq t-left-x -6)
+	(setq t-right-x 6)			
+	(setq t-left-y 12)
+	(setq t-right-y 12)		
+	(cond ((= direction "D")
+			(setq t-left-x 6)
+			(setq t-right-x -6)
+			(setq t-left-y -12)
+			(setq t-right-y -12)					
+		)
+		((= direction "L")
+			(setq t-left-x -12)
+			(setq t-right-x -12)					
+			(setq t-left-y 6)
+			(setq t-right-y -6)		
+		)
+		((= direction "R")
+			(setq t-left-x 12)
+			(setq t-right-x 12)
+			(setq t-left-y 6)
+			(setq t-right-y -6)		
+		)
+	)
 	(entmake
 		(list
 			(cons 0 "POLYLINE")
@@ -152,13 +188,13 @@
 	(entmake
 		(list
 			(cons 0 "VERTEX")
-			(cons 10 (list tleftx ttopy 0)) ; Left
+			(cons 10 (list t-left-x t-left-y 0)) ; Left
 		)
 	)
 	(entmake
 		(list
 			(cons 0 "VERTEX")
-			(cons 10 (list trightx ttopy 0))	; Right
+			(cons 10 (list t-right-x t-right-y 0)) ; Right
 		)
 	)
 	(entmake
@@ -179,6 +215,52 @@
 	(setq halfway (/ span 2))
 	(setq -halfway (- 0 halfway))
 	(setq quarter (/ span 4))
+
+	(setq c-ll-x -halfway)
+	(setq c-ll-y 0)
+	(setq c-lr-x halfway)
+	(setq c-lr-y 0)
+	(setq c-ur-x halfway)
+	(setq c-ur-y span)
+	(setq c-ul-x -halfway)
+	(setq c-ul-y span)
+	(setq text-center-x 0)
+	(setq text-center-y halfway)
+	
+	(cond ((= direction "D")
+			(setq c-ll-x -halfway)
+			(setq c-ll-y -span)
+			(setq c-lr-x halfway)
+			(setq c-lr-y -span)
+			(setq c-ur-x halfway)
+			(setq c-ur-y 0)
+			(setq c-ul-x -halfway)
+			(setq c-ul-y 0)
+			(setq text-center-x 0)
+			(setq text-center-y -halfway))
+		((= direction "L")
+			(setq c-ll-x -span)
+			(setq c-ll-y -halfway)
+			(setq c-lr-x 0)
+			(setq c-lr-y -halfway)
+			(setq c-ur-x 0)
+			(setq c-ur-y halfway)
+			(setq c-ul-x -span)
+			(setq c-ul-y halfway)
+			(setq text-center-x -halfway)
+			(setq text-center-y 0))
+		((= direction "R")
+			(setq c-ll-x 0)
+			(setq c-ll-y -halfway)
+			(setq c-lr-x span)
+			(setq c-lr-y -halfway)
+			(setq c-ur-x span)
+			(setq c-ur-y halfway)
+			(setq c-ul-x 0)
+			(setq c-ul-y halfway)
+			(setq text-center-x halfway)
+			(setq text-center-y 0))
+	)
 	(entmake
 		(list
 			(cons 0 "POLYLINE")
@@ -191,25 +273,25 @@
 	(entmake
 		(list
 			(cons 0 "VERTEX")
-			(cons 10 (list -halfway 0 0)) ; Lower Left
+			(cons 10 (list c-ll-x c-ll-y 0)) ; Lower Left
 		)
 	)
 	(entmake
 		(list
 			(cons 0 "VERTEX")
-			(cons 10 (list halfway 0 0))	; Lower Right
+			(cons 10 (list c-lr-x c-lr-y 0)) ; Lower Right
 		)
 	)
 	(entmake
 		(list
 			(cons 0 "VERTEX")
-			(cons 10 (list halfway span 0))	; Upper Right
+			(cons 10 (list c-ur-x c-ur-y 0)) ; Upper Right
 		)
 	)
 	(entmake
 		(list
 			(cons 0 "VERTEX")
-			(cons 10 (list -halfway span 0))	; Upper Left
+			(cons 10 (list c-ul-x c-ul-y 0)) ; Upper Left
 		)
 	)
 	(entmake
@@ -227,7 +309,7 @@
 		(list
 			(cons 0 "TEXT")
 			(cons 10 (list span span 0)) ; Upper left corner
-			(cons 11 (list 0 halfway 0)) ; Second alignment point, center of text
+			(cons 11 (list text-center-x text-center-y 0)) ; Second alignment point, center of text
 			(cons 40 16.0)         ; Text height
 			(cons 1 coverage-text) ; Text value
 			(cons 72 1) ; Horizontal text justification: 1 = Center, 4 = Middle
