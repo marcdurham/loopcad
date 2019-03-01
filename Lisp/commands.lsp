@@ -9,6 +9,7 @@
 (defun C:HEAD-16 () (head-insert-coverage "16"))
 (defun C:HEAD-18 () (head-insert-coverage "18"))
 (defun C:HEAD-20 () (head-insert-coverage "20"))
+(defun C:SWHEAD () (swhead-insert-user))
 (defun C:PIPE () (pipe-draw "?"))
 (defun C:PIPE-12 () (pipe-draw "1/2"))
 (defun C:PIPE-34 () (pipe-draw "3/4"))
