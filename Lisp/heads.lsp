@@ -88,7 +88,7 @@
 		pause ; Get insertion point
 		1.0 ; X scale
 		1.0 ; Y scale
-		0 ; Rotation 
+		0 ; TODO: pause here for Rotation 
 		model-code ; Model Code
 	)
 	(setq pt (cdr (assoc 10 (entget (entlast)))))
