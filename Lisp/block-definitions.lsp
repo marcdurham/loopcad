@@ -9,7 +9,7 @@
 ; Tee Label Properties
 (setq tee-label:tag-string "TEENUMBER")
 (setq tee-label:prompt "Tee number label")
-(setq tee-label:label-color color-blue)
+(setq tee-label:label-color color-green)
 (setq tee-label:layer "TeeLabels")
 (setq tee-label:x-offset 4.0)
 (setq tee-label:y-offset 4.0)
@@ -17,7 +17,7 @@
 ; Riser Label Properties
 (setq riser-label:tag-string "RISERNUMBER")
 (setq riser-label:layer "RiserLabels")
-(setq riser-label:label-color color-cyan)
+(setq riser-label:label-color color-green)
 
 ; Head Model Properties
 ; Insert Point: 9.132, 8.395 copied from old block so it looks the same
@@ -467,7 +467,7 @@
 			(cons 1 "")       ; Text value
 			(cons 2 "NAME")   ; Tag string
 			(cons 3 "Enter floor name") ; Prompt string
-			(cons 40 5.0)         ; Text height
+			(cons 40 9.0)         ; Text height
 			(cons 7 "ARIAL")      ; Text style
 			(cons 62 color-cyan)  ; Color
 			(cons 8 layer) ; Layer
@@ -482,7 +482,7 @@
 			(cons 1 "0")           ; Text value
 			(cons 2 "ELEVATION")   ; Tag string
 			(cons 3 "Enter elevation") ; Prompt string
-			(cons 40 5.0)         ; Text height
+			(cons 40 9.0)         ; Text height
 			(cons 7 "ARIAL")      ; Text style
 			(cons 62 color-cyan)  ; Color
 			(cons 8 layer) ; Layer
@@ -580,7 +580,7 @@
 			(cons 0 "CIRCLE")      
 			(cons 10 (list 0 0 0)) ; Center Point
 			; Radius: 5.0 copied from old block so it looks the same
-			(cons 40 5.0)        ; Radius
+			(cons 40 4.5)        ; Radius
 			(cons 62 color-cyan)  ; Color
 			(cons 8 layer) 		  ; Layer
 		)
