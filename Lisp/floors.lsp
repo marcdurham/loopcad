@@ -8,7 +8,7 @@
         (setvar "LWDISPLAY" 1)
     )
 	(setq p (getpoint))
-	(setq floor-name (getstring "Enter floor name"))
+	(setq floor-name (getstring T "Enter floor name")) ; getstring with T allows spaces
 	(setq elevation (get-elevation p))
     (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having
 						  ; a different scale, being 12 time bigger than they 
