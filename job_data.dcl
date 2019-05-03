@@ -4,41 +4,53 @@ job_data
 : dialog
  
 {
-label = "Test Dialog No 1";
- 
+	label = "Job Data";
+	: popup_list 
+	{
+		action = "(patternlsp)";
+		edit_width = 0;
+		key = "company";
+		list = "X-Fire\n13dpex.com\nOther";
+		// value = "2";
+		is_tab_stop = true; 
+	}
+
+
+	: edit_box 
+	{
+		action = "(texted)";
+		allow_accept = true;
+		edit_limit = 31;
+		key = "job_number";
+		label = "Job Number: ";
+		mnemonic = "F";
+		value = "drawing"; 
+		width = 30;
+		alignment = right;
+		is_tab_stop = true; 
+	}     
+	
 	: text
 	{
-	label = "This is a Test Message";
-	alignment = centered;
+		label = "Job Name";
+		alignment = left;
 	}
-	
-	: edit_box {
-	action = "(texted)";
-	allow_accept = true;
-	edit_limit = 31;
-	key = "EB";
-	label = "File name: ";
-	mnemonic = "F";
-	value = "drawing"; 
-	width = 30;
+
+	: edit_box 
+	{
+		action = "(texted)";
+		allow_accept = true;
+		edit_limit = 31;
+		key = "EB";
+		label = "Job name: ";
+		mnemonic = "F";
+		value = "drawing"; 
+		width = 30;
+		alignment = right;
+		is_tab_stop = true; 		
 	}     
 
-	: button
-	{
-	key = "accept";
-	label = "Close";
-	is_default = true;
-	fixed_width = true;
-	alignment = centered;
-	}
-	
-	: button
-	{
-	key = "what";
-	label = "What";
-	//is_default = true;
-	//fixed_width = true;
-	alignment = centered;
-	}
+	allow_accept = true;
+	ok_cancel;
  
 }
