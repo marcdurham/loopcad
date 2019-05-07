@@ -86,6 +86,8 @@
 	(define-floor-tag)
 	(define-riser)
 	(princ "\nLabels defined.\n")
+	(define-job-data)
+	(princ "\nJob data block defined.\n")
 	(princ)
 )
 
@@ -603,6 +605,44 @@
 		)
 	)
 )
+
+; Job Data
+(defun define-job-data ( / label-color layer )
+	(setq layer "JobData")
+	(entmake 
+		(list
+			(cons 0 "BLOCK")
+			(cons 2 "JobData") ; Block name
+		)
+	)
+	(job-data-attdef "JOB_NUMBER" "" "" 1)
+	(job-data-attdef "JOB_NAME" "" "" 2)
+	(job-data-attdef "JOB_SITE_ADDRESS" "" "" 3)
+	(job-data-attdef "CALCULATED_BY_COMPANY" "" "" 4)
+	(job-data-attdef "SUPPLY_STATIC_PRESSURE" "0" "" 5)
+	(job-data-attdef "SUPPLY_RESIDUAL_PRESSURE" "0" "" 6)
+	(job-data-attdef "SUPPLY_AVAILABLE_FLOW" "0" "" 7)
+	(job-data-attdef "SUPPLY_ELEVATION" "0" "" 8)
+	(job-data-attdef "SUPPLY_PIPE_LENGTH" "0" "" 9)
+	(job-data-attdef "SUPPLY_PIPE_INTERNAL_DIAMETER" "0" "" 10)
+	(job-data-attdef "SPRINKLER_PIPE_TYPE" "" "" 11)
+	(job-data-attdef "SPRINKLER_FITTING_TYPE" "" "" 12)
+	(job-data-attdef "SUPPLY_PIPE_TYPE" "" "" 13)
+	(job-data-attdef "SUPPLY_PIPE_SIZE" "0" "" 14)
+	(job-data-attdef "SUPPLY_NAME" "MTR" "" 15)
+	(job-data-attdef "DOMESTIC_FLOW_ADDED" "0" "" 16)
+	(job-data-attdef "WATER_FLOW_SWITCH_MAKE_MODEL" "" "" 17)
+	(job-data-attdef "SUPPLY_PIPE_FITTINGS_SUMMARY" "" "" 18)
+	(job-data-attdef "SUPPLY_PIPE_FITTINGS_EQUIV_LENGTH" "0" "" 19)
+	(job-data-attdef "SUPPLY_PIPE_ADD_PRESSURE_LOSS" "0" "" 20)
+	(job-data-attdef "WATER_FLOW_SWITCH_PRESSURE_LOSS" "0" "" 21)
+	(entmake 
+		(list
+			(cons 0 "ENDBLK")
+		)
+	)
+)
+
 ; Convert feet to inches
 (defun feet->inches (feet)
     (* feet 12)
