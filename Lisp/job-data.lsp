@@ -80,15 +80,12 @@
 
 (defun job-data-attribute ( tag-string text-value position / y-offset )
 	(setq y-offset (* 10.0 position))
-	(princ (strcat "\nInserting attribute: " tag-string))
 	(entmake
 		(list 
 			(cons 0 "ATTRIB") ; Entity type
-			;(cons 10 (add-point-offset point 0.0 (- 0.0 y-offset))) ; Label insertion point
 			(cons 10 (list 0.0 (- 0.0 y-offset))) ; Label insertion point
 			(cons 1 text-value)    ; Text value
 			(cons 2 tag-string)    ; Tag string
-			;(cons 3 attribute-prompt) ; Prompt string
 			(cons 40 5.0)          ; Text height
 			(cons 7 "ARIAL")       ; Text style
 			(cons 62 color-blue)   ; Color
@@ -99,11 +96,9 @@
 
 (defun job-data-attdef ( tag-string text-value attribute-prompt position / y-offset )
 	(setq y-offset (* 10.0 position))
-	(princ (strcat "\nInserting attribute definition: " tag-string))
 	(entmake
 		(list 
 			(cons 0 "ATTDEF") ; Entity type
-			;(cons 10 (add-point-offset point 0.0 (- 0.0 y-offset))) ; Label insertion point
 			(cons 10 (list 0.0 (- 0.0 y-offset))) ; Label insertion point
 			(cons 1 text-value)    ; Text value
 			(cons 2 tag-string)    ; Tag string
