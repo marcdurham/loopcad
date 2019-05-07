@@ -19,8 +19,8 @@
 		(if (null global:pipe-size)
 			(setq global:pipe-size "05")
 		)
-		(initget "05 075 1 125")
-		(if (setq tmp (getkword (strcat "\nPipe Size [0.5/0.75/1/1.25] <" global:pipe-size ">: ")))
+		(initget "05 075 1 15")
+		(if (setq tmp (getkword (strcat "\nPipe Size [0.5/0.75/1/1.5] <" global:pipe-size ">: ")))
 			(setq global:pipe-size tmp)
 		)
 	)
@@ -76,6 +76,7 @@
 	)			
 )
 
+; Name colors
 (setq color-red 1)
 (setq color-yellow 2)
 (setq color-green 3)
@@ -85,17 +86,19 @@
 (setq color-black-white 7)
 (setq color-dark-gray 8)
 (setq color-light-gray 9)
+(setq color-orange 30)
 
 (setq size-color-list 
 	(list 
-		(cons "1/2" color-green)
+		(cons "1/2" color-green) ; Domestic pipe
 		(cons "3/4" color-red)
 		(cons "1" 150) ; Since this is listed first it is the default 1 inch color
 		(cons "1" color-blue)
-		(cons "1-1/4" color-magenta)
+		(cons "1" color-orange) ; Copper pipe
+		(cons "1-1/2" color-magenta)
 		(cons "05" color-green)
 		(cons "075" color-red)
-		(cons "125" color-magenta)
+		(cons "15" color-magenta)
 	)
 )
 
