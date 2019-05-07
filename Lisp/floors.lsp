@@ -38,7 +38,7 @@
     (command "-LAYER" "COLOR" "White" "Risers" "")
     (setvar "LWDISPLAY" 0)
     (command "-LAYER" "SET" "Risers" "")
-    (command "-INSERT" "Riser" pause 1.0 1.0 0) 
+    (command "-INSERT" "Riser" pause 1.0 1.0 0)
 	
 	(setq p (cdr (assoc 10 (entget (entlast))))) ; Get insertion point
 	(setq p-elevation (get-elevation p))
@@ -61,7 +61,7 @@
 					(setq tag-offset 
 						(add-point-offset (get-ins-point tag) (- 0 (getx offset)) (- 0 (gety offset)))
 					)
-					(insert-flr-con tag-offset)
+					(command "-INSERT" "Riser" tag-offset 1.0 1.0 0)
 				)
 			)
 		)
