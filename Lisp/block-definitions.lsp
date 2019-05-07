@@ -16,6 +16,7 @@
 
 ; Riser Label Properties
 (setq riser-label:tag-string "RISERNUMBER")
+(setq riser-label:prompt "Riser number label")
 (setq riser-label:layer "RiserLabels")
 (setq riser-label:label-color color-green)
 
@@ -44,6 +45,16 @@
 		"T.0" 
 		tee-label:label-color
 		tee-label:layer
+		head-block:model-x-offset    ; Label X Offset
+		0 							 ; Label Y Offset
+	)
+	(define-label-block 
+		"RiserLabel" 
+		riser-label:tag-string
+		riser-label:prompt 
+		"R.0.X" 
+		riser-label:label-color
+		riser-label:layer
 		head-block:model-x-offset    ; Label X Offset
 		0 							 ; Label Y Offset
 	)
