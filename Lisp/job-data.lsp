@@ -34,38 +34,27 @@
 		)
 	)
 	(setq e (entlast))
-	; Outer Circle
-	(entmake
-		(list
-			(cons 0 "CIRCLE")      
-			(cons 10 (list 0 0 0)) ; Center Point
-			; Radius: 5.0 copied from old block so it looks the same
-			(cons 40 4.5)        ; Radius
-			(cons 62 color-cyan)  ; Color
-			(cons 8 "JobData") 		  ; Layer
-		)
-	)
-	(job-data-attribute "JOB_NUMBER" "L-TEST" 1)
+	(job-data-attribute "JOB_NUMBER" "" 1)
 	(job-data-attribute "JOB_NAME" "" 2)
 	(job-data-attribute "JOB_SITE_ADDRESS" "" 3)
 	(job-data-attribute "CALCULATED_BY_COMPANY" "" 4)
-	(job-data-attribute "SUPPLY_STATIC_PRESSURE" "0" 5)
-	(job-data-attribute "SUPPLY_RESIDUAL_PRESSURE" "0" 6)
-	(job-data-attribute "SUPPLY_AVAILABLE_FLOW" "0" 7)
-	(job-data-attribute "SUPPLY_ELEVATION" "0" 8)
-	(job-data-attribute "SUPPLY_PIPE_LENGTH" "0" 9)
-	(job-data-attribute "SUPPLY_PIPE_INTERNAL_DIAMETER" "0" 10)
-	(job-data-attribute "SPRINKLER_PIPE_TYPE" "" 11)
-	(job-data-attribute "SPRINKLER_FITTING_TYPE" "" 12)
-	(job-data-attribute "SUPPLY_PIPE_TYPE" "" 13)
-	(job-data-attribute "SUPPLY_PIPE_SIZE" "0" 14)
+	(job-data-attribute "SPRINKLER_PIPE_TYPE" "" 5)
+	(job-data-attribute "SPRINKLER_FITTING_TYPE" "" 6)
+	(job-data-attribute "SUPPLY_STATIC_PRESSURE" "0" 7)
+	(job-data-attribute "SUPPLY_RESIDUAL_PRESSURE" "0" 8)
+	(job-data-attribute "SUPPLY_AVAILABLE_FLOW" "0" 9)
+	(job-data-attribute "SUPPLY_ELEVATION" "0" 10)
+	(job-data-attribute "SUPPLY_PIPE_TYPE" "" 11)
+	(job-data-attribute "SUPPLY_PIPE_SIZE" "0" 12)
+	(job-data-attribute "SUPPLY_PIPE_INTERNAL_DIAMETER" "0" 13)
+	(job-data-attribute "SUPPLY_PIPE_LENGTH" "0" 14)
 	(job-data-attribute "SUPPLY_NAME" "MTR" 15)
 	(job-data-attribute "DOMESTIC_FLOW_ADDED" "0" 16)
 	(job-data-attribute "WATER_FLOW_SWITCH_MAKE_MODEL" "" 17)
-	(job-data-attribute "SUPPLY_PIPE_FITTINGS_SUMMARY" "" 18)
-	(job-data-attribute "SUPPLY_PIPE_FITTINGS_EQUIV_LENGTH" "0" 19)
-	(job-data-attribute "SUPPLY_PIPE_ADD_PRESSURE_LOSS" "0" 20)
-	(job-data-attribute "WATER_FLOW_SWITCH_PRESSURE_LOSS" "0" 21)
+	(job-data-attribute "WATER_FLOW_SWITCH_PRESSURE_LOSS" "0" 18)
+	(job-data-attribute "SUPPLY_PIPE_FITTINGS_SUMMARY" "" 19)
+	(job-data-attribute "SUPPLY_PIPE_FITTINGS_EQUIV_LENGTH" "0" 20)
+	(job-data-attribute "SUPPLY_PIPE_ADD_PRESSURE_LOSS" "0" 21)
 	(entmake
 		(list 
 			(cons 0 "SEQEND") 
@@ -109,4 +98,16 @@
 			(cons 8 "JobData")     ; Layer
 		)
 	)
+)
+
+(defun job-data-dialog ( / id result )
+	(setq id (load_dialog "job_data.dcl"))
+	(new_dialog "job_data" id)
+	(set_tile "job_number" job_data:job_number)
+	(setq result (start_dialog))
+	(if (= result 1) ; 1 = User clicked 'OK'
+		(princ "\nOK: Set JobData block attributes...\n")
+		(princ "\nCancel\n")
+	)
+	(unload_dialog id)
 )

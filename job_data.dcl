@@ -1,56 +1,311 @@
 //DCL CODING STARTS HERE
-job_data
- 
-: dialog
- 
+job_data : dialog
 {
 	label = "Job Data";
+	action = "(princ 'JobData clicked!')";
+	
 	: popup_list 
 	{
-		action = "(patternlsp)";
 		edit_width = 0;
-		key = "company";
+		key = "calculated_by_company";
+		label = "Calculated by Company: ";
 		list = "X-Fire\n13dpex.com\nOther";
-		// value = "2";
-		is_tab_stop = true; 
+		value = "Other";
+		width = 50;
+		fixed_width = true;
+		is_tab_stop = true;
+		action = "(setq job_data:$key $value)";	
 	}
 
-
-	: edit_box 
+	: boxed_column
 	{
-		action = "(texted)";
-		allow_accept = true;
-		edit_limit = 31;
-		key = "job_number";
-		label = "Job Number: ";
-		mnemonic = "F";
-		value = "drawing"; 
-		width = 30;
-		alignment = right;
-		is_tab_stop = true; 
-	}     
+		//width = 60;
+		//fixed_width = true;
+		label = "Job";
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			edit_limit = 31;
+			key = "job_number";
+			label = "&Job Number: ";
+			mnemonic = "J";
+			value = ""; 
+			width = 30;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 
+			action = "(setq job_data:$key $value)";	
+		}     
+
+		: edit_box 
+		{
+			allow_accept = true;
+			edit_limit = 31;
+			key = "job_name";
+			label = "Job &Name: ";
+			mnemonic = "N";
+			value = ""; 
+			width = 60;
+			fixed_width = true;
+			alignment = right;
+			is_tab_stop = true; 	
+			action = "(setq job_data:$key $value)";		
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			edit_limit = 31;
+			key = "job_site_address";
+			label = "Site Address: ";
+			value = ""; 
+			width = 50;
+			alignment = right;
+			is_tab_stop = true; 
+			action = "(setq job_data:$key $value)";		
+		}
+		
+		: popup_list 
+		{
+			key = "sprinkler_pipe_type";
+			label = "Sprinkler Pipe Type: ";
+			list = "Rehau PEX\nCopper\nCPVC\nOther";
+			value = "Other";
+			width = 50;
+			fixed_width = true;
+			is_tab_stop = true;
+			action = "(setq job_data:$key $value)";	
+		}
+		
+		: popup_list 
+		{
+			key = "sprinkler_fitting_type";
+			label = "Sprinkler Fitting Type: ";
+			list = "Rehau Brass\nRehau Plastic\nOther";
+			value = "Other";
+			width = 50;
+			fixed_width = true;
+			is_tab_stop = true;
+			action = "(setq job_data:$key $value)";	
+		}
+	}
+	: boxed_column
+	{
+		//width = 45;
+		//fixed_width = true;
+		label = "Water Supply Node";
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_name";
+			label = "Node Name: ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_elevation";
+			label = "Elevation (ft): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true;
+			action = "(setq job_data:$key $value)";		
+		}
+			
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_available_flow";
+			label = "Available Flow (gpm): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true;
+			action = "(setq job_data:$key $value)";		
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_static_pressure";
+			label = "Static Pressure (psi): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true;
+			action = "(setq job_data:$key $value)";		
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_residual_pressure";
+			label = "Residual Pressure (psi): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true;
+			action = "(setq job_data:$key $value)";		
+		}
+	}
 	
-	: text
-	{
-		label = "Job Name";
-		alignment = left;
-	}
-
 	: edit_box 
 	{
-		action = "(texted)";
 		allow_accept = true;
-		edit_limit = 31;
-		key = "EB";
-		label = "Job name: ";
-		mnemonic = "F";
-		value = "drawing"; 
-		width = 30;
-		alignment = right;
-		is_tab_stop = true; 		
-	}     
+		key = "domestic_flow_added";
+		label = "Domestic Flow Added (gpm): ";
+		value = ""; 
+		width = 50;
+		fixed_width = true;
+		alignment = left;
+		is_tab_stop = true;
+		action = "(setq job_data:$key $value)";		
+	}
 
+	: boxed_column
+	{
+		//width = 45;
+		//fixed_width = true;
+		label = "Supply to Manifold Pipe";
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_pipe_type";
+			label = "Pipe Type: ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_pipe_length";
+			label = "Pipe Lenght (ft): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_pipe_size";
+			label = "Pipe Size (inches): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_pipe_internal_diameter";
+			label = "Internal Diameter (inches): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_pipe_fittings_summary";
+			label = "Fittings Summary: ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_pipe_fittings_equiv_length";
+			label = "Fittings Equiv. Length (ft): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "supply_pipe_add_pressure_loss";
+			label = "Add Pressure Loss (psi): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+	}
+	
+	: boxed_column
+	{
+		//width = 45;
+		//fixed_width = true;
+		label = "Water Flow Switch";
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "water_flow_switch_make_model";
+			label = "Make && Model: ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+		
+		: edit_box 
+		{
+			allow_accept = true;
+			key = "water_flow_switch_pressure_loss";
+			label = "Pressure Loss (psi): ";
+			value = ""; 
+			width = 40;
+			fixed_width = true;
+			alignment = left;
+			is_tab_stop = true; 		
+			action = "(setq job_data:$key $value)";
+		}
+	}
+	
 	allow_accept = true;
 	ok_cancel;
- 
 }
