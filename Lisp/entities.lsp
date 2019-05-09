@@ -46,7 +46,7 @@
 
 (defun set-attribute (ename tag-string val / en ent)
 	(setq en (get-attribute ename tag-string))
-	(if (null val) (setq val ""))
+	(if (null val) (setq val "")) ; Value cannot be nil
 	(if en
 		(progn
 			(setq ent (entget en))

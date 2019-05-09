@@ -132,7 +132,7 @@
 	(setq job-data-block-name (get-job-data-block-name))
 	(foreach key job_data:keys 
 		(progn
-			(setq value (get-job-data key))
+			(setq value (get-job-data-var key))
 			(set-attribute job-data-block-name (strcase key) value)
 		)
 	)
@@ -146,7 +146,7 @@
 	(foreach key job_data:keys 
 		(progn
 			(setq value (get-attribute-value job-data-block-name (strcase key)))
-			(set-job-data (strcase key T) value)
+			(set-job-data-var (strcase key T) value)
 			(princ "\nLoaded data Key: ")
 			(princ (strcase key T))
 			(princ ": ")
@@ -193,7 +193,28 @@
 	)
 )
 
-(defun set-job-data ( key value )
+; Called only by job_data dialog.
+(defun set-job-data ( key value / lav item-list n)
+	(setq lav (get_attr key "list")) ; job_data dialog needs to be open for this line
+	(if (> (strlen lav) 0) ; The "list" attribute has a list
+		(progn 
+			;;;(set-job-data-var (strcat key ":list") lav)
+			(setq item-list (string-split lav ","))
+			(setq n (atoi value))
+			(setq value (nth n item-list))
+			(princ "\nVALUE REPLACED:")
+			(princ value)
+			(princ "\n")
+		)
+	)
+	(set-job-data-var key value)		
+)
+
+(defun set-job-data-var ( key value )
+	(princ "\nSet Job Data Var: ")
+	(princ key)
+	(princ ": ")
+	(princ value)
 	(if (null job_data) (setq job_data '()))
 	(if (null (assoc key job_data))
 		(setq job_data (append job_data (list (cons key value))))
@@ -207,6 +228,30 @@
 	)
 )
 
-(defun get-job-data ( key )
+; Call only when a dialog with this key is open
+(defun get-job-data ( key / lav value index popup-list )
+	(setq value (get-job-data-var key))
+	(setq lav (get_attr key "list")) ; From job_data dialog
+	(if (> (strlen lav) 0) ; The "list" attribute contains a list
+		(progn 
+			(setq popup-list (string-split lav ","))
+			(setq index (index-of value popup-list))
+			(itoa index)
+		)
+		value
+	)
+)
+
+(defun get-job-data-var ( key )
 	(cdr (assoc key job_data))
+)
+
+(defun string-split ( source target / len lst i )
+    (setq len (1+ (strlen target)))
+    (while (setq i (vl-string-search target source))
+        (setq lst (cons (substr source 1 i) lst)
+              source (substr source (+ i len))
+        )
+    )
+    (reverse (cons source lst))
 )
