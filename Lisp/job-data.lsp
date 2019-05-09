@@ -106,9 +106,6 @@
 	(new_dialog "job_data" id)
 	
 	(setq block-name (get-job-data-block-name))
-	(princ "\nJob Data Block Name: ")
-	(princ block-name)
-	(princ "\n")
 	(if (null block-name)
 		(insert-job-data-block '(0 0 0))
 		(if (job-data-block-is-v1 block-name)
@@ -130,7 +127,7 @@
 				(entdel block-name)
 				(load-job-data-attributes new-block-name)
 			)
-			(load-job-data-attributes new-block-name)
+			(load-job-data-attributes block-name)
 		)
 	)	
 	
