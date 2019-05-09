@@ -129,7 +129,6 @@
 )
 
 (defun set-job-data-attributes( / key value job-data-block-name )
-	(princ "\nSetting job data...\n")
 	(setq job-data-block-name (get-job-data-block-name))
 	(foreach key job_data:keys 
 		(progn

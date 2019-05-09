@@ -26,6 +26,6 @@
 (defun C:JOIN-HEADS () (head-join))
 (defun C:RISER () (riser-insert))
 (defun C:FLOOR-TAG () (floor-tag-insert))
-(defun C:INSERT-JOB-DATA () (job-data-insert))
+(defun C:INSERT-JOB-DATA () (job-data-dialog))
 
 (princ) ; exit quietly

@@ -44,8 +44,9 @@
 	output
 )
 
-(defun set-attribute (ename tag-string  val / en ent)
+(defun set-attribute (ename tag-string val / en ent)
 	(setq en (get-attribute ename tag-string))
+	(if (null val) (setq val ""))
 	(if en
 		(progn
 			(setq ent (entget en))
