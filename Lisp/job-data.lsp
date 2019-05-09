@@ -117,7 +117,7 @@
 	(setq result (start_dialog))
 	(if (= result 1) ; 1 = User clicked 'OK'
 		(set-job-data-attributes)
-		(princ "\nCancel\n")
+		(princ "\nCancelled. Job data not set.\n")
 	)
 	(unload_dialog id)
 )
@@ -133,17 +133,9 @@
 			)
 		)
 	)
-	(princ "\nJob Data Block Name: " )
-	(princ job-data-block-name)
-	; Try loading them instead
 	(foreach key job_data:keys 
 		(progn
-			;(setq key (strcase key))
-			(princ "\nKey: ")
-			(princ key)
-			(princ ": ")
 			(setq value (get-job-data key))
-			(princ value)
 			(set-attribute job-data-block-name (strcase key) value)
 		)
 	)
