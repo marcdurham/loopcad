@@ -141,16 +141,11 @@
 
 
 (defun load-job-data-attributes ( / key value job-data-block-name )
-	(princ "\nLoading job data...\n")
 	(setq job-data-block-name (get-job-data-block-name))
 	(foreach key job_data:keys 
 		(progn
 			(setq value (get-attribute-value job-data-block-name (strcase key)))
 			(set-job-data-var (strcase key T) value)
-			(princ "\nLoaded data Key: ")
-			(princ (strcase key T))
-			(princ ": ")
-			(princ value)
 		)
 	)
 	(princ)
@@ -198,23 +193,15 @@
 	(setq lav (get_attr key "list")) ; job_data dialog needs to be open for this line
 	(if (> (strlen lav) 0) ; The "list" attribute has a list
 		(progn 
-			;;;(set-job-data-var (strcat key ":list") lav)
 			(setq item-list (string-split lav ","))
 			(setq n (atoi value))
 			(setq value (nth n item-list))
-			(princ "\nVALUE REPLACED:")
-			(princ value)
-			(princ "\n")
 		)
 	)
 	(set-job-data-var key value)		
 )
 
 (defun set-job-data-var ( key value )
-	(princ "\nSet Job Data Var: ")
-	(princ key)
-	(princ ": ")
-	(princ value)
 	(if (null job_data) (setq job_data '()))
 	(if (null (assoc key job_data))
 		(setq job_data (append job_data (list (cons key value))))
