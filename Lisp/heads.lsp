@@ -13,7 +13,7 @@
   )
   (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having a
                         ; different scale, being 12 times bigger than they should be.
-  (setvar "OSMODE" 0)
+  (setvar "OSMODE" osmode-snap-ins-pts)
   (command "-LAYER" "NEW" "Heads" "")
   (command "-LAYER" "NEW" "HeadCoverage" "")
   (command "-LAYER" "COLOR" "Red" "Heads" "")
@@ -71,7 +71,7 @@
   )
   (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having a
                         ; different scale, being 12 times bigger than they should be.
-  (setvar "OSMODE" 0)
+  (setvar "OSMODE" osmode-snap-ins-pts)
   (command "-LAYER" "NEW" "Heads" "")
   (command "-LAYER" "NEW" "HeadCoverage" "")
   (command "-LAYER" "COLOR" "Red" "Heads" "")
