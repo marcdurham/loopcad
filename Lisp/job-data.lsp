@@ -114,6 +114,7 @@
 		(if (job-data-block-is-v1 block-name)
 			(progn
 				; Convert v1 to v2
+				(alert "An older version of job data was found, it will be converted to the new format.  If you do not want it converted, do not save the file.")
 				(setq new-block-name (insert-job-data-block '(0 0 0)))
 				(set-attribute new-block-name "JOB_NUMBER" (get-attribute-value block-name "LEAD_NUMBER"))
 				(set-attribute new-block-name "JOB_NAME"(get-attribute-value block-name "JOB_NAME"))
