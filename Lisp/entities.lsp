@@ -30,17 +30,22 @@
 )
 
 ; Returns entity name of attribute entity owned by 'ename'
-(defun get-attribute (ename tagname / att)
+(defun get-attribute (ename tag-string / att att-tag-string att-value output)
 	(foreach att (get-attributes ename)
 		; Find by tag name: (2 . "TAG NAME")
-		(if (str= tagname (cdr (assoc 2 (entget att)))) 
-			att ; Returns entity name
+		(progn
+			(setq att-tag-string (cdr (assoc 2 (entget att))))
+			;(setq att-value (cdr (assoc 1 (entget att))))
+			(if (str= tag-string att-tag-string) 
+				(setq output att)
+			)
 		)
 	)
+	output
 )
 
-(defun set-attribute (ename tagname val / em ent)
-	(setq en (get-attribute ename tagname))
+(defun set-attribute (ename tag-string  val / en ent)
+	(setq en (get-attribute ename tag-string))
 	(if en
 		(progn
 			(setq ent (entget en))
@@ -57,8 +62,8 @@
 	)
 )
 
-(defun get-attribute-value (ename tagname / attr-entity)
-	(setq attr-entity (entget (get-attribute ename tagname)))
+(defun get-attribute-value (ename tag-string / attr-entity)
+	(setq attr-entity (entget (get-attribute ename tag-string)))
 	; Return attribute value from: (1 . "VALUE HERE")
 	(cdr (assoc 1 attr-entity))
 )
