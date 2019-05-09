@@ -13,7 +13,7 @@ job_data : dialog
 		width = 60;
 		fixed_width = true;
 		is_tab_stop = true;
-		action = "(setq job_data:$key $value)";	
+		action = "(set-job-data $key $value)";	
 	}
 
 	: boxed_column
@@ -32,7 +32,7 @@ job_data : dialog
 			fixed_width = true;
 			alignment = left;
 			is_tab_stop = true; 
-			action = "(setq job_data:$key $value)";	
+			action = "(set-job-data $key $value)";	
 		}     
 
 		: edit_box 
@@ -47,20 +47,20 @@ job_data : dialog
 			fixed_width = true;
 			alignment = left;
 			is_tab_stop = true; 	
-			action = "(setq job_data:$key $value)";		
+			action = "(set-job-data $key $value)";		
 		}
 		
 		: edit_box 
 		{
 			allow_accept = true;
-			edit_limit = 31;
+			edit_limit = 255;
 			key = "job_site_address";
 			label = "Site Address: ";
 			value = ""; 
 			width = 50;
 			alignment = right;
 			is_tab_stop = true; 
-			action = "(setq job_data:$key $value)";		
+			action = "(set-job-data $key $value)";		
 		}
 	}
 			
@@ -73,7 +73,7 @@ job_data : dialog
 		width = 50;
 		fixed_width = true;
 		is_tab_stop = true;
-		action = "(setq job_data:$key $value)";	
+		action = "(set-job-data $key $value)";	
 	}
 	
 	: popup_list 
@@ -85,7 +85,7 @@ job_data : dialog
 		width = 50;
 		fixed_width = true;
 		is_tab_stop = true;
-		action = "(setq job_data:$key $value)";	
+		action = "(set-job-data $key $value)";	
 	}
 		
 	: boxed_row
@@ -104,7 +104,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true; 		
-				action = "(setq job_data:$key $value)";
+				action = "(set-job-data $key $value)";
 			}
 			
 			: edit_box 
@@ -117,7 +117,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true;
-				action = "(setq job_data:$key $value)";		
+				action = "(set-job-data $key $value)";		
 			}
 				
 			: edit_box 
@@ -130,7 +130,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true;
-				action = "(setq job_data:$key $value"		
+				action = "(set-job-data $key $value)";	
 			}
 		}
 		
@@ -146,7 +146,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true;
-				action = "(setq job_data:$key $value)";		
+				action = "(set-job-data $key $value)";		
 			}
 			
 			: edit_box 
@@ -159,7 +159,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true;
-				action = "(setq job_data:$key $value)";		
+				action = "(set-job-data $key $value)";		
 			}
 		}
 	}
@@ -174,7 +174,7 @@ job_data : dialog
 		fixed_width = true;
 		alignment = left;
 		is_tab_stop = true;
-		action = "(setq job_data:$key $value)";		
+		action = "(set-job-data $key $value)";		
 	}
 
 	: boxed_row
@@ -194,7 +194,7 @@ job_data : dialog
 				width = 40;
 				fixed_width = true;
 				is_tab_stop = true;
-				action = "(setq job_data:$key $value)";	
+				action = "(set-job-data $key $value)";	
 			}
 			
 			: edit_box 
@@ -207,7 +207,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true; 		
-				action = "(setq job_data:$key $value)";
+				action = "(set-job-data $key $value)";
 			}
 			
 			: edit_box 
@@ -220,7 +220,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true; 		
-				action = "(setq job_data:$key $value)";
+				action = "(set-job-data $key $value)";
 			}
 			
 			: edit_box 
@@ -233,7 +233,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true; 		
-				action = "(setq job_data:$key $value)";
+				action = "(set-job-data $key $value)";
 			}
 		}
 		
@@ -251,7 +251,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true; 		
-				action = "(setq job_data:$key $value)";
+				action = "(set-job-data $key $value)";
 			}
 			
 			: edit_box 
@@ -264,7 +264,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true; 		
-				action = "(setq job_data:$key $value)";
+				action = "(set-job-data $key $value)";
 			}
 			
 			: edit_box 
@@ -277,7 +277,7 @@ job_data : dialog
 				fixed_width = true;
 				alignment = left;
 				is_tab_stop = true; 		
-				action = "(setq job_data:$key $value)";
+				action = "(set-job-data $key $value)";
 			}
 		}
 	}
@@ -296,7 +296,7 @@ job_data : dialog
 			fixed_width = true;
 			alignment = left;
 			is_tab_stop = true; 		
-			action = "(setq job_data:$key $value)";
+			action = "(set-job-data $key $value)";
 		}
 		
 		: edit_box 
@@ -309,7 +309,7 @@ job_data : dialog
 			fixed_width = true;
 			alignment = left;
 			is_tab_stop = true; 		
-			action = "(setq job_data:$key $value)";
+			action = "(set-job-data $key $value)";
 		}
 	}
 	
