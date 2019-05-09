@@ -122,17 +122,9 @@
 	(unload_dialog id)
 )
 
-(defun set-job-data-attributes ( / key value job-data-block-name )
+(defun set-job-data-attributes( / key value job-data-block-name )
 	(princ "\nSetting job data...\n")
-	(setq 
-		job-data-block-name 
-		(cdr 
-			(assoc 
-				-1 
-				(car (get-blocks (list "JobData" "Job Data")))
-			)
-		)
-	)
+	(setq job-data-block-name (get-job-data-block-name))
 	(foreach key job_data:keys 
 		(progn
 			(setq value (get-job-data key))
@@ -140,6 +132,32 @@
 		)
 	)
 	(princ)
+)
+
+
+(defun load-job-data-attributes ( / key value job-data-block-name )
+	(princ "\nLoading job data...\n")
+	(setq job-data-block-name (get-job-data-block-name))
+	(foreach key job_data:keys 
+		(progn
+			(setq value (get-attribute-value job-data-block-name (strcase key)))
+			(set-job-data (strcase key T) value)
+			(princ "\nLoaded data Key: ")
+			(princ (strcase key T))
+			(princ ": ")
+			(princ value)
+		)
+	)
+	(princ)
+)
+
+(defun get-job-data-block-name ( )
+	(cdr 
+		(assoc 
+			-1 
+			(car (get-blocks (list "JobData" "Job Data")))
+		)
+	)
 )
 
 (setq job_data:keys 
