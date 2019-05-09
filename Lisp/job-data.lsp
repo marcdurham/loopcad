@@ -107,13 +107,9 @@
 	(foreach key job_data:keys 
 		(progn
 			(setq value (get-job-data key))
-			(princ "\nKey: ")
-			(princ key)
-			(princ " Value: ")
-			(princ value)
 			(if (not (null value))
 				(set_tile key value)
-				(set_tile key "")
+				(set_tile key "") ; set_tile does not accept nil as a value
 			)
 		)
 	)
@@ -126,8 +122,19 @@
 	(unload_dialog id)
 )
 
-(defun set-job-data-attributes ( / key value )
-	(princ "\nOK: Set JobData block attributes...\n")
+(defun set-job-data-attributes ( / key value job-data-block-name )
+	(princ "\nSetting job data...\n")
+	(setq 
+		job-data-block-name 
+		(cdr 
+			(assoc 
+				-1 
+				(car (get-blocks (list "JobData" "Job Data")))
+			)
+		)
+	)
+	(princ "\nJob Data Block Name: " )
+	(princ job-data-block-name)
 	; Try loading them instead
 	(foreach key job_data:keys 
 		(progn
@@ -137,7 +144,7 @@
 			(princ ": ")
 			(setq value (get-job-data key))
 			(princ value)
-			;(setq job_data:
+			(set-attribute job-data-block-name (strcase key) value)
 		)
 	)
 	(princ)
