@@ -100,10 +100,16 @@
 	)
 )
 
-(defun job-data-dialog ( / id result key value )
+(defun job-data-dialog ( / id result key value block-name )
 	(setq id (load_dialog "job_data.dcl"))
 	(new_dialog "job_data" id)
 	
+	(setq block-name (get-job-data-block-name))
+	(if (null block-name)
+		(insert-job-data-block '(0 0 0))
+		(load-job-data-attributes)
+	)	
+
 	(foreach key job_data:keys 
 		(progn
 			(setq value (get-job-data key))
