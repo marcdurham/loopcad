@@ -64,6 +64,7 @@
 	;(entupd e)
 	(princ "\nBlock inserted\n")
 	(princ)
+	e
 )
 
 
@@ -100,16 +101,39 @@
 	)
 )
 
-(defun job-data-dialog ( / id result key value block-name )
+(defun job-data-dialog ( / id result key value block-name new-block-name )
 	(setq id (load_dialog "job_data.dcl"))
 	(new_dialog "job_data" id)
 	
 	(setq block-name (get-job-data-block-name))
+	(princ "\nJob Data Block Name: ")
+	(princ block-name)
+	(princ "\n")
 	(if (null block-name)
 		(insert-job-data-block '(0 0 0))
-		(load-job-data-attributes)
+		(if (job-data-block-is-v1 block-name)
+			(progn
+				; Convert v1 to v2
+				(setq new-block-name (insert-job-data-block '(0 0 0)))
+				(set-attribute new-block-name "JOB_NUMBER" (get-attribute-value block-name "LEAD_NUMBER"))
+				(set-attribute new-block-name "JOB_NAME"(get-attribute-value block-name "JOB_NAME"))
+				(set-attribute new-block-name "SUPPLY_STATIC_PRESSURE"(get-attribute-value block-name "STATIC_PRESSURE"))
+				(set-attribute new-block-name "JOB_SITE_ADDRESS" (get-attribute-value block-name "SITE_LOCATION"))
+				(set-attribute new-block-name "SUPPLY_RESIDUAL_PRESSURE" (get-attribute-value block-name "RESIDUAL_PRESSURE"))
+				(set-attribute new-block-name "SUPPLY_AVAILABLE_FLOW" (get-attribute-value block-name "AVAILABLE_FLOW"))
+				(set-attribute new-block-name "SUPPLY_ELEVATION" (get-attribute-value block-name "METER_ELEVATION"))
+				(set-attribute new-block-name "SUPPLY_PIPE_LENGTH" (get-attribute-value block-name "METER_PIPE_LENGTH"))
+				(set-attribute new-block-name "SUPPLY_PIPE_INTERNAL_DIAMETER" (get-attribute-value block-name "METER_PIPE_INTERNAL_DIAMETER"))
+				(set-attribute new-block-name "CALCULATED_BY_COMPANY" (get-attribute-value block-name "CALCULATED_BY_COMPANY"))
+				; Delete old block
+				(entdel block-name)
+				(load-job-data-attributes new-block-name)
+			)
+			(load-job-data-attributes new-block-name)
+		)
 	)	
-
+	
+	; Set tiles values from job_data values
 	(foreach key job_data:keys 
 		(progn
 			(setq value (get-job-data key))
@@ -128,6 +152,10 @@
 	(unload_dialog id)
 )
 
+(defun job-data-block-is-v1 ( block-name )
+	(not (null (get-attribute block-name "LEAD_NUMBER")))
+)
+
 (defun set-job-data-attributes( / key value job-data-block-name )
 	(setq job-data-block-name (get-job-data-block-name))
 	(foreach key job_data:keys 
@@ -140,11 +168,10 @@
 )
 
 
-(defun load-job-data-attributes ( / key value job-data-block-name )
-	(setq job-data-block-name (get-job-data-block-name))
+(defun load-job-data-attributes ( block-name / key value )
 	(foreach key job_data:keys 
 		(progn
-			(setq value (get-attribute-value job-data-block-name (strcase key)))
+			(setq value (get-attribute-value block-name (strcase key)))
 			(set-job-data-var (strcase key T) value)
 		)
 	)
