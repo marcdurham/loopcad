@@ -5,3 +5,11 @@
 		(data-submit key value)
 	)
 )
+
+(defun data-request (key)
+   (getcfg (strcat "AppData/LoopCAD/" key))
+)
+
+(defun data-submit (key value)
+    (setcfg (strcat "AppData/LoopCAD/" key) value)
+)
