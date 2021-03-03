@@ -20,7 +20,7 @@
 			(setq global:pipe-size "05")
 		)
 		(initget "05 075 1 15")
-		(if (setq tmp (getkword (strcat "\nPipe Size [0.5/0.75/1/1.5] <" global:pipe-size ">: ")))
+		(if (setq tmp (getkword (strcat "\nPipe Size [05/075/1/15] <" global:pipe-size ">: ")))
 			(setq global:pipe-size tmp)
 		)
 	)
@@ -33,7 +33,7 @@
 	(setq line-width "2\"")
 	(prompt (strcat "\nPipe Size: " global:pipe-size "\n"))
 	(prompt "\nDraw pipe to each head.\n")
-	(command "-PLINE" pause "Width" line-width line-width pause)
+	(command "PLINE" pause "Width" line-width line-width pause)
 )
 
 ; 64 = OSMODE: Snap to insertion points

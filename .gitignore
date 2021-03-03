@@ -7,3 +7,9 @@ Archive/
 *.vbi
 /Testing/
 /LoopCAD.vbi
+
+# Binary Menu Files
+*.mnr
+*.cuix
+
+
