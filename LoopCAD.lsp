@@ -6,9 +6,9 @@
 (load ".\\Lisp\\load-safely.lsp")
 
 (foreach f (cdr (cdr (vl-directory-files ".\\Lisp")))
-	(if (= (strcase (vl-filename-extension f)) (strcase ".lsp"))
-		(load-safely (strcat ".\\Lisp\\" f))
-	)
+    (if (= (strcase (vl-filename-extension f)) (strcase ".lsp"))
+        (load-safely (strcat ".\\Lisp\\" f))
+    )
 )
 (princ "\n")
 

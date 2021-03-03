@@ -11,14 +11,14 @@
         (command "-LAYER" "SET" "0" "")
     )
     (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having 
-	; a different scale, being 12 time bigger than they should be
+    ; a different scale, being 12 time bigger than they should be
     (setvar "OSMODE" 0)
     (command "-LAYER" "NEW" "HeadPairs" "")
     (command "-LAYER" "COLOR" "Yellow" "HeadPairs" "")
     (command "-LAYER" "ON" "HeadPairs" "")
     (setvar "LWDISPLAY" 0)
     (command "-LAYER" "SET" "HeadPairs" "")
-	(setvar "OSMODE" 64) ; 64 = Snap to insertion points
+    (setvar "OSMODE" 64) ; 64 = Snap to insertion points
     (setvar "ORTHOMODE" 0)
     (command "-COLOR" "BYLAYER")
     (prompt "\nDraw a line between each head pair.\n")

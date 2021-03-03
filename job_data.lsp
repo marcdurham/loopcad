@@ -6,7 +6,7 @@
 (setq dcl_id (load_dialog "job_data.dcl"))
  
      (if (not (new_dialog "job_data" dcl_id))
-	 (exit )
+     (exit )
      );if
  
 (action_tile "accept"
