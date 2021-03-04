@@ -7,7 +7,7 @@
         (setvar "OSMODE" old-osmode)
         (setvar "LWDISPLAY" 1)
     )
-    (setq p (getpoint))
+    (setq p (getpoint "Click insertion point for floor tag"))
     (setq floor-name (getstring T "Enter floor name")) ; getstring with T allows spaces
     (setq elevation (get-elevation p))
     (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having
@@ -18,7 +18,8 @@
     (command "-LAYER" "COLOR" "White" "FloorTags" "")
     (setvar "LWDISPLAY" 0)
     (command "-LAYER" "SET" "FloorTags" "")
-    (command "-INSERT" "FloorTag.dwg" p 1.0 1.0 0 floor-name elevation)  
+    ;(command "-INSERT" "FloorTag.dwg" p 1.0 1.0 0 floor-name elevation)
+    (command "-INSERT" "FloorTag" p 1.0 1.0 0 floor-name elevation)  
 )
 
 (defun riser-insert ( / p w old-osmode tag tags tag-elevation p-elevation offset tag-offset)
