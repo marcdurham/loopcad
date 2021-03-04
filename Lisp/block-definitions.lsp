@@ -1,3 +1,5 @@
+; DXF Code Reference Document
+; https://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-reference_enu.pdf
 ; Head Label Properties
 (setq head-label:tag-string "HEADNUMBER")
 (setq head-label:prompt "Head number label")
@@ -25,6 +27,9 @@
 (setq head-block:model-x-offset 9.132)
 (setq head-block:model-y-offset 8.395)
 
+(defun define-labelsx ()
+    (princ "\nDoing nothing\n")
+)
 (defun define-labels ()
     ; These two block definitions are not used by any functions but they are defined so that
     ; a user can use the "INSERT" command to insert them manually if they want.
@@ -464,115 +469,125 @@
 
 ; Floor Tag
 (defun define-floor-tag ( / label-color layer )
+   (defun *error* (message)
+      (princ)
+      (princ message)
+      (princ)
+    )
     (setq layer "FloorTags")
     (entmake 
-        (list
-            (cons 0 "BLOCK")
-            (cons 2 "FloorTag") ; Block name
+        '(
+            (0 . "BLOCK")
+            (2 . "FloorTag") ; Block name
+            (8 . "0")                ; recommended
+            (10 0.0 0.0 0.0)         ; required
+            (70 . 2)                 ; required [NOTE 0 if no attributes]
+            (100 . "AcDbEntity")     ; recommended
+            (100 . "AcDbBlockBegin") ; recommended
+        )
+    )
+
+    (entmake 
+        '(
+            (0 . "ATTDEF")
+            (1 . "Main Floor")   ; Default value
+            (2 . "NAME")         ; Tag name
+            (3 . "Enter floor name")
+            (8 . "FloorTag")     ; Layer
+            (10 10.0 -10.0 0.0)  ; Coordinates
+            (40 . 9.0)   ; Text Size (KEEP)
+            (62 . 4)     ; Color (4 = Cyan)
+            (70 . 0)     ; Attribute Flags (KEEP)
         )
     )
     
-    ; Name
     (entmake 
-        (list
-            (cons 0 "ATTDEF")
-            (cons 10 (list 10.0 -10.0 0.0))
-            (cons 1 "")       ; Text value
-            (cons 2 "NAME")   ; Tag string
-            (cons 3 "Enter floor name") ; Prompt string
-            (cons 40 9.0)         ; Text height
-            (cons 7 "ARIAL")      ; Text style
-            (cons 62 color-cyan)  ; Color
-            (cons 8 layer) ; Layer
-        )
-    )
-    
-    ; Elevation
-    (entmake 
-        (list
-            (cons 0 "ATTDEF")
-            (cons 10 (list 10.0 -20.0 0.0))    
-            (cons 1 "0")           ; Text value
-            (cons 2 "ELEVATION")   ; Tag string
-            (cons 3 "Enter elevation") ; Prompt string
-            (cons 40 9.0)         ; Text height
-            (cons 7 "ARIAL")      ; Text style
-            (cons 62 color-cyan)  ; Color
-            (cons 8 layer) ; Layer
+        '(
+            (0 . "ATTDEF")
+            (1 . "100")         ; Default value
+            (2 . "ELEVATION")   ; Tag name
+            (3 . "Enter elevation in feet")
+            (8 . "FloorTag")    ; Layer
+            (10 10.0 -20.0 0.0) ; Coordinates
+            (40 . 9.0)    ; Text Size (KEEP)
+            (62 . 4)      ; Color (4 = Cyan)
+            (70 . 0)      ; Attribute Flags (KEEP)
         )
     )
     
     ; Outer Circle
     (entmake
         (list
-            (cons 0 "CIRCLE")      
-            (cons 10 (list 0 0 0)) ; Center Point
+            '(0 . "CIRCLE")      
+            '(10 0 0 0)       ; Center Point
             ; Radius: 7.71 copied from old block so it looks the same
-            (cons 40 7.71)        ; Radius
-            (cons 62 color-cyan)  ; Color
-            (cons 8 layer)           ; Layer
+            '(40 . 7.71)      ; Radius
+            '(62 . 4)         ; Color (4 = Cyan)
+            (cons 8 layer)    ; Layer
         )
     )
     
     ; Vertical Line
     (entmake
         (list
-            (cons 0 "POLYLINE")
-            (cons 10 (list 0 0 0))  ; Point is always zero
-            (cons 70 1)             ; 1 = Closed Polyline
-            (cons 62 color-cyan)      ; Color
-            (cons 8 layer)             ; Layer
+            '(0 . "POLYLINE")
+            '(10 0 0 0)              ; Point is always zero
+            '(70 . 1)                ; 1 = Closed Polyline
+            (cons 62 color-cyan)     ; Color
+            (cons 8 layer)           ; Layer
         )
     )
     (entmake
-        (list
-            (cons 0 "VERTEX")
-            (cons 10 (list 7.71 0 0)) ; Top
+        '(
+            (0 . "VERTEX")
+            (10 7.71 0 0) ; Top
         )
     )
     (entmake
-        (list
-            (cons 0 "VERTEX")
-            (cons 10 (list -7.71 0 0))    ; Bottom
+        '(
+            (0 . "VERTEX")
+            (10 -7.71 0 0)    ; Bottom
         )
     )
     (entmake
-        (list
-            (cons 0 "SEQEND")
+        '(
+            (0 . "SEQEND")
         )
     )
-    
+
     ; Horizontal Line
     (entmake
-        (list
-            (cons 0 "POLYLINE")
-            (cons 10 (list 0 0 0))  ; Point is always zero
-            (cons 70 1)             ; 1 = Closed Polyline
-            (cons 62 color-cyan)  ; Color
-            (cons 8 "FloorTags") ; Layer
-        )
-    )    
-    (entmake
-        (list
-            (cons 0 "VERTEX")
-            (cons 10 (list 0 -7.71 0)) ; Left
+        '(
+            (0 . "POLYLINE")
+            (10 0 0 0)           ; Point is always zero
+            (70 . 1)             ; 1 = Closed Polyline
+            (62 . 4)             ; 4: color-cyan; Color
+            (8 . "FloorTags")    ; Layer
         )
     )
     (entmake
-        (list
-            (cons 0 "VERTEX")
-            (cons 10 (list 0 7.71 0))    ; Right
+        '(
+            (0 . "VERTEX")
+            (10 0 -7.71 0) ; Left
         )
     )
     (entmake
-        (list
-            (cons 0 "SEQEND")
+        '(
+            (0 . "VERTEX")
+            (10 0 7.71 0)    ; Right
         )
     )
-    
+    (entmake
+        '(
+            (0 . "SEQEND")
+        )
+    )
+
     (entmake 
-        (list
-            (cons 0 "ENDBLK")
+        '(
+            (0 . "ENDBLK")
+            (100 . "AcDbBlockEnd") ; recommended
+            (8 . "0")              ; recommended
         )
     )
 )
@@ -646,4 +661,28 @@
 ; Convert feet to inches
 (defun feet->inches (feet)
     (* feet 12)
+)
+
+
+
+
+
+(defun alt_def ()
+  
+  ;BLOCK Header definition:
+  ;Code 70 shows that attributes follow. Code 10 contains the
+  ;insertion point.
+  
+  (entmake '((0 . "BLOCK")(2 . "ALT_ID")(70 . 2)(10 0.0 0.0 0.0)))
+  
+  ;Text ATTRIBUTE definition:
+  
+  (entmake 
+    '((0 . "ATTDEF")(8 . "0")(10 0.0 0.0 0.0)(1 . "I")(2 . "NUM_ALT")
+    (3 . "Alturas")(40 . 2.0)(41 . 1.0)(50 . 0.0)(70 . 0)(71 . 0)(72 . 4)(73 . 2))
+  )
+  
+  ;BLOCK's ending definition:
+  
+  (entmake '((0 . "ENDBLK")))
 )
