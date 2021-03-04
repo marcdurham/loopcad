@@ -3,7 +3,7 @@
 # because running scripts is disabled on this system.
 $cd = Get-Location
 $path1 = "hkcu:\Software\ProgeCAD\progeCAD"
-$path2 = (get-childitem $path1).Name
+$path2 = (Get-ChildItem $path1).Name
 $configPath = "${path2}\progeCAD-PRO:ENG\Profiles\Default\Config".Replace("HKEY_CURRENT_USER\", "hkcu:")
 $config = (Get-ItemProperty -Path "$configPath")
 
@@ -23,3 +23,5 @@ if ($menuPath.Contains("$cd")) {
     "Adding LoopCAD folder to Menu Path..."
     Set-ItemProperty -Path "$configPath" -Name "MENUPATH" -Value "$menuPath;$cd"
 }
+
+# Computer\HKEY_CURRENT_USER\SOFTWARE\Autodesk\AutoCAD\R24.0\ACAD-4101:409\Profiles\<<Unnamed Profile>>\General
