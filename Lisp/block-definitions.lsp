@@ -476,14 +476,14 @@
     )
     (setq layer "FloorTags")
     (entmake 
-        '(
-            (0 . "BLOCK")
-            (2 . "FloorTag") ; Block name
-            (8 . "0")                ; recommended
-            (10 0.0 0.0 0.0)         ; required
-            (70 . 2)                 ; required [NOTE 0 if no attributes]
-            (100 . "AcDbEntity")     ; recommended
-            (100 . "AcDbBlockBegin") ; recommended
+        (list
+            '(0 . "BLOCK")
+            '(2 . "FloorTag") ; Block name
+            '(8 . layer)      ; Layer (recommended)
+            '(10 0.0 0.0 0.0)         ; required
+            '(70 . 2)                 ; required [NOTE 0 if no attributes]
+            '(100 . "AcDbEntity")     ; recommended
+            '(100 . "AcDbBlockBegin") ; recommended
         )
     )
 
