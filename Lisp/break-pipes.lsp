@@ -181,7 +181,7 @@
     (setq b (list 1000 2000 0))
     (if (and
             (not (in-box (list 1001 0 0) a b))
-            (not (in-box (list -401 0 0) a b))
+            (not (in-box (list -501 0 0) a b))
             (not (in-box (list 0 -401 0) a b))
             (not (in-box (list 0 2001 0) a b))
             (in-box (list 0 0 0) a b) ; This one should be in the box
@@ -194,10 +194,10 @@
 
 ; Is point 'p' in the box between the corners defined by 'a' and 'b'
 (defun in-box (p a b / x y maxx maxy minx miny)
-    (setq maxx (+ (max (getx a) (getx b)) near-line-margin))
-    (setq maxy (+ (max (gety a) (gety b)) near-line-margin))
-    (setq minx (- (min (getx a) (getx b)) near-line-margin))
-    (setq miny (- (min (gety a) (gety b)) near-line-margin))
+    (setq maxx (max (getx a) (getx b)))
+    (setq maxy (max (gety a) (gety b)))
+    (setq minx (min (getx a) (getx b)))
+    (setq miny (min (gety a) (gety b)))
     (setq x (getx p))
     (setq y (gety p))
     (if (and (< x maxx)

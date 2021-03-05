@@ -79,109 +79,6 @@
     (princ)
 )
 
-(defun test-insertblock ()
-    (setq block (vla-InsertBlock
-        (vla-get-modelspace
-          (vla-get-activedocument
-            (vlax-get-acad-object)
-          )
-        )
-        (vlax-3d-point (getpoint))
-        "FloorTag"
-        1
-        1
-        1
-        0
-      )
-)
-    ;; get the block attributes
-    (setq attributes (vlax-safearray->list (vlax-variant-value (vla-getAttributes block))))
-    ;; get the first attribute of the list to set its "value" (TextString property)
-    (vla-put-TextString (car attributes) "ME Floor")
-  (vla-put-TextString (nth 1 attributes) "144")
-)
-(defun test-mtext ()
-    (entmake
-        '(
-            (0 . "MTEXT")
-            (1 . "Elevation Box")
-            ;;;(5 . "23A") ; entlast ; ?
-            (7 . "Standard") ; entlast ; ? Probably text type
-                  (8 . "0")  ; Layer
-            (10 10.0 30.0 0.0)
-            ;(11 1.0 0.0 0.0) ; entlast ; ?
-            ;(210 0.0 0.0 1.0) ; entlast ; ?
-            (40 . 10.0) ; Text Height
-            (41 . 100.0) ; Reference Rectangle Width
-            ;(42 . 100.0) ; entlast ; ?
-            ;(43 . 10.0)  ; entlast ; ?
-            (44 . 1.0) ; entlast ; ? Lince space factor
-            ;(46 . 0.0) ; entlast ; ?
-            (50 . 0.0) ; Roation angle in radians (entlast)
-            (67 . 0)
-            (71 . 1)    ; Attachment point: 1 = Top left (entlast)
-                  ;(72 . 1)    ; Drawing direction: 1 = Left to right
-            (73 . 1)
-            (72 . 5) ; entlast ;
-          
-          
-            (90 . 1) ; Background fill 0 = Off
-            ;(430 . "CYAN")
-            (420 255 0 0 0) ; Color Value 0 to 255
-            (60 . 0) ; 1 = Invisible
-            (410 . "Model")
-            (100 . "AcDbMText")
-            (100 . "AcDbEntity")
-	    
-        )
-    )
-    ;;(entget (entlast))
-)
-(defun forgetme ()
-   (entmake
-   '(
-            (0 . "TEXT")
-            (1 . "MTEXT is running")
-            (8 . "0")     ; Layer
-            (10 -100.0 10.0 0.0)    ; Insertion Point
-            (40 . 10.0)   ; Text Height
-            (41 . 1.0) ; Reference Rectangle Width 
-            ;(71 . 1)      ; Attachment point: 1 = Top left
-            (72 . 0)      ; (TEXT) H Justification: 0 = Left (MTEXT)Drawing direction: 1 = Left to right
-            ;(73 . 1)    ; MText line spacing style: 1 = At least
-	    (100 . "AcDbText")
-        )
-   )
-)
-(defun test-text ()
-    (entmake
-        '(
-            (0 . "TEXT")
-            (1 . "Testing")
-            (8 . "0")     ; Layer
-            (10 10.0 10.0 0.0)    ; Insertion Point
-            (40 . 10.0)   ; Text Height
-            (41 . 1.0) ; Reference Rectangle Width 
-            ;(71 . 1)      ; Attachment point: 1 = Top left
-            (72 . 0)      ; (TEXT) H Justification: 0 = Left (MTEXT)Drawing direction: 1 = Left to right
-            ;(73 . 1)    ; MText line spacing style: 1 = At least
-	    (100 . "AcDbText")
-        )
-    )
-   (entmake
-        '(
-            (0 . "TEXT")
-            (1 . "Testing")
-            (8 . "0")     ; Layer
-            (10 50.0 20.0 0.0)    ; Insertion Point
-            (40 . 10.0)   ; Text Height
-            (41 . 1.0) ; Reference Rectangle Width 
-            ;(71 . 1)      ; Attachment point: 1 = Top left
-            (72 . 0)      ; (TEXT) H Justification: 0 = Left (MTEXT)Drawing direction: 1 = Left to right
-            ;(73 . 1)    ; MText line spacing style: 1 = At least
-        )
-    )
-)
 (defun get-elevation-boxes ( / en ent boxes layer) 
     (setq boxes '())
     (setq en (entnext))
@@ -226,13 +123,16 @@
 
 (defun get-polyline-vertices ( ent / en vertex vertices) 
     (setq vertices '())
-    (setq en (cdr (assoc -1 ent)))
+    (princ "\nGetting entity name...\n")
+    (setq en (get-ename ent))
+    (princ (strcat "\n Entity Name: " en))
     (setq en (entnext en))
+   (princ (strcat "\n Next Entity Name: " en))
     (setq ent (entget en))
     (while en
-        (cond ((str= "VERTEX" (cdr (assoc 0 ent)))
+        (cond ((str= "VERTEX" (get-etype ent))
                 (setq ent (entget en))
-                (setq vertex (cdr (assoc 10 ent)))
+                (setq vertex (get-ins-point ent))
                 (setq vertices (cons vertex vertices))
                 (setq en (entnext en))
                 (setq ent (entget en))
@@ -259,7 +159,13 @@
     (setq elevation "0")
     ; Get areas of all boxes that p is in, it may be in more than one
     (setq in-areas '())
+  
+    (princ "\nScan boxes\n")
+  
     (setq boxes (get-elevation-boxes))
+    
+    (princ (strcat "\nElevation Boxes Found: " (itoa (length boxes)) "\n"))
+  
     (foreach box boxes
         (progn 
             (setq a (car (corners box)))
@@ -271,18 +177,31 @@
             )
         )
     )
+  
+    (princ "\nBoxes done\n")
+  
     (setq m (apply 'min in-areas))
     (setq i (index-of m all-areas))
     (setq smallest-box (nth i boxes))
     
+    (princ "\nSmallest box found\n")
+  
     (if (not (null smallest-box))
         (progn
             ; Match the smallest (elevation) box to it's MText containing the elevation text
-            (setq vertices (get-polyline-vertices smallest-box))
+            (setq vertices (get-vertices smallest-box))
+            (princ (strcat "\nVertices found: " (itoa (length vertices)) "\n"))
             (setq text-boxes (get-elevation-text))
+            (princ (strcat "\nText Boxes Count: " (itoa (length text-boxes)) "\n"))
             (foreach vertex vertices
                 (foreach text-box text-boxes
-                    (if (= vertex (get-ins-point text-box))
+                    
+                  (setq insPoint (get-ins-point text-box))
+                  (setq insPoint2D (list (nth 0 insPoint) (nth 1 insPoint)))
+                  (princ (strcat "\nVertex length: " (itoa (length vertex))  (rtos (nth 0 vertex))  (rtos (nth 1 vertex)) "\n"))
+                    (princ (strcat "\nInspoint2d length " (itoa (length insPoint2D))  (rtos (nth 0 insPoint2D))  (rtos (nth 1 insPoint2D))"\n"))
+                    (princ (strcat "\nDistance: " (rtos (distance vertex insPoint)) "\n"))
+                    (if (< (distance vertex insPoint) near-line-margin)
                         ; This text-box belongs to this elevation box
                         (setq elevation (elevation-from text-box))                                     
                     )
@@ -290,7 +209,7 @@
             )
         )
     )
-    elevation
+    (atoi elevation)
 )
 
 ; Get numeric elevation value from MText entity
@@ -300,6 +219,7 @@
     (substr (text-from text-box) 11)
 )
 
+; TODO: Try vla-get-text
 ; Get text from MText entity
 (defun text-from ( text-box / )
     (cdr (assoc 1 text-box))                    
@@ -314,7 +234,7 @@
 
 ; Returns opposite corners of a box made of a four point polyline
 (defun corners ( rectangle / a b vertices )
-    (setq vertices (get-polyline-vertices rectangle))
+    (setq vertices (get-vertices rectangle))
     (setq a (nth 0 vertices)) ; First corner
     (setq b (nth 2 vertices)) ; Opposite corner    
     (list a b )

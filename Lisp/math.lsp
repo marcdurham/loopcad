@@ -109,6 +109,8 @@
     (remove-repeated-points vertices)
 )
 
+
+
 (defun get-layer (entity-name)
     (cdr (assoc 8 (entget entity-name)))
 )
@@ -126,6 +128,10 @@
         (setq entity (entget entity))
     )
     (cdr (assoc 10 entity))
+)
+
+(defun get-ename (entity)
+    (cdr (assoc -1 entity))
 )
 
 (defun ent-name (entity)
