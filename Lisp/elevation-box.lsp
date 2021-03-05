@@ -1,4 +1,4 @@
-(defun elevation-box-draw (/ a b p1 p2 p3 p4 top bottom left right)
+(defun elevation-box-draw (/ a b p1 p2 p3 p4 top bottom left right points)
     (setq old-osmode (getvar "OSMODE"))
     (setq temperror *error*)
     (defun *error* (message)
@@ -7,8 +7,8 @@
         (princ message)
         (princ)
         (setvar "OSMODE" old-osmode)
-        (command "-COLOR" "BYLAYER")
-        (command "-LAYER" "SET" "0" "")
+        (command-s "-COLOR" "BYLAYER")
+        (command-s "-LAYER" "SET" "0" "")
         (setq *error* temperror)
     )
     (setvar "OSMODE" 0)
@@ -21,83 +21,167 @@
     (setq elevation (getint (strcat "\nEnter elevation (ft): <" (itoa elevation) ">")))
     
     (setq right (greatest (car a) (car b)))
-    (setq top (greatest (cadr a) (cadr b)))
+    (setq top  (greatest (cadr a) (cadr b)))
     (setq left (least (car a) (car b)))
     (setq bottom (least (cadr a) (cadr b)))
-    (setq p1 (list left top))
-    (setq p2 (list right top))
-    (setq p3 (list right bottom))
-    (setq p4 (list left bottom))
-    
-    ;(command "-COLOR" "BYLAYER" "")
-    ;(command "-LINETYPE" "SET" "Continuous" "")
-    ;(command "-LAYER" "NEW" "ElevationBox" "")
-    ;(command "-LAYER" "COLOR" "Magenta" "ElevationBox" "")
-    ;(command "-LAYER" "SET" "ElevationBox" "")
+    ; (setq p1 (list left top))
+    ; (setq p2 (list right top))
+    ; (setq p3 (list right bottom))
+    ; (setq p4 (list left bottom))
+ 
+    (command "-COLOR" "BYLAYER" "")
+    (command "-LINETYPE" "SET" "Continuous" "")
+    (command "-LAYER" "NEW" "ElevationBox" "")
+    (command "-LAYER" "COLOR" "Magenta" "ElevationBox" "")
+    (command "-LAYER" "SET" "ElevationBox" "")
     ;(command "-PLINE" p1 p2 p3 p4 p1 "")
     ;(command "-MTEXT" p1 p3 (strcat "Elevation " (itoa elevation)) "") 
-    ;(command "-COLOR" "BYLAYER")
-    ;(command "-LAYER" "SET" "0" "")
     
-    (entmake
-        (list
-            (cons 0 "POLYLINE")
-            (cons 10 (list 0 0 0))  ; Point is always zero
-            (cons 70 1)             ; 1 = Closed Polyline
-            (cons 62 color-magenta)  ; Color
-            (cons 8 "ElevationBox") ; Layer
-        )
+    ;; Creates a lightweight polyline in model space.
+    (setq acadObj (vlax-get-acad-object))
+    (setq doc (vla-get-ActiveDocument acadObj))
+
+    ;; Define the 2D polyline points
+    (setq points (vlax-make-safearray vlax-vbDouble '(0 . 9)))
+    (vlax-safearray-fill 
+      points 
+      (list 
+        left top
+        right top
+        right bottom
+        left bottom
+        left top
+      )
     )
-    (entmake
-        (list
-            (cons 0 "VERTEX")
-            (cons 10 p1) ; Lower Left
-        )
+        
+    ;; Create a lightweight Polyline object in model space
+    (setq modelSpace (vla-get-ModelSpace doc))
+    (setq plineObj (vla-AddLightWeightPolyline modelSpace points))
+    (vla-put-layer plineObj "ElevationBox")
+   
+    ;; Define the mtext object
+    (setq corner (vlax-3d-point a)
+          width (abs (- right left))
+          text (strcat "Elevation " (itoa elevation))
     )
-    (entmake
-        (list
-            (cons 0 "VERTEX")
-            (cons 10 p2)    ; Lower Right
-        )
-    )
-    (entmake
-        (list
-            (cons 0 "VERTEX")
-            (cons 10 p3)    ; Upper Right
-        )
-    )
-    (entmake
-        (list
-            (cons 0 "VERTEX")
-            (cons 10 p4)    ; Upper Left
-        )
-    )
-    (entmake
-        (list
-            (cons 0 "SEQEND")
-        )
-    )
-    (entmake
-        (list
-            (cons 0 "MTEXT")
-            (cons 10 p1)
-            (cons 40 10.0) ; Text Height
-            (cons 41 1000.0) ; Reference Width 
-            (cons 11 (list 1.0 0.0 0.0))
-            (cons 71 1)    ; Attachment point: 1 = Top left
-            (cons 72 1)    ; Drawing direction: 1 = Left to right
-            ;(cons 73 1)    ; MText line spacing style: 1 = At least
-            (cons 1 (strcat "Elevation " (itoa elevation))) ; Text Value
-            (cons 62 color-magenta) ; Color
-            (cons 8 "ElevationBox")  ; Layer
-        )
-    )
-    
+
+    ;; Creates the mtext object
+    (setq modelSpace (vla-get-ModelSpace doc))
+    (setq MTextObj (vla-AddMText modelSpace corner width text))
+    (vla-put-height MTextObj 10.0)
+    (vla-put-layer MTextObj "ElevationBox")
+
+    ; Set things back
+    (command "-COLOR" "BYLAYER")
+    (command "-LAYER" "SET" "0" "")
     (setvar "OSMODE" old-osmode)
     (setq *error* temperror)
     (princ)
 )
 
+(defun test-insertblock ()
+    (setq block (vla-InsertBlock
+        (vla-get-modelspace
+          (vla-get-activedocument
+            (vlax-get-acad-object)
+          )
+        )
+        (vlax-3d-point (getpoint))
+        "FloorTag"
+        1
+        1
+        1
+        0
+      )
+)
+    ;; get the block attributes
+    (setq attributes (vlax-safearray->list (vlax-variant-value (vla-getAttributes block))))
+    ;; get the first attribute of the list to set its "value" (TextString property)
+    (vla-put-TextString (car attributes) "ME Floor")
+  (vla-put-TextString (nth 1 attributes) "144")
+)
+(defun test-mtext ()
+    (entmake
+        '(
+            (0 . "MTEXT")
+            (1 . "Elevation Box")
+            ;;;(5 . "23A") ; entlast ; ?
+            (7 . "Standard") ; entlast ; ? Probably text type
+                  (8 . "0")  ; Layer
+            (10 10.0 30.0 0.0)
+            ;(11 1.0 0.0 0.0) ; entlast ; ?
+            ;(210 0.0 0.0 1.0) ; entlast ; ?
+            (40 . 10.0) ; Text Height
+            (41 . 100.0) ; Reference Rectangle Width
+            ;(42 . 100.0) ; entlast ; ?
+            ;(43 . 10.0)  ; entlast ; ?
+            (44 . 1.0) ; entlast ; ? Lince space factor
+            ;(46 . 0.0) ; entlast ; ?
+            (50 . 0.0) ; Roation angle in radians (entlast)
+            (67 . 0)
+            (71 . 1)    ; Attachment point: 1 = Top left (entlast)
+                  ;(72 . 1)    ; Drawing direction: 1 = Left to right
+            (73 . 1)
+            (72 . 5) ; entlast ;
+          
+          
+            (90 . 1) ; Background fill 0 = Off
+            ;(430 . "CYAN")
+            (420 255 0 0 0) ; Color Value 0 to 255
+            (60 . 0) ; 1 = Invisible
+            (410 . "Model")
+            (100 . "AcDbMText")
+            (100 . "AcDbEntity")
+	    
+        )
+    )
+    ;;(entget (entlast))
+)
+(defun forgetme ()
+   (entmake
+   '(
+            (0 . "TEXT")
+            (1 . "MTEXT is running")
+            (8 . "0")     ; Layer
+            (10 -100.0 10.0 0.0)    ; Insertion Point
+            (40 . 10.0)   ; Text Height
+            (41 . 1.0) ; Reference Rectangle Width 
+            ;(71 . 1)      ; Attachment point: 1 = Top left
+            (72 . 0)      ; (TEXT) H Justification: 0 = Left (MTEXT)Drawing direction: 1 = Left to right
+            ;(73 . 1)    ; MText line spacing style: 1 = At least
+	    (100 . "AcDbText")
+        )
+   )
+)
+(defun test-text ()
+    (entmake
+        '(
+            (0 . "TEXT")
+            (1 . "Testing")
+            (8 . "0")     ; Layer
+            (10 10.0 10.0 0.0)    ; Insertion Point
+            (40 . 10.0)   ; Text Height
+            (41 . 1.0) ; Reference Rectangle Width 
+            ;(71 . 1)      ; Attachment point: 1 = Top left
+            (72 . 0)      ; (TEXT) H Justification: 0 = Left (MTEXT)Drawing direction: 1 = Left to right
+            ;(73 . 1)    ; MText line spacing style: 1 = At least
+	    (100 . "AcDbText")
+        )
+    )
+   (entmake
+        '(
+            (0 . "TEXT")
+            (1 . "Testing")
+            (8 . "0")     ; Layer
+            (10 50.0 20.0 0.0)    ; Insertion Point
+            (40 . 10.0)   ; Text Height
+            (41 . 1.0) ; Reference Rectangle Width 
+            ;(71 . 1)      ; Attachment point: 1 = Top left
+            (72 . 0)      ; (TEXT) H Justification: 0 = Left (MTEXT)Drawing direction: 1 = Left to right
+            ;(73 . 1)    ; MText line spacing style: 1 = At least
+        )
+    )
+)
 (defun get-elevation-boxes ( / en ent boxes layer) 
     (setq boxes '())
     (setq en (entnext))
