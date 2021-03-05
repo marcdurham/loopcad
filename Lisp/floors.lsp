@@ -1,4 +1,35 @@
+
 (defun floor-tag-insert ( / p old-osmode elevation floor-name)
+    (setq old-osmode (getvar "OSMODE"))
+    (defun *error* (message)
+        (princ)
+        (princ message)
+        (princ)
+        (setvar "OSMODE" old-osmode)
+        (setvar "LWDISPLAY" 1)
+    )
+    (setq p (getpoint "Click insertion point for floor tag"))
+    (setq floor-name (getstring T "Enter floor name")) ; getstring with T allows spaces
+    (setq elevation (get-elevation p))
+    (princ (strcat "Elevation: " (itoa elevation)))
+  
+    (setq acadObj (vlax-get-acad-object))
+    (setq doc (vla-get-ActiveDocument acadObj))
+    
+    ; Insert the block
+    (setq insertionPoint (vlax-3d-point p))
+    (setq modelSpace (vla-get-ModelSpace doc))
+    (setq block (vla-InsertBlock modelSpace insertionPoint "FloorTag" 1 1 1 0))
+  
+    ; get the block attributes
+    (setq attributes (vlax-safearray->list (vlax-variant-value (vla-getAttributes block))))
+    
+    ; Set attribute values by the attribute position
+    (vla-put-TextString (nth 0 attributes) floor-name)
+    (vla-put-TextString (nth 1 attributes) elevation)
+)
+
+(defun floor-tag-insert-old ( / p old-osmode elevation floor-name)
     (setq old-osmode (getvar "OSMODE"))
     (defun *error* (message)
         (princ)
@@ -19,6 +50,7 @@
     (setvar "LWDISPLAY" 0)
     (command "-LAYER" "SET" "FloorTags" "")
     ;(command "-INSERT" "FloorTag.dwg" p 1.0 1.0 0 floor-name elevation)
+    (princ (strcat "\nElevation: " (itoa elevation)))
     (command "-INSERT" "FloorTag" p 1.0 1.0 0 floor-name elevation)  
 )
 
