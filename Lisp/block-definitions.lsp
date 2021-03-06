@@ -91,8 +91,6 @@
     (define-floor-tag)
     (define-riser)
     (princ "\nLabels defined.\n")
-    (define-job-data)
-    (princ "\nJob data block defined.\n")
     (princ)
 )
 
@@ -622,113 +620,6 @@
     (princ)
 )
 
-; New Job Data
-; 2021-03-05 Trying a different approach
-(defun define-job-data-old ( / label-color layer )
-    (setq layer "JobData")
-  
-    (setq acadObj (vlax-get-acad-object))
-    (setq doc (vla-get-ActiveDocument acadObj))
-    
-    ; Insert the block
-    (setq insertionPoint (vlax-3d-point 0 0 0))
-    (setq modelSpace (vla-get-ModelSpace doc))
-  
-  
-  ;; Create the block
-    (setq blockObj (vla-Add (vla-get-Blocks doc) insertionPnt "JobData"))
-    
-     ;; Add a circle to the block
-    (setq center (vlax-3d-point 0 0 0)
-          radius 1)
-    (setq circleObj (vla-AddCircle blockObj center radius))
-  
-  
-   ;; Define the attribute definition
-    (setq insertionPoint (vlax-3d-point 5 5 0) 
-          attHeight 1
-          attMode acAttributeModeVerify
-          attPrompt "New Prompt"
-          attTag "NEW_TAG"
-          attValue "New Value")
-    
-    ;; Create the attribute definition object in model space    
-    ;(setq attributeObj 
-    ;    (vla-AddAttribute blockObj attHeight attMode attPrompt insertionPoint attTag attValue))
-  
-  (setq blockRefObj (vla-InsertBlock modelSpace (vlax-3d-point 100 100 0) "JobData" 1 1 1 0))
-)
-
-; Job Data
-(defun define-job-data-old ( / label-color layer )
-    (setq layer "JobData")
-  
-    (setq acadObj (vlax-get-acad-object))
-    (setq doc (vla-get-ActiveDocument acadObj))
-    
-    ; Insert the block
-    (setq insertionPoint (vlax-3d-point p))
-    (setq modelSpace (vla-get-ModelSpace doc))
-  
-  
-  ;; Create the block
-    (setq blockObj (vla-Add (vla-get-Blocks doc) insertionPnt "JobData"))
-    
-    ;; Add a circle to the block
-   ;; Define the attribute definition
-    (setq insertionPoint (vlax-3d-point 5 5 0) 
-          attHeight 1
-          attMode acAttributeModeVerify
-          attPrompt "New Prompt"
-          attTag "NEW_TAG"
-          attValue "New Value")
-    
-    ;; Create the attribute definition object in model space    
-    ;;;;;;(setq attributeObj (vla-AddAttribute blockObj attHeight attMode attPrompt insertionPoint attTag 
-   
-  
-    ;;(setq block (vla-InsertBlock modelSpace insertionPoint "FloorTag" 1 1 1 0))
-  
-    ; get the block attributes
-    (setq attributes (vlax-safearray->list (vlax-variant-value (vla-getAttributes block))))
-    
-    ;(get_attr key attribute)
-    (foreach attribute attributes
-      (progn  
-          (setq tag (val-get-TagString attribute))
-          (princ (strcat "\nTag: " tag))
-        (vla-addattribute block)
-      )
-        
-    )
-    ; Set attribute values by the attribute position
-    ;(vla-put-TextString (nth 0 attributes) floor-name)
-    ;(vla-put-TextString (nth 1 attributes) elevation)
-  
-    (job-data-attdef "JOB_NUMBER" "" "" 1)
-    (job-data-attdef "JOB_NAME" "" "" 2)
-    (job-data-attdef "JOB_SITE_ADDRESS" "" "" 3)
-    (job-data-attdef "CALCULATED_BY_COMPANY" "" "" 4)
-    (job-data-attdef "SUPPLY_STATIC_PRESSURE" "0" "" 5)
-    (job-data-attdef "SUPPLY_RESIDUAL_PRESSURE" "0" "" 6)
-    (job-data-attdef "SUPPLY_AVAILABLE_FLOW" "0" "" 7)
-    (job-data-attdef "SUPPLY_ELEVATION" "0" "" 8)
-    (job-data-attdef "SUPPLY_PIPE_LENGTH" "0" "" 9)
-    (job-data-attdef "SUPPLY_PIPE_INTERNAL_DIAMETER" "0" "" 10)
-    (job-data-attdef "SPRINKLER_PIPE_TYPE" "" "" 11)
-    (job-data-attdef "SPRINKLER_FITTING_TYPE" "" "" 12)
-    (job-data-attdef "SUPPLY_PIPE_TYPE" "" "" 13)
-    (job-data-attdef "SUPPLY_PIPE_SIZE" "0" "" 14)
-    (job-data-attdef "SUPPLY_NAME" "MTR" "" 15)
-    (job-data-attdef "DOMESTIC_FLOW_ADDED" "0" "" 16)
-    (job-data-attdef "WATER_FLOW_SWITCH_MAKE_MODEL" "" "" 17)
-    (job-data-attdef "SUPPLY_PIPE_FITTINGS_SUMMARY" "" "" 18)
-    (job-data-attdef "SUPPLY_PIPE_FITTINGS_EQUIV_LENGTH" "0" "" 19)
-    (job-data-attdef "SUPPLY_PIPE_ADD_PRESSURE_LOSS" "0" "" 20)
-    (job-data-attdef "WATER_FLOW_SWITCH_PRESSURE_LOSS" "0" "" 21)
-    
-)
-
 ; Convert feet to inches
 (defun feet->inches (feet)
     (* feet 12)
@@ -754,40 +645,3 @@
   (entmake '((0 . "ENDBLK")))
 )
 
-
-; New Job Data
-; 2021-03-05 Trying a different approach
-(defun define-job-data-old ( / label-color layer )
-    (setq layer "JobData")
-  
-    (setq acadObj (vlax-get-acad-object))
-    (setq doc (vla-get-ActiveDocument acadObj))
-    
-    ; Insert the block
-    (setq insertionPoint (vlax-3d-point 0 0 0))
-    (setq modelSpace (vla-get-ModelSpace doc))
-  
-  
-  ;; Create the block
-    (setq blockObj (vla-Add (vla-get-Blocks doc) insertionPnt "JobData"))
-    
-     ;; Add a circle to the block
-    (setq center (vlax-3d-point 0 0 0)
-          radius 1)
-    (setq circleObj (vla-AddCircle blockObj center radius))
-  
-  
-   ;; Define the attribute definition
-    (setq insertionPoint (vlax-3d-point 5 5 0) 
-          attHeight 1
-          attMode acAttributeModeVerify
-          attPrompt "New Prompt"
-          attTag "NEW_TAG"
-          attValue "New Value")
-    
-    ;; Create the attribute definition object in model space    
-    ;(setq attributeObj 
-    ;    (vla-AddAttribute blockObj attHeight attMode attPrompt insertionPoint attTag attValue))
-  
-  (setq blockRefObj (vla-InsertBlock modelSpace (vlax-3d-point 100 100 0) "JobData" 1 1 1 0))
-)
