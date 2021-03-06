@@ -44,14 +44,14 @@
     ;; Define the 2D polyline points
     (setq points (vlax-make-safearray vlax-vbDouble '(0 . 9)))
     (vlax-safearray-fill 
-      points 
-      (list 
-        left top
-        right top
-        right bottom
-        left bottom
-        left top
-      )
+        points 
+        (list 
+          left top
+          right top
+          right bottom
+          left bottom
+          left top
+        )
     )
         
     ;; Create a lightweight Polyline object in model space
@@ -157,15 +157,10 @@
 ; return the elevation.
 (defun get-elevation ( p / box boxes a b i ar in-areas all-areas m vertex vertices text-box text-boxes smallest-box elevation)
     (setq elevation "0")
-    ; Get areas of all boxes that p is in, it may be in more than one
     (setq in-areas '())
-  
-    (princ "\nScan boxes\n")
-  
+
+    ; Get a list of all boxes that the point p is in
     (setq boxes (get-elevation-boxes))
-    
-    (princ (strcat "\nElevation Boxes Found: " (itoa (length boxes)) "\n"))
-  
     (foreach box boxes
         (progn 
             (setq a (car (corners box)))
@@ -177,38 +172,31 @@
             )
         )
     )
-  
-    (princ "\nBoxes done\n")
-  
+
+    ; Find the smallest box, which should be the inner-most box
     (setq m (apply 'min in-areas))
     (setq i (index-of m all-areas))
     (setq smallest-box (nth i boxes))
     
-    (princ "\nSmallest box found\n")
-  
+
     (if (not (null smallest-box))
         (progn
             ; Match the smallest (elevation) box to it's MText containing the elevation text
             (setq vertices (get-vertices smallest-box))
-            (princ (strcat "\nVertices found: " (itoa (length vertices)) "\n"))
             (setq text-boxes (get-elevation-text))
-            (princ (strcat "\nText Boxes Count: " (itoa (length text-boxes)) "\n"))
             (foreach vertex vertices
-                (foreach text-box text-boxes
-                    
+                (foreach text-box text-boxes                    
                   (setq insPoint (get-ins-point text-box))
                   (setq insPoint2D (list (nth 0 insPoint) (nth 1 insPoint)))
-                  (princ (strcat "\nVertex length: " (itoa (length vertex))  (rtos (nth 0 vertex))  (rtos (nth 1 vertex)) "\n"))
-                    (princ (strcat "\nInspoint2d length " (itoa (length insPoint2D))  (rtos (nth 0 insPoint2D))  (rtos (nth 1 insPoint2D))"\n"))
-                    (princ (strcat "\nDistance: " (rtos (distance vertex insPoint)) "\n"))
-                    (if (< (distance vertex insPoint) near-line-margin)
-                        ; This text-box belongs to this elevation box
-                        (setq elevation (elevation-from text-box))                                     
-                    )
+                  (if (< (distance vertex insPoint) near-line-margin)
+                      ; This text-box belongs to this elevation box
+                      (setq elevation (elevation-from text-box))                                     
+                  )
                 )
             )
         )
     )
+    ; Return the elevation of the inner-most elevation box
     (atoi elevation)
 )
 

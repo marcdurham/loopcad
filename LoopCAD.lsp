@@ -19,4 +19,6 @@
 
 (define-labels)
 
+(princ "\nLoaded LoopCAD LISP files\n")
+
 (princ) ; exit quietly

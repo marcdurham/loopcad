@@ -1,4 +1,43 @@
 (defun job-data-insert ( / old-osmode)
+    (setq acadObj (vlax-get-acad-object))
+    (setq doc (vla-get-ActiveDocument acadObj))
+    (setq modelSpace (vla-get-ModelSpace doc))
+    
+    ;; Define the mtext object
+    (setq p (vlax-3d-point 0 0 0)
+          width 100
+          text (strcat 
+                    "job_number: L-0000\n"
+                    "job_name: \n"
+                    "job_site_address: \n"
+                    "calculated_by_company: \n"
+                    "sprinkler_pipe_type: PEX\n"
+                    "sprinkler_fitting_type: Brass\n"
+                    "supply_static_pressure: 0.0\n"
+                    "supply_residual_pressure: 0.0\n"
+                    "supply_available_flow: 0.0\n"
+                    "supply_elevation: 0\n"
+                    "supply_pipe_type: CPVC\n"
+                    "supply_pipe_size: 1.0\n"
+                    "supply_pipe_internal_diameter: 1.5\n"
+                    "supply_pipe_length: 10.0\n"
+                    "supply_name: SUPPLY\n"
+                    "domestic_flow_added: 0.0\n"
+                    "water_flow_switch_make_model: \n"
+                    "water_flow_switch_pressure_loss: 0.0\n"
+                    "supply_pipe_fittings_summary: 0.0\n"
+                    "supply_pipe_fittings_equiv_length: 0.0\n"
+                    "supply_pipe_add_pressure_loss: 0.0\n"
+               )
+    )
+  
+    ; Insert the MText object
+    (setq MTextObj (vla-AddMText modelSpace p width text))
+    (vla-put-height MTextObj 10.0)
+    (vla-put-layer MTextObj "JobData")
+)
+
+(defun job-data-insert-old ( / old-osmode)
     (if (= (length (get-blocks (list "JobData" "Job Data"))) 0)
         (progn
             (setq old-osmode (getvar "OSMODE"))
@@ -19,8 +58,8 @@
             (insert-job-data-block '(0 0 0))
         )
     )
-    (vl-vbarun "ScanJobData")
-    (vl-vbarun "EditJobData")
+    ;(vl-vbarun "ScanJobData")
+    ;(vl-vbarun "EditJobData")
 )
 
 (defun insert-job-data-block ( point )
@@ -67,6 +106,11 @@
     e
 )
 
+; Test
+(defun test-job-data-attribute ()
+    (princ "Should return nil\n")
+    (job-data-attribute "TEST_TAG" "TEST_VALUE" 0)
+)
 
 (defun job-data-attribute ( tag-string text-value position / y-offset )
     (setq y-offset (* 10.0 position))
@@ -101,7 +145,49 @@
     )
 )
 
+(defun test-job-data-dialog ()
+    (setq id (load_dialog "job_data.dcl"))
+    (princ (strcat "\nJob Data CDL ID:" (itoa id)))
+    (if (not (new_dialog "job_data" id))
+        (princ "\nError loading job_data.dcl\n")
+        (exit)
+    )
+    (unload_dialog id)
+)
+
+(vlax-ldata-put "job_data" "job_site_address" "123 Main St")
+
 (defun job-data-dialog ( / id result key value block-name new-block-name )
+    (setq id (load_dialog "job_data.dcl"))
+    (new_dialog "job_data" id)
+  
+    ; Set tiles values from job_data values
+    (foreach key job_data:keys 
+        (progn
+            (princ (strcat "\nLoading Job Data Key: " key))
+            (setq value (get-job-data key))
+            (if (not (null value))
+                (progn
+                  (princ (strcat "\n    Value: " value))
+                  (set_tile key value)
+                )
+                (progn
+                  (princ (strcat "\n    Value: EMPTY"))
+                  (set_tile key "") ; set_tile does not accept nil as a value
+                )
+            )
+        )
+    )
+    
+    (setq result (start_dialog))
+    (if (= result 1) ; 1 = User clicked 'OK'
+        (set-job-data-attributes)
+        (princ "\nCancelled. Job data not set.\n")
+    )
+    (unload_dialog id)
+)
+
+(defun job-data-dialog-old ( / id result key value block-name new-block-name )
     (setq id (load_dialog "job_data.dcl"))
     (new_dialog "job_data" id)
     
@@ -213,7 +299,14 @@
 )
 
 ; Called only by job_data dialog.
-(defun set-job-data ( key value / lav item-list n)
+(defun set-job-data ( key value )
+  (vlax-ldata-put "job_data" key value)
+)
+(defun get-job-data ( key )
+    (vlax-ldata-get "job_data" key)
+)
+
+(defun set-job-data-old ( key value / lav item-list n)
     (setq lav (get_attr key "list")) ; job_data dialog needs to be open for this line
     (if (> (strlen lav) 0) ; The "list" attribute has a list
         (progn 
@@ -222,10 +315,10 @@
             (setq value (nth n item-list))
         )
     )
-    (set-job-data-var key value)        
+    (set-job-data-var key value)
 )
 
-(defun set-job-data-var ( key value )
+(defun set-job-data-var-old ( key value )
     (if (null job_data) (setq job_data '()))
     (if (null (assoc key job_data))
         (setq job_data (append job_data (list (cons key value))))
@@ -240,7 +333,7 @@
 )
 
 ; Call only when a dialog with this key is open
-(defun get-job-data ( key / lav value index popup-list )
+(defun get-job-data-old ( key / lav value index popup-list )
     (setq value (get-job-data-var key))
     (setq lav (get_attr key "list")) ; From job_data dialog
     (if (> (strlen lav) 0) ; The "list" attribute contains a list
