@@ -68,26 +68,26 @@
     (define-head-coverage 16)
     (define-head-coverage 18)
     (define-head-coverage 20)
-    (define-sw-head-coverage 12 "U") ; Sprays Up
-    (define-sw-head-coverage 14 "U")
-    (define-sw-head-coverage 16 "U")
-    (define-sw-head-coverage 18 "U")
-    (define-sw-head-coverage 20 "U")
-    (define-sw-head-coverage 12 "D") ; Sprays Down
-    (define-sw-head-coverage 14 "D")
-    (define-sw-head-coverage 16 "D")
-    (define-sw-head-coverage 18 "D")
-    (define-sw-head-coverage 20 "D")
-    (define-sw-head-coverage 12 "L") ; Sprays Left
-    (define-sw-head-coverage 14 "L")
-    (define-sw-head-coverage 16 "L")
-    (define-sw-head-coverage 18 "L")
-    (define-sw-head-coverage 20 "L")
-    (define-sw-head-coverage 12 "R") ; Sprays Right
-    (define-sw-head-coverage 14 "R")
-    (define-sw-head-coverage 16 "R")
-    (define-sw-head-coverage 18 "R")
-    (define-sw-head-coverage 20 "R")    
+    ; (define-sw-head-coverage 12 "U") ; Sprays Up
+    ; (define-sw-head-coverage 14 "U")
+    ; (define-sw-head-coverage 16 "U")
+    ; (define-sw-head-coverage 18 "U")
+    ; (define-sw-head-coverage 20 "U")
+    ; (define-sw-head-coverage 12 "D") ; Sprays Down
+    ; (define-sw-head-coverage 14 "D")
+    ; (define-sw-head-coverage 16 "D")
+    ; (define-sw-head-coverage 18 "D")
+    ; (define-sw-head-coverage 20 "D")
+    ; (define-sw-head-coverage 12 "L") ; Sprays Left
+    ; (define-sw-head-coverage 14 "L")
+    ; (define-sw-head-coverage 16 "L")
+    ; (define-sw-head-coverage 18 "L")
+    ; (define-sw-head-coverage 20 "L")
+    ; (define-sw-head-coverage 12 "R") ; Sprays Right
+    ; (define-sw-head-coverage 14 "R")
+    ; (define-sw-head-coverage 16 "R")
+    ; (define-sw-head-coverage 18 "R")
+    ; (define-sw-head-coverage 20 "R")    
     (define-floor-tag)
     (define-riser)
     (princ "\nLabels defined.\n")
@@ -343,6 +343,169 @@
 
 ; Head Block (Normal)
 (defun define-head-block (coverage block-name tag-string prompt default label-color layer / span halfway quarter coverage-text)
+    (setq acadObj (vlax-get-acad-object))
+    (setq doc (vla-get-ActiveDocument acadObj))
+    
+    (setq 
+        innerCircleRadius 2.275
+        outerCircleRadius 6.653
+    )
+    ;; Define the Circle object that will be inserted into the block
+    (setq centerPoint (vlax-3d-point 0 0 0)
+          InsertPoint (vlax-3d-point 1 1 0)
+          radius 0.5)
+    
+    ;; Create a new block to hold the Circle object
+    (setq blocks (vla-get-Blocks doc))
+    (setq newBlock (vla-Add blocks centerPoint (strcat "Head" (itoa coverage))))
+    
+    ;; Add the Circle object to the new block object
+    (setq innerCircle (vla-AddCircle newBlock centerPoint innerCircleRadius))
+    ;(setq outerCircle (vla-AddCircle newBlock centerPoint outerCircleRadius))
+  
+    ;(vla-put-color innerCircle 1) ; 1 = Red
+    ;(vla-put-layer innerCircle "Heads")
+    ;(vla-put-color outerCircle 1) ; 1 = Red
+    ;(vla-put-layer outerCircle "Heads")
+    
+    ;; Create a rectangular array of Circles using the new block containing the Circle
+    ;; and the AddMInsertBlock method
+    (setq modelSpace (vla-get-ModelSpace doc))
+    (setq newMBlock (vla-AddMInsertBlock modelSpace InsertPoint (strcat "Head" (itoa coverage)) 1 1 1 1 2 2 1 1))
+        
+  
+  ; (entmake 
+  ;       (list
+  ;           '(0 . "BLOCK")
+  ;           '(8 . "Heads")
+  ;           '(10 0.0 0.0 0.0)         ; required
+  ;           (cons 2 (strcat block-name (itoa coverage))) ; Block name
+  ;          '(70 . 2) ; required [NOTE 0 if no attribu
+  ;          '(100 . "AcDbEntity")     ; recommended
+  ;           '(100 . "AcDbBlockBegin") ; recommended
+  ;       )
+  ;   )
+  
+  ;   ; Head Model Number
+  ;   (entmake 
+  ;       (list
+  ;           '(0 . "ATTDEF")
+  ;           (cons 10 
+  ;               (list 
+  ;                   head-block:model-x-offset 
+  ;                   head-block:model-y-offset 
+  ;                   0.0
+  ;               )
+  ;           )
+  ;           (cons 1 default)      ; Text value
+  ;           (cons 2 tag-string)   ; Tag string
+  ;           (cons 3 prompt)       ; Prompt string
+  ;           (cons 40 5.0)         ; Text height
+  ;           (cons 7 "ARIAL")      ; Text style
+  ;           (cons 62 label-color) ; Color
+  ;           (cons 8 layer)        ; Layer
+  ;          '(70 . 0)     ; Attribute Flags (KEEP)
+  ;       )
+  ;   )
+    
+  ;   ; Head
+  ;   ; Inner Circle
+  ;   (entmake
+  ;       (list
+  ;           '(0 . "CIRCLE")     
+  ;           (cons 10 (list 0 0 0)) ; Center Point
+  ;           ; Radius: 2.278 copeid from old block so it looks the same
+  ;           (cons 40 2.278)        ; Radius
+  ;           (cons 62 color-red)    ; Color
+  ;           (cons 8 layer)         ; Layer
+  ;       )
+  ;   )
+  ;   ; Outer Circle
+  ;   (entmake
+  ;       (list
+  ;           (cons 0 "CIRCLE")      
+  ;           (cons 10 (list 0 0 0)) ; Center Point
+  ;           ; Radius: 6.653 copeid from old block so it looks the same
+  ;           (cons 40 6.653)        ; Radius
+  ;           (cons 62 color-red)    ; Color
+  ;           (cons 8 layer)         ; Layer
+  ;       )
+  ;   )
+    
+  ;   ; Head Coverage Box
+  ;   (setq span (feet->inches coverage))
+  ;   (setq -span (- 0 span))
+  ;   (setq halfway (/ span 2))
+  ;   (setq -halfway (- 0 halfway))
+  ;   (setq quarter (/ span 4))
+  ;   (entmake
+  ;       (list
+  ;           '(0 . "POLYLINE")
+  ;           '(10 0 0 0)           ; Point is always zero
+  ;           '(70 . 1)             ; 1 = Closed Polyline
+  ;           (cons 62 color-yellow)  ; Color
+  ;           '(8 . "HeadCoverage") ; Layer
+  ;       )
+  ;   )
+  ;   (entmake
+  ;       (list
+  ;           '(0 . "VERTEX")
+  ;           (cons 10 (list -halfway -halfway 0)) ; Lower Left
+  ;       )
+  ;   )
+  ;   (entmake
+  ;       (list
+  ;           '(0 . "VERTEX")
+  ;           (cons 10 (list halfway -halfway 0))    ; Lower Right
+  ;       )
+  ;   )
+  ;   (entmake
+  ;       (list
+  ;           '(0 . "VERTEX")
+  ;           (cons 10 (list halfway halfway 0))    ; Upper Right
+  ;       )
+  ;   )
+  ;   (entmake
+  ;       (list
+  ;           '(0 . "VERTEX")
+  ;           (cons 10 (list -halfway halfway 0))    ; Upper Left
+  ;       )
+  ;   )
+  ;   (entmake
+  ;       '(
+  ;           (0 . "SEQEND")
+  ;       )
+  ;   )
+    
+  ;   ; Coverage Text 
+  ;   ; Example: 12' x 12'
+  ;   (setq coverage-text 
+  ;       (strcat (itoa coverage) "'  X  " (itoa coverage) "'")
+  ;   )
+  ;   (entmake
+  ;       (list
+  ;           '(0 . "TEXT")
+  ;           (cons 10 (list span span 0)) ; Upper left corner
+  ;           (cons 11 (list 0 quarter 0)) ; Second alignment point, center of text
+  ;           '(40 . 16.0)         ; Text height
+  ;           (cons 1 coverage-text) ; Text value
+  ;           '(72 . 1) ; Horizontal text justification: 1 = Center, 4 = Middle
+  ;           '(73 . 2) ; Vertical text justification: 2 = Middle
+  ;           (cons 62 color-yellow)  ; Color
+  ;           '(8 . "HeadCoverage") ; Layer
+  ;       )
+  ;   )
+  ;   (entmake 
+  ;      '(
+  ;           (0 . "ENDBLK")
+  ;           (100 . "AcDbBlockEnd") ; recommended
+  ;           (8 . "0")              ; recommended
+  ;       )
+  ;   )
+)
+
+; Head Block (Normal)
+(defun define-head-block-old (coverage block-name tag-string prompt default label-color layer / span halfway quarter coverage-text)
     (entmake 
         (list
             (cons 0 "BLOCK")
@@ -623,25 +786,5 @@
 ; Convert feet to inches
 (defun feet->inches (feet)
     (* feet 12)
-)
-
-(defun alt_def ()
-  
-  ;BLOCK Header definition:
-  ;Code 70 shows that attributes follow. Code 10 contains the
-  ;insertion point.
-  
-  (entmake '((0 . "BLOCK")(2 . "ALT_ID")(70 . 2)(10 0.0 0.0 0.0)))
-  
-  ;Text ATTRIBUTE definition:
-  
-  (entmake 
-    '((0 . "ATTDEF")(8 . "0")(10 0.0 0.0 0.0)(1 . "I")(2 . "NUM_ALT")
-    (3 . "Alturas")(40 . 2.0)(41 . 1.0)(50 . 0.0)(70 . 0)(71 . 0)(72 . 4)(73 . 2))
-  )
-  
-  ;BLOCK's ending definition:
-  
-  (entmake '((0 . "ENDBLK")))
 )
 

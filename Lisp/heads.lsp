@@ -11,7 +11,8 @@
     (setvar "LWDISPLAY" 1)
     (setq *error* temperror)
   )
-  (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having a
+  (setvar "INSUNITS" 2) ; 0 = not set, 1 = inches, 2 = feet
+                        ; This line prevents inserted block refs from having a
                         ; different scale, being 12 times bigger than they should be.
   (setvar "OSMODE" osmode-snap-ins-pts)
   (command "-LAYER" "NEW" "Heads" "")
@@ -40,13 +41,34 @@
     )
     (initget "12 14 16 18 20")
     (if (setq tmp (getkword (strcat "\nHead Coverage [12/14/16/18/20] <" global:head-coverage ">: ")))
-        (setq global:head-coverage tmp)
+        (progn
+          (princ (strcat "\nHead Coverage Selected: " tmp))
+          (setq global:head-coverage tmp)
+        )
     )
     (entdel (entlast))
-    (setq model-code (model-code-from model global:head-coverage slope temperature))
+    (princ "\nLast entity (temp) deleted\n")
+    ;;;;;(setq model-code (model-code-from model (itoa global:head-coverage) (itoa slope) (itoa temperature)))
     (prompt (strcat "\nInserting Head Model Code: " model-code "\n"))
     (prompt "\nPress Esc to quit inserting heads.\n")
-    (command "-INSERT" (strcat "Head" global:head-coverage ".dwg") pt 1.0 1.0 0 model-code)
+    ;;;(command "-INSERT" (strcat "Head" (itoa global:head-coverage) ".dwg") pt 1.0 1.0 0 model-code)
+    
+    (setq acadObj (vlax-get-acad-object))
+    (setq doc (vla-get-ActiveDocument acadObj))
+    
+    ; Insert the block
+    (setq insertionPoint (vlax-3d-point pt))
+    (setq modelSpace (vla-get-ModelSpace doc))
+    (setq headBlockName (strcat "Head" global:head-coverage ".dwg"))
+    (princ (strcat "\n Head Block Name: " headBlockName))
+    (setq block (vla-InsertBlock modelSpace insertionPoint headBlockName 1 1 1 0 ""))
+  
+    ; get the block attributes
+    (setq attributes (vlax-safearray->list (vlax-variant-value (vla-getAttributes block))))
+    
+    ; Set attribute values by the attribute position
+    (vla-put-TextString (nth 0 attributes) model-code)
+    
   )
 )
 
