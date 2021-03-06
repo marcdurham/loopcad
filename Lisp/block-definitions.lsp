@@ -410,7 +410,7 @@
     (vla-addattribute 
       newBlock    ; Block
       9.0         ; Height
-      acAttributeModeConstant  ; Mode
+      acAttributeModeLockPosition  ; Mode
       ""; Prompt
       centerPoint ; Insertion Point
       "MODEL"     ; Tag

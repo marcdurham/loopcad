@@ -33,7 +33,8 @@
   (command-s "-LAYER" "ON" "HeadCoverage" "")
   (setvar "LWDISPLAY" 0)
   (command-s "-LAYER" "SET" "Heads" "")
-  (setq model-code "HEAD-X")
+  (setvar "ATTREQ" 0)
+  (setq model-code "EMPTY")
   ;;(while T
 ;
 ;   This section is for heads that you already know the coverage
@@ -46,7 +47,15 @@
 ;    (command "-INSERT" (strcat "Head" coverage ".dwg") pause 1.0 1.0 0 model-code)
 ;
     (command-s "-INSERT" (strcat "Head" coverage) pause 1.0 1.0 0 "")
-  (prompt "Prese the [ENTER] key to repeat")
+  
+    (setq block (vlax-ename->vla-object (entlast)))
+    ; get the block attributes
+    (setq attributes (vlax-safearray->list (vlax-variant-value (vla-getAttributes block))))
+  
+    ; Set attribute values by the attribute position
+    (vla-put-TextString (nth 0 attributes) model-code)
+  
+    (prompt "Press the [ENTER] key or right click model space to repeat")
   ;;)
     ; (setq pt (cdr (assoc 10 (entget (entlast)))))
     ; (if (null global:head-coverage)
