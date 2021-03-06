@@ -1,6 +1,7 @@
 ; DXF Code Reference Document
 ; https://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-reference_enu.pdf
 ; Head Label Properties
+ 
 (setq head-label:tag-string "HEADNUMBER")
 (setq head-label:prompt "Head number label")
 (setq head-label:label-color color-blue)
@@ -358,150 +359,64 @@
     ;; Create a new block to hold the Circle object
     (setq blocks (vla-get-Blocks doc))
     (setq newBlock (vla-Add blocks centerPoint (strcat "Head" (itoa coverage))))
-    
+    ;(vla-put-layer newBlock "Heads")
+  
     ;; Add the Circle object to the new block object
     (setq innerCircle (vla-AddCircle newBlock centerPoint innerCircleRadius))
-    ;(setq outerCircle (vla-AddCircle newBlock centerPoint outerCircleRadius))
+    (setq outerCircle (vla-AddCircle newBlock centerPoint outerCircleRadius))
+
+    (vla-put-layer innerCircle "Heads")
+    (vla-put-layer outerCircle "Heads")
   
-    ;(vla-put-color innerCircle 1) ; 1 = Red
-    ;(vla-put-layer innerCircle "Heads")
-    ;(vla-put-color outerCircle 1) ; 1 = Red
-    ;(vla-put-layer outerCircle "Heads")
+    (vla-put-color innerCircle 1) ; 1 = Red
+    (vla-put-color outerCircle 1) ; 1 = Red
     
-    ;; Create a rectangular array of Circles using the new block containing the Circle
-    ;; and the AddMInsertBlock method
-    (setq modelSpace (vla-get-ModelSpace doc))
-    (setq newMBlock (vla-AddMInsertBlock modelSpace InsertPoint (strcat "Head" (itoa coverage)) 1 1 1 1 2 2 1 1))
+    ; Head Coverage Box
+    (setq span (feet->inches coverage))
+    (setq -span (- 0 span))
+    (setq halfway (/ span 2))
+    (setq -halfway (- 0 halfway))
+    (setq quarter (/ span 4))
         
+      ;; Define the 2D polyline points
+    (setq points (vlax-make-safearray vlax-vbDouble '(0 . 9)))
+    (vlax-safearray-fill 
+        points 
+        (list 
+          -halfway -halfway   ;  (cons 10 (list -halfway -halfway 0)) ; Lower Left
+          halfway -halfway ;  (cons 10 (list halfway -halfway 0))    ; Lower Right
+          halfway halfway ; (cons 10 (list halfway halfway 0))    ; Upper Right
+          -halfway halfway ; (cons 10 (list -halfway halfway 0))    ; Upper Left
+          -halfway -halfway
+        )
+    )
+        
+    ;; Create a lightweight Polyline object in model space
+    (setq plineObj (vla-AddLightWeightPolyline newBlock points))
+    (vla-put-layer plineObj "HeadCoverage")
+    (vla-put-color plineObj 2) ; 2 = Yellow
   
-  ; (entmake 
-  ;       (list
-  ;           '(0 . "BLOCK")
-  ;           '(8 . "Heads")
-  ;           '(10 0.0 0.0 0.0)         ; required
-  ;           (cons 2 (strcat block-name (itoa coverage))) ; Block name
-  ;          '(70 . 2) ; required [NOTE 0 if no attribu
-  ;          '(100 . "AcDbEntity")     ; recommended
-  ;           '(100 . "AcDbBlockBegin") ; recommended
-  ;       )
-  ;   )
+    ;   ; Coverage Text 
+    ;   ; Example: 12' x 12'
+        (setq coverage-text 
+           (strcat (itoa coverage) "'  X  " (itoa coverage) "'")
+       )
   
-  ;   ; Head Model Number
-  ;   (entmake 
-  ;       (list
-  ;           '(0 . "ATTDEF")
-  ;           (cons 10 
-  ;               (list 
-  ;                   head-block:model-x-offset 
-  ;                   head-block:model-y-offset 
-  ;                   0.0
-  ;               )
-  ;           )
-  ;           (cons 1 default)      ; Text value
-  ;           (cons 2 tag-string)   ; Tag string
-  ;           (cons 3 prompt)       ; Prompt string
-  ;           (cons 40 5.0)         ; Text height
-  ;           (cons 7 "ARIAL")      ; Text style
-  ;           (cons 62 label-color) ; Color
-  ;           (cons 8 layer)        ; Layer
-  ;          '(70 . 0)     ; Attribute Flags (KEEP)
-  ;       )
-  ;   )
+    ;(setq modelSpace (vla-get-ModelSpace doc))
+    (setq textObj (vla-AddText newBlock coverage-text  (vlax-3d-point -halfway halfway 0) 16.0))
+    (vla-put-color textObj 2)
+    (vla-put-layer textObj "HeadCoverage")
     
-  ;   ; Head
-  ;   ; Inner Circle
-  ;   (entmake
-  ;       (list
-  ;           '(0 . "CIRCLE")     
-  ;           (cons 10 (list 0 0 0)) ; Center Point
-  ;           ; Radius: 2.278 copeid from old block so it looks the same
-  ;           (cons 40 2.278)        ; Radius
-  ;           (cons 62 color-red)    ; Color
-  ;           (cons 8 layer)         ; Layer
-  ;       )
-  ;   )
-  ;   ; Outer Circle
-  ;   (entmake
-  ;       (list
-  ;           (cons 0 "CIRCLE")      
-  ;           (cons 10 (list 0 0 0)) ; Center Point
-  ;           ; Radius: 6.653 copeid from old block so it looks the same
-  ;           (cons 40 6.653)        ; Radius
-  ;           (cons 62 color-red)    ; Color
-  ;           (cons 8 layer)         ; Layer
-  ;       )
-  ;   )
-    
-  ;   ; Head Coverage Box
-  ;   (setq span (feet->inches coverage))
-  ;   (setq -span (- 0 span))
-  ;   (setq halfway (/ span 2))
-  ;   (setq -halfway (- 0 halfway))
-  ;   (setq quarter (/ span 4))
-  ;   (entmake
-  ;       (list
-  ;           '(0 . "POLYLINE")
-  ;           '(10 0 0 0)           ; Point is always zero
-  ;           '(70 . 1)             ; 1 = Closed Polyline
-  ;           (cons 62 color-yellow)  ; Color
-  ;           '(8 . "HeadCoverage") ; Layer
-  ;       )
-  ;   )
-  ;   (entmake
-  ;       (list
-  ;           '(0 . "VERTEX")
-  ;           (cons 10 (list -halfway -halfway 0)) ; Lower Left
-  ;       )
-  ;   )
-  ;   (entmake
-  ;       (list
-  ;           '(0 . "VERTEX")
-  ;           (cons 10 (list halfway -halfway 0))    ; Lower Right
-  ;       )
-  ;   )
-  ;   (entmake
-  ;       (list
-  ;           '(0 . "VERTEX")
-  ;           (cons 10 (list halfway halfway 0))    ; Upper Right
-  ;       )
-  ;   )
-  ;   (entmake
-  ;       (list
-  ;           '(0 . "VERTEX")
-  ;           (cons 10 (list -halfway halfway 0))    ; Upper Left
-  ;       )
-  ;   )
-  ;   (entmake
-  ;       '(
-  ;           (0 . "SEQEND")
-  ;       )
-  ;   )
-    
-  ;   ; Coverage Text 
-  ;   ; Example: 12' x 12'
-  ;   (setq coverage-text 
-  ;       (strcat (itoa coverage) "'  X  " (itoa coverage) "'")
-  ;   )
-  ;   (entmake
-  ;       (list
-  ;           '(0 . "TEXT")
-  ;           (cons 10 (list span span 0)) ; Upper left corner
-  ;           (cons 11 (list 0 quarter 0)) ; Second alignment point, center of text
-  ;           '(40 . 16.0)         ; Text height
-  ;           (cons 1 coverage-text) ; Text value
-  ;           '(72 . 1) ; Horizontal text justification: 1 = Center, 4 = Middle
-  ;           '(73 . 2) ; Vertical text justification: 2 = Middle
-  ;           (cons 62 color-yellow)  ; Color
-  ;           '(8 . "HeadCoverage") ; Layer
-  ;       )
-  ;   )
-  ;   (entmake 
-  ;      '(
-  ;           (0 . "ENDBLK")
-  ;           (100 . "AcDbBlockEnd") ; recommended
-  ;           (8 . "0")              ; recommended
-  ;       )
-  ;   )
+    (vla-addattribute 
+      newBlock    ; Block
+      9.0         ; Height
+      acAttributeModeLockPosition ; Mode
+      ""; Prompt
+      centerPoint ; Insertion Point
+      "MODEL"     ; Tag
+      "MOD-123"   ; Value
+    )
+  
 )
 
 ; Head Block (Normal)
@@ -788,3 +703,10 @@
     (* feet 12)
 )
 
+;(defun add-default-layers ( x / headLayer layers )
+    (setq acadObj (vlax-get-acad-object))
+    (setq temp:doc (vla-get-ActiveDocument acadObj))
+    (setq temp:layers (vla-get-layers temp:doc))
+    (setq headLayer (vla-Add temp:layers "Heads"))
+    (setq headCoverageLayer (vla-Add temp:layers "HeadCoverage"))  
+;)

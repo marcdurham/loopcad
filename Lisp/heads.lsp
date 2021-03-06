@@ -48,7 +48,7 @@
     )
     (entdel (entlast))
     (princ "\nLast entity (temp) deleted\n")
-    ;;;;;(setq model-code (model-code-from model (itoa global:head-coverage) (itoa slope) (itoa temperature)))
+    (setq model-code (strcat model "-" (itoa global:head-coverage)))
     (prompt (strcat "\nInserting Head Model Code: " model-code "\n"))
     (prompt "\nPress Esc to quit inserting heads.\n")
     ;;;(command "-INSERT" (strcat "Head" (itoa global:head-coverage) ".dwg") pt 1.0 1.0 0 model-code)
@@ -59,10 +59,10 @@
     ; Insert the block
     (setq insertionPoint (vlax-3d-point pt))
     (setq modelSpace (vla-get-ModelSpace doc))
-    (setq headBlockName (strcat "Head" global:head-coverage ".dwg"))
+    (setq headBlockName (strcat "Head" global:head-coverage))
     (princ (strcat "\n Head Block Name: " headBlockName))
-    (setq block (vla-InsertBlock modelSpace insertionPoint headBlockName 1 1 1 0 ""))
-  
+    (setq block (vla-InsertBlock modelSpace insertionPoint headBlockName 1 1 1 0 "X-2"))
+      
     ; get the block attributes
     (setq attributes (vlax-safearray->list (vlax-variant-value (vla-getAttributes block))))
     
@@ -70,6 +70,10 @@
     (vla-put-TextString (nth 0 attributes) model-code)
     
   )
+  
+  (setvar "OSMODE" old-osmode)
+    (command "-LAYER" "OFF" "HeadCoverage" "")
+    (setvar "LWDISPLAY" 1)
 )
 
 (defun swhead-insert (direction model temperature / model-code pt tmp)
