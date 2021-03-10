@@ -8,6 +8,8 @@
         (setvar "OSMODE" old-osmode)
         (setvar "LWDISPLAY" 1)
     )
+    
+    (setvar "INSUNITS" 2) ; 0 = not set, 1 = inches, 2 = feet
     (setq p (getpoint "Click insertion point for floor tag"))
     (setq floor-name (getstring T "Enter floor name")) ; getstring with T allows spaces
     (setq elevation (get-elevation p))

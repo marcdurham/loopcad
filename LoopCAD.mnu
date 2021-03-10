@@ -15,9 +15,9 @@ ID_Insert_Floor_Tag [_Button("Insert floor tag", FloorTag.bmp, FloorTag.bmp)]^C^
 ID_Join_Head_Pair [_Button("Join head pair", JoinHeadPair.bmp, JoinHeadPair.bmp)]^C^CPAIR
 ID_Label_Nodes [_Button("Label nodes", LabelNodes.bmp, LabelNodes.bmp)]^C^CLABEL-NODES
 ID_Label_Pipes [_Button("Label pipes", LabelPipes.bmp, LabelPipes.bmp)]^C^CLABEL-PIPES
-ID_Break_Pipes [_Button("Break pipes", BreakPipes.bmp, BreakPipes.bmp)]^C^CBREAK-PIPES
+//ID_Break_Pipes [_Button("Break pipes", BreakPipes.bmp, BreakPipes.bmp)]^C^CBREAK-PIPES
 ID_Insert_Job_Data [_Button("Insert job data", InsertJobData.bmp, InsertJobData.bmp)]^C^CJOB
-ID_Scan_To_CDS [_Button("Scan to CDS File", ScanToFSDX.bmp, ScanToFSDX.bmp)]^C^C(princ "Doing nothing, please save as DXF instead.")
+//ID_Scan_To_CDS [_Button("Scan to CDS File", ScanToFSDX.bmp, ScanToFSDX.bmp)]^C^C(princ "Doing nothing, please save as DXF instead.")
 
 ***HELPSTRINGS
 TBAR_LoopCADMain [LoopCADMain]

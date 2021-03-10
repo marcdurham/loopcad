@@ -32,7 +32,7 @@
         (command "-COLOR" "BYLAYER")
         (command "-LAYER" "SET" "0" "")
     )
-    (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having a different scale, being 12 time bigger than they should be
+    (setvar "INSUNITS" 2) ; 0 = not set, 1 = inches, 2 = feet
     (setvar "OSMODE" osmode-snap-ins-pts)
     (command "-LAYER" "NEW" "DomesticTees" "")
     (command "-LAYER" "COLOR" "White" "Tee" "")
