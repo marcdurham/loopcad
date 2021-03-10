@@ -1,9 +1,9 @@
-;;; VLisp project file [V2.0] LoopCAD saved to:[c:\Code\LoopCAD] at:[3/3/2021]
-(VLISP-PROJECT-LIST 
+;;; VLisp project file [V2.0] LoopCAD saved to:[C:/Code/LoopCAD] at:[3/9/21] 
+(VLISP-PROJECT-LIST
   :NAME
   LoopCAD
   :OWN-LIST
-  ("c:/Code/LoopCAD/Lisp/block-definitions" 
+  ("c:/Code/LoopCAD/Lisp/block-definitions"
     "c:/Code/LoopCAD/Lisp/break-pipes"
     "c:/Code/LoopCAD/Lisp/commands"
     "c:/Code/LoopCAD/Lisp/contains"
@@ -22,9 +22,8 @@
     "c:/Code/LoopCAD/Lisp/nodes"
     "c:/Code/LoopCAD/Lisp/pipes"
     "c:/Code/LoopCAD/Lisp/points"
-    "c:/Code/LoopCAD/Lisp/set-acad-support-path"
     "c:/Code/LoopCAD/Lisp/tees"
-  )
+   )
   :FAS-DIRECTORY
   nil
   :TMP-DIRECTORY
