@@ -1,0 +1,18 @@
+;;; Visual LISP make file [V1.0] LoopCAD saved to:[c:/Code/LoopCAD] at:[3/9/21] 
+(PRV-DEF (:target . "LoopCAD.VLX")
+	 (:active-x . T)
+	 (:separate-namespace)
+	 (:protected . T)
+	 (:load-file-list
+	   (:lsp "Lisp/commands.lsp")
+	   (:lsp "Lisp/break-pipes.lsp")
+	   (:lsp "Lisp/block-definitions.lsp")
+	   (:lsp "job_data.lsp")
+	   (:lsp "LoopCAD.lsp")
+	 )
+	 (:require-file-list (:DCL "job_data.dcl"))
+	 (:ob-directory)
+	 (:tmp-directory)
+	 (:optimization . st)
+)
+;; EOF
