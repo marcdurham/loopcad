@@ -15,7 +15,7 @@
     ; Set tiles values from job_data values saved to the DWG file
     (foreach key job_data:keys 
         (progn
-            (setq value (load-job-data key))
+            (setq value (load-job-data key ""))
             (if (not (null value))
                 (set_tile key value)
                 (set_tile key "") ; set_tile does not accept nil as a value
@@ -60,6 +60,8 @@
         "supply_pipe_fittings_summary"
         "supply_pipe_fittings_equiv_length"
         "supply_pipe_add_pressure_loss"
+        "head_model_default"
+        "head_coverage_default"
     )
 )
 
@@ -68,15 +70,14 @@
 (defun set-job-data ( key value )
   (vlax-ldata-put "job_data_temp" key value)
 )
-(defun load-job-data ( key )
-    (vlax-ldata-get "job_data_temp" key)
-)
 
 ; Data saved to the file
 ; Both dictionaries are actually saved, but job_data_temp is ignored
 ; There's no reason to delete it
-(defun load-job-data ( key )
-    (vlax-ldata-get "job_data" key)
+(defun load-job-data ( key default / a b)
+    (setq a (vlax-ldata-get "job_data" key))
+    (setq b (getcfg (strcat "AppData/LoopCAD/" key)))
+    (if a a (if b b default))
 )
 (defun save-job-data ( key value )
   (vlax-ldata-put "job_data" key value)

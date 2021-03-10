@@ -34,8 +34,8 @@
   (setvar "LWDISPLAY" 0)
   (command-s "-LAYER" "SET" "Heads" "")
   (setvar "ATTREQ" 0)
-  (setq model-code "EMPTY")
-  (setq model-default (load-job-data "default_head_model"))
+  (setq model-default (load-job-data "head_model_default" "RFC43"))
+  (setq model-code (strcat model-default "-" coverage))
   
   ;;(while T
 ;
@@ -54,6 +54,7 @@
     ; get the block attributes
     (setq attributes (vlax-safearray->list (vlax-variant-value (vla-getAttributes block))))
   
+    
     ; Set attribute values by the attribute position
     (vla-put-TextString (nth 0 attributes) model-code)
   
