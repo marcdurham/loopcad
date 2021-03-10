@@ -1,8 +1,8 @@
 ***MENUGROUP=LoopCAD
 ***TOOLBARS
 **LoopCADMain
-TBAR_LoopCADMain [_Toolbar("LoopCAD Main", _Floating, _Show, 350, 150, 0)]
-ID_Load_LoopCAD [_Button("Load LoopCAD modules", .\Icons\LoadLoopCAD.bmp, .\Icons\LoadLoopCAD.bmp)]^C^C_-VBALOAD LoopCAD.vbi;(load "LoopCAD.lsp")
+ID_LoopCADMain [_Toolbar("LoopCADMain", _Floating, _Show, 350, 150, 0)]
+ID_Load_LoopCAD [_Button("Load LoopCAD modules", .\Icons\LoadLoopCAD.bmp, .\Icons\LoadLoopCAD.bmp)]^C^C(load "LoopCAD.lsp")
 ID_Insert_Head [_Button("Insert head", .\Icons\InsertHead.bmp, .\Icons\InsertHead.bmp)]^C^CHEAD
 ID_Insert_SideWallHead [_Button("Insert side wall head", .\Icons\SideWallHead.bmp, .\Icons\SideWallHead.bmp)]^C^CSWHEAD
 ID_Draw_Pipe [_Button("Draw pipe", .\Icons\DrawPipe.bmp, .\Icons\DrawPipe.bmp)]^C^CPIPE
@@ -12,12 +12,12 @@ ID_Insert_Domestic_Tee [_Button("Insert domestic tee", .\Icons\InsertDomesticTee
 ID_Insert_Riser [_Button("Insert riser", .\Icons\Riser.bmp, .\Icons\Riser.bmp)]^C^CRISER
 ID_Insert_Floor_Tag [_Button("Insert floor tag", .\Icons\FloorTag.bmp, .\Icons\FloorTag.bmp)]^C^CFLOOR-TAG
 
-ID_Join_Head_Pair [_Button("Join head pair", .\Icons\JoinHeadPair.bmp, .\Icons\JoinHeadPair.bmp)]^C^CJOIN-HEADS
+ID_Join_Head_Pair [_Button("Join head pair", .\Icons\JoinHeadPair.bmp, .\Icons\JoinHeadPair.bmp)]^C^CPAIR
 ID_Label_Nodes [_Button("Label nodes", .\Icons\LabelNodes.bmp, .\Icons\LabelNodes.bmp)]^C^CLABEL-NODES
 ID_Label_Pipes [_Button("Label pipes", .\Icons\LabelPipes.bmp, .\Icons\LabelPipes.bmp)]^C^CLABEL-PIPES
 ID_Break_Pipes [_Button("Break pipes", .\Icons\BreakPipes.bmp, .\Icons\BreakPipes.bmp)]^C^CBREAK-PIPES
-ID_Insert_Job_Data [_Button("Insert job data", .\Icons\InsertJobData.bmp, .\Icons\InsertJobData.bmp)]^C^CINSERT-JOB-DATA
-ID_Scan_To_CDS [_Button("Scan to CDS File", .\Icons\ScanToFSDX.bmp, .\Icons\ScanToFSDX.bmp)]^C^C^C_-VBARUN DrawingScanner.Scan^C
+ID_Insert_Job_Data [_Button("Insert job data", .\Icons\InsertJobData.bmp, .\Icons\InsertJobData.bmp)]^C^CJOB
+ID_Scan_To_CDS [_Button("Scan to CDS File", .\Icons\ScanToFSDX.bmp, .\Icons\ScanToFSDX.bmp)]^C^C(princ "Doing nothing, please save as DXF instead.")
 
 ***HELPSTRINGS
 TBAR_LoopCADMain [LoopCADMain]
