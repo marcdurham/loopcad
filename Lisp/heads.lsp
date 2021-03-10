@@ -35,6 +35,8 @@
   (command-s "-LAYER" "SET" "Heads" "")
   (setvar "ATTREQ" 0)
   (setq model-code "EMPTY")
+  (setq model-default (load-job-data "default_head_model"))
+  
   ;;(while T
 ;
 ;   This section is for heads that you already know the coverage
