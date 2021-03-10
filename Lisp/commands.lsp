@@ -3,7 +3,7 @@
 (defun C:SET-HEAD-COVERAGE () (head-coverage-set))
 (defun C:SET-HEAD-SLOPE () (head-slope-set))
 (defun C:SET-HEAD-TEMP () (head-temperature-set))
-(defun C:HEAD () (head-insert-user))
+(defun C:HEAD () (head-insert-select-coverage))
 (defun C:HEAD-12 () (head-insert-coverage "12"))
 (defun C:HEAD-14 () (head-insert-coverage "14"))
 (defun C:HEAD-16 () (head-insert-coverage "16"))
@@ -23,9 +23,9 @@
 (defun C:LABEL-NODES () (label-all-nodes))
 (defun C:LABEL-PIPES () (label-all-pipes))
 (defun C:BREAK-PIPES () (break-pipes-delete-old))
-(defun C:JOIN-HEADS () (head-join))
+(defun C:PAIR () (head-pair))
 (defun C:RISER () (riser-insert))
 (defun C:FLOOR-TAG () (floor-tag-insert))
-(defun C:JOB-DATA () (job-data-dialog))
+(defun C:JOB () (job-data-dialog))
 
 (princ) ; exit quietly

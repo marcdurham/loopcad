@@ -709,4 +709,7 @@
     (setq temp:layers (vla-get-layers temp:doc))
     (setq headLayer (vla-Add temp:layers "Heads"))
     (setq headCoverageLayer (vla-Add temp:layers "HeadCoverage"))  
+    (setq headPairsLayer (vla-Add temp:layers "HeadPairs"))  
+
+    (command "-LAYER" "COLOR" "Yellow" "HeadPairs" "")
 ;)
