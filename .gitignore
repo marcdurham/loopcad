@@ -11,5 +11,7 @@ Archive/
 # Binary Menu Files
 *.mnr
 *.cuix
-
+*.fas
+*.pdb
+*.ob
 
