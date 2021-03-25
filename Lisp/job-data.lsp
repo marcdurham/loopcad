@@ -68,7 +68,6 @@
 
 ; JOB-DATA functions, called only by job_data dialog.
 (defun set-job-data ( key value )
-    (princ (strcat "\nset-job-data: key: " key " value: " value))
     (set-dict-data "job_data_temp" key value)
 )
 
@@ -76,27 +75,26 @@
 ; Both dictionaries are actually saved, but job_data_temp is ignored
 ; There's no reason to delete it
 (defun load-job-data ( key default / a b)
-    (princ (strcat "\nload-job-data: key: " key " default " default))
+    ; First try getting it from the "job_data" dictionary entry
     (setq a (get-dict-data "job_data" key))
+    ; Next try getting it from the config in the Windows registry
     (setq b (getcfg (strcat "AppData/LoopCAD/" key)))
+    ; Last, if it's in none of the above locations: return the default
     (if a a (if b b default))
 )
 
 (defun save-job-data ( key value )
-    (princ (strcat "\nsave-job-data: key: " key " value: " value))
     (if (= value nil)
         (set-dict-data "job_data" key "")
         (set-dict-data "job_data" key value)
     )
-    t
+    nil
 )
-
 
 ; Generic DICT-DATA functions
 ; ****************************************************************
 ; Get a text value from the named dictionary
 (defun get-dict-data (dict-name key / value)
-    (princ (strcat "\nget-dict-data: dict-name: " dict-name " key: " key))
     (setq value (cdr (assoc 1 (dictsearch (get-data-dict dict-name) key))))
     (if (= value nill)
         (setq value "")
@@ -106,14 +104,15 @@
 
 ; Set a text value in the named dictionary
 (defun set-dict-data (dict-name key value / data-dict xrecord)
-    (princ (strcat "\nset-dict-data: dict-name: " dict-name " key: " key " value: " value))
     (if (= value nil)
-        (setq value "")
+        (setq value "") ; We must convert any nil values to empty strings
+                        ; so we don't break the DCL form which can't use
+                        ; nill in a text box
     )
     (setq data-dict (get-data-dict dict-name))
-    ; If the XRecord does exist
+    ; Check to see if the XRecord exists
     (if (setq xrecord (dictsearch data-dict key))
-        (progn ; It does exist
+        (progn ; It does exist, remove it, and re-create it
             (dictremove (get-data-dict dict-name) key)
             (setq xrecord (entmakex 
                 (list 
@@ -122,12 +121,10 @@
                   (cons 1 value) ; Text value
                 ))
             )
-            ; If creation succeeded then add it to the dictionary
+            ; Add it to the dictionary
             (if xrecord (setq xrecord (dictadd data-dict key xrecord)))
-            (princ (strcat "\nValue Removed and Added to " dict-name " Key: " key " Value: " value))
-            ;;;(princ (strcat "    Type of Value Added to " dict-name " Key: " key " Value Type: " (type value)))
         )
-        (progn ; It does not exist
+        (progn ; It does not exist so create the XRecord
             (setq xrecord (entmakex 
                 (list 
                   '(0 . "XRECORD")
@@ -135,15 +132,13 @@
                   (cons 1 value) ; Text value
                 ))
             )
-            ; If creation succeeded then add it to the dictionary
+            ; Add it to the dictionary
             (if xrecord (setq xrecord (dictadd data-dict key xrecord)))
-            (princ (strcat "\nValue Added to " dict-name " Key: " key " Value: " value))
-            ;;;(princ (strcat "    Type of Value Added to " dict-name " Key: " key " Value Type: " (type value)))
         )
     )
 )
 
-; Get or create and get the named dictionary
+; Get the named dictionary, create it first if needed
 (defun get-data-dict (dict-name / data-dict)
     ; If "data-dict" is already present in the main dictionary
     (if (not (setq data-dict (dictsearch (namedobjdict) dict-name)))
