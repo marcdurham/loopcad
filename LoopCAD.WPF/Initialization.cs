@@ -63,6 +63,8 @@ namespace LoopCAD.WPF
             Transaction trans = db.TransactionManager.StartTransaction();
 
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
+            var styles = trans.GetObject(db.TextStyleTableId, OpenMode.ForWrite) as TextStyleTable;
+            var currentStyle = trans.GetObject(db.Textstyle, OpenMode.ForWrite) as TextStyleTableRecord;
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
 
             //dynamic bt = db.BlockTableId;
@@ -77,10 +79,28 @@ namespace LoopCAD.WPF
                 {
                 nodeLabelDef = new BlockTableRecord();
                 nodeLabelDef.Name = "NodeLabel";
+
+                var style = new TextStyleTableRecord()
+                {
+                    Font = new Autodesk.AutoCAD.GraphicsInterface.FontDescriptor(
+                        "ARIAL", 
+                        bold: false, 
+                        italic: false, 
+                        characters: currentStyle.Font.CharacterSet, 
+                        pitchAndFamily: currentStyle.Font.PitchAndFamily),
+                };
+
+                ObjectId styleId = styles.Add(style);
+                trans.AddNewlyCreatedDBObject(style, true);
+
                 AttributeDefinition attRef = new AttributeDefinition();
+                attRef.Height = 4.75;
+                attRef.TextStyleId = styleId;
+
+
                 attRef.Tag = "NODENUMBER";
                 attRef.TextString = "N.99";
-                attRef.Position = new Point3d(6, 6, 0);
+                attRef.Position = new Point3d(6, -6, 0);
                 nodeLabelDef.AppendEntity(attRef);
                 nodeLabelId = blkTbl.Add(nodeLabelDef);
                 trans.AddNewlyCreatedDBObject(nodeLabelDef, true);
