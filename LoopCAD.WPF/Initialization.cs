@@ -79,32 +79,7 @@ namespace LoopCAD.WPF
                     if (string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase)
                         && block.Name.ToUpper().StartsWith("HEAD"))
                     {
-                        var newBlockRef = new BlockReference(block.Position, nodeLabelDef.Id);
-
-                        modelSpace.AppendEntity(newBlockRef);
-                        trans.AddNewlyCreatedDBObject(newBlockRef, true);
-
-                        // Iterate block definition to find all non-constant
-                        // AttributeDefinitions
-                        foreach (ObjectId id in nodeLabelDef)
-                        {
-                            DBObject obj = id.GetObject(OpenMode.ForRead);
-                            var attDef = obj as AttributeDefinition;
-
-                            if ((attDef != null) && (!attDef.Constant) && attDef.Tag.ToUpper() == "NODENUMBER")
-                            {
-                                //This is a non-constant AttributeDefinition
-                                //Create a new AttributeReference
-                                using (var attRef = new AttributeReference())
-                                {
-                                    attRef.SetAttributeFromBlock(attDef, newBlockRef.BlockTransform);
-                                    attRef.TextString = $"N.{nodeNumber++}";
-                                    //Add the AttributeReference to the BlockReference
-                                    newBlockRef.AttributeCollection.AppendAttribute(attRef);
-                                    trans.AddNewlyCreatedDBObject(attRef, true);
-                                }
-                            }
-                        }
+                        nodeNumber = CreateLabel(trans, modelSpace, nodeLabelDef, nodeNumber, block);
 
                         var pipeLabel = new DBText()
                         {
@@ -121,6 +96,38 @@ namespace LoopCAD.WPF
             }
 
             trans.Commit();
+        }
+
+        private static int CreateLabel(Transaction trans, BlockTableRecord modelSpace, BlockTableRecord nodeLabelDef, int nodeNumber, BlockReference block)
+        {
+            var newBlockRef = new BlockReference(block.Position, nodeLabelDef.Id);
+
+            modelSpace.AppendEntity(newBlockRef);
+            trans.AddNewlyCreatedDBObject(newBlockRef, true);
+
+            // Iterate block definition to find all non-constant
+            // AttributeDefinitions
+            foreach (ObjectId id in nodeLabelDef)
+            {
+                DBObject obj = id.GetObject(OpenMode.ForRead);
+                var attDef = obj as AttributeDefinition;
+
+                if ((attDef != null) && (!attDef.Constant) && attDef.Tag.ToUpper() == "NODENUMBER")
+                {
+                    //This is a non-constant AttributeDefinition
+                    //Create a new AttributeReference
+                    using (var attRef = new AttributeReference())
+                    {
+                        attRef.SetAttributeFromBlock(attDef, newBlockRef.BlockTransform);
+                        attRef.TextString = $"N.{nodeNumber++}";
+                        //Add the AttributeReference to the BlockReference
+                        newBlockRef.AttributeCollection.AppendAttribute(attRef);
+                        trans.AddNewlyCreatedDBObject(attRef, true);
+                    }
+                }
+            }
+
+            return nodeNumber;
         }
 
         private static BlockTableRecord NodeLabel(Transaction trans)
