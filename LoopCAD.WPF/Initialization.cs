@@ -64,7 +64,7 @@ namespace LoopCAD.WPF
 
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
             var styles = trans.GetObject(db.TextStyleTableId, OpenMode.ForWrite) as TextStyleTable;
-            var currentStyle = trans.GetObject(db.Textstyle, OpenMode.ForWrite) as TextStyleTableRecord;
+
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
 
             //dynamic bt = db.BlockTableId;
@@ -76,22 +76,11 @@ namespace LoopCAD.WPF
             ObjectId nodeLabelId = ObjectId.Null;
             BlockTableRecord nodeLabelDef;
             if (!blkTbl.Has("NodeLabel"))
-                {
+            {
                 nodeLabelDef = new BlockTableRecord();
                 nodeLabelDef.Name = "NodeLabel";
 
-                var style = new TextStyleTableRecord()
-                {
-                    Font = new Autodesk.AutoCAD.GraphicsInterface.FontDescriptor(
-                        "ARIAL", 
-                        bold: false, 
-                        italic: false, 
-                        characters: currentStyle.Font.CharacterSet, 
-                        pitchAndFamily: currentStyle.Font.PitchAndFamily),
-                };
-
-                ObjectId styleId = styles.Add(style);
-                trans.AddNewlyCreatedDBObject(style, true);
+                ObjectId styleId = ArialStyle(trans, styles, db);
 
                 AttributeDefinition attRef = new AttributeDefinition();
                 attRef.Height = 4.75;
@@ -104,7 +93,7 @@ namespace LoopCAD.WPF
                 nodeLabelDef.AppendEntity(attRef);
                 nodeLabelId = blkTbl.Add(nodeLabelDef);
                 trans.AddNewlyCreatedDBObject(nodeLabelDef, true);
-            } 
+            }
             else
             {
                 nodeLabelId = blkTbl["NodeLabel"];
@@ -195,6 +184,25 @@ namespace LoopCAD.WPF
             //trans.AddNewlyCreatedDBObject(lineObj, true);
             trans.Commit();
 
+        }
+
+        private static ObjectId ArialStyle(Transaction trans, TextStyleTable styles, Database db)
+        {
+            var currentStyle = trans.GetObject(db.Textstyle, OpenMode.ForWrite) as TextStyleTableRecord;
+
+            var style = new TextStyleTableRecord()
+            {
+                Font = new Autodesk.AutoCAD.GraphicsInterface.FontDescriptor(
+                    "ARIAL",
+                    bold: false,
+                    italic: false,
+                    characters: currentStyle.Font.CharacterSet,
+                    pitchAndFamily: currentStyle.Font.PitchAndFamily),
+            };
+
+            ObjectId styleId = styles.Add(style);
+            trans.AddNewlyCreatedDBObject(style, true);
+            return styleId;
         }
 
         [CommandMethod("LABELSTUFF")]
