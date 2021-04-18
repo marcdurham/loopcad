@@ -5,6 +5,7 @@ using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -63,7 +64,7 @@ namespace LoopCAD.WPF
             Transaction trans = db.TransactionManager.StartTransaction();
 
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
-            var styles = trans.GetObject(db.TextStyleTableId, OpenMode.ForWrite) as TextStyleTable;
+            
 
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
 
@@ -73,31 +74,22 @@ namespace LoopCAD.WPF
             //Point3d pnt2 = new Point3d(10, 10, 0);
 
             //Line lineObj = new Line(pnt1, pnt2);
-            ObjectId nodeLabelId = ObjectId.Null;
+            
+            //ObjectId nodeLabelId = ObjectId.Null;
             BlockTableRecord nodeLabelDef;
             if (!blkTbl.Has("NodeLabel"))
             {
-                nodeLabelDef = new BlockTableRecord();
-                nodeLabelDef.Name = "NodeLabel";
-
-                ObjectId styleId = ArialStyle(trans, styles, db);
-
-                AttributeDefinition attRef = new AttributeDefinition();
-                attRef.Height = 4.75;
-                attRef.TextStyleId = styleId;
-
-
-                attRef.Tag = "NODENUMBER";
-                attRef.TextString = "N.99";
-                attRef.Position = new Point3d(6, -6, 0);
-                nodeLabelDef.AppendEntity(attRef);
-                nodeLabelId = blkTbl.Add(nodeLabelDef);
+                nodeLabelDef = NodeLabelDefFrom(db, trans, blkTbl);
                 trans.AddNewlyCreatedDBObject(nodeLabelDef, true);
             }
             else
             {
-                nodeLabelId = blkTbl["NodeLabel"];
-                nodeLabelDef = trans.GetObject(nodeLabelId, OpenMode.ForRead) as BlockTableRecord;
+                //nodeLabelId = blkTbl["NodeLabel"];
+                nodeLabelDef = trans.GetObject(blkTbl["NodeLabel"], OpenMode.ForRead) as BlockTableRecord;
+                //if(nodeLabelDef.Id == nodeLabelId)
+                //{
+                //    Debug.WriteLine("Yep");
+                //}
             }
 
             int pipeNumber = 1;
@@ -111,7 +103,7 @@ namespace LoopCAD.WPF
                     if(string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase)
                         && block.Name.ToUpper().StartsWith("HEAD"))
                     {
-                        BlockReference newBlockRef = new BlockReference(block.Position, nodeLabelId);
+                        BlockReference newBlockRef = new BlockReference(block.Position, nodeLabelDef.Id);
                         
                         modelSpace.AppendEntity(newBlockRef);
                         trans.AddNewlyCreatedDBObject(newBlockRef, true);
@@ -186,8 +178,28 @@ namespace LoopCAD.WPF
 
         }
 
-        private static ObjectId ArialStyle(Transaction trans, TextStyleTable styles, Database db)
+        private static BlockTableRecord NodeLabelDefFrom(Database db, Transaction trans, BlockTable blkTbl)
         {
+            var nodeLabelDef = new BlockTableRecord();
+            nodeLabelDef.Name = "NodeLabel";
+
+            var attRef = new AttributeDefinition();
+            attRef.Height = 4.75;
+            attRef.TextStyleId = ArialStyle(trans, db);
+
+
+            attRef.Tag = "NODENUMBER";
+            attRef.TextString = "N.99";
+            attRef.Position = new Point3d(6, -6, 0);
+            nodeLabelDef.AppendEntity(attRef);
+            blkTbl.Add(nodeLabelDef);
+            
+            return nodeLabelDef;
+        }
+
+        private static ObjectId ArialStyle(Transaction trans, Database db)
+        {
+            var styles = trans.GetObject(db.TextStyleTableId, OpenMode.ForWrite) as TextStyleTable;
             var currentStyle = trans.GetObject(db.Textstyle, OpenMode.ForWrite) as TextStyleTableRecord;
 
             var style = new TextStyleTableRecord()
@@ -201,7 +213,9 @@ namespace LoopCAD.WPF
             };
 
             ObjectId styleId = styles.Add(style);
+            
             trans.AddNewlyCreatedDBObject(style, true);
+            
             return styleId;
         }
 
