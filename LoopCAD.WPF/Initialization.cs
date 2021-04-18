@@ -62,43 +62,52 @@ namespace LoopCAD.WPF
 
             Database db = HostApplicationServices.WorkingDatabase;
             Transaction trans = db.TransactionManager.StartTransaction();
-
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
-
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-            
-           
 
             int pipeNumber = 1;
             int nodeNumber = 1;
             foreach (var objectId in modelSpace)
             {
-                if (objectId.ObjectClass.DxfName == "INSERT")
+                if(IsHead(trans, objectId))
                 {
                     var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-                    if (string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase)
-                        && block.Name.ToUpper().StartsWith("HEAD"))
-                    {
-                        CreateLabel(trans, $"N.{nodeNumber++}", block.Position);
 
-                        var pipeLabel = new DBText()
-                        {
-                            Layer = "Heads",
-                            ColorIndex = 150,
-                            TextString = $"p{pipeNumber}",
-                            Position = block.Position
-                        };
-
-                        modelSpace.AppendEntity(pipeLabel);
-                        trans.AddNewlyCreatedDBObject(pipeLabel, true);
-                    }
+                    CreateNodeLabel(trans, $"N.{nodeNumber++}", block.Position);
+                    CreatePipeLabel(trans, pipeNumber, block.Position);
                 }
             }
 
             trans.Commit();
         }
 
-        private static void CreateLabel(Transaction trans, string text, Point3d position)
+        bool IsHead(Transaction trans, ObjectId objectId)
+        {
+            var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+            return objectId.ObjectClass.DxfName == "INSERT" && 
+                string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase) &&
+                block.Name.ToUpper().StartsWith("HEAD");
+        }
+
+        static void CreatePipeLabel(Transaction trans, int pipeNumber, Point3d position)
+        {
+            Database db = HostApplicationServices.WorkingDatabase;
+            BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
+            BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
+
+            var pipeLabel = new DBText()
+            {
+                Layer = "Heads",
+                ColorIndex = 150,
+                TextString = $"p{pipeNumber}",
+                Position = position
+            };
+
+            modelSpace.AppendEntity(pipeLabel);
+            trans.AddNewlyCreatedDBObject(pipeLabel, true);
+        }
+
+        static void CreateNodeLabel(Transaction trans, string text, Point3d position)
         {
             Database db = HostApplicationServices.WorkingDatabase;
       
@@ -136,7 +145,7 @@ namespace LoopCAD.WPF
             }
         }
 
-        private static BlockTableRecord NodeLabel(Transaction trans)
+        static BlockTableRecord NodeLabel(Transaction trans)
         {
             Database db = HostApplicationServices.WorkingDatabase;
             var blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
@@ -159,15 +168,14 @@ namespace LoopCAD.WPF
             return nodeLabelDef;
         }
 
-        private static BlockTableRecord NodeLabelDefFrom(Transaction trans, BlockTable blkTbl)
+        static BlockTableRecord NodeLabelDefFrom(Transaction trans, BlockTable blkTbl)
         {
-            Database db = HostApplicationServices.WorkingDatabase;
             var nodeLabelDef = new BlockTableRecord();
             nodeLabelDef.Name = "NodeLabel";
 
             var attRef = new AttributeDefinition();
             attRef.Height = 4.75;
-            attRef.TextStyleId = ArialStyle(trans, db);
+            attRef.TextStyleId = ArialStyle(trans);
 
 
             attRef.Tag = "NODENUMBER";
@@ -179,8 +187,9 @@ namespace LoopCAD.WPF
             return nodeLabelDef;
         }
 
-        private static ObjectId ArialStyle(Transaction trans, Database db)
+        static ObjectId ArialStyle(Transaction trans)
         {
+            Database db = HostApplicationServices.WorkingDatabase;
             var styles = trans.GetObject(db.TextStyleTableId, OpenMode.ForWrite) as TextStyleTable;
             var currentStyle = trans.GetObject(db.Textstyle, OpenMode.ForWrite) as TextStyleTableRecord;
 
