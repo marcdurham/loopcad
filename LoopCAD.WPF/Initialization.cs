@@ -64,47 +64,32 @@ namespace LoopCAD.WPF
             Transaction trans = db.TransactionManager.StartTransaction();
 
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
-            
 
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
 
             //dynamic bt = db.BlockTableId;
-            string str = "ABC";
+
             //Point3d pnt1 = new Point3d(0, 0, 0);
             //Point3d pnt2 = new Point3d(10, 10, 0);
 
             //Line lineObj = new Line(pnt1, pnt2);
-            
+
             //ObjectId nodeLabelId = ObjectId.Null;
-            BlockTableRecord nodeLabelDef;
-            if (!blkTbl.Has("NodeLabel"))
-            {
-                nodeLabelDef = NodeLabelDefFrom(db, trans, blkTbl);
-                trans.AddNewlyCreatedDBObject(nodeLabelDef, true);
-            }
-            else
-            {
-                //nodeLabelId = blkTbl["NodeLabel"];
-                nodeLabelDef = trans.GetObject(blkTbl["NodeLabel"], OpenMode.ForRead) as BlockTableRecord;
-                //if(nodeLabelDef.Id == nodeLabelId)
-                //{
-                //    Debug.WriteLine("Yep");
-                //}
-            }
+            BlockTableRecord nodeLabelDef = NodeLabel(db, trans);
 
             int pipeNumber = 1;
             int nodeNumber = 1;
-            foreach(var objectId in modelSpace)
+            foreach (var objectId in modelSpace)
             {
-                if(objectId.ObjectClass.DxfName == "INSERT")    
+                if (objectId.ObjectClass.DxfName == "INSERT")
                 {
-                    System.Diagnostics.Debug.WriteLine("found a block");
+                    Debug.WriteLine("found a block");
                     BlockReference block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-                    if(string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase)
+                    if (string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase)
                         && block.Name.ToUpper().StartsWith("HEAD"))
                     {
                         BlockReference newBlockRef = new BlockReference(block.Position, nodeLabelDef.Id);
-                        
+
                         modelSpace.AppendEntity(newBlockRef);
                         trans.AddNewlyCreatedDBObject(newBlockRef, true);
 
@@ -150,7 +135,7 @@ namespace LoopCAD.WPF
                             TextString = $"p{pipeNumber}",
                             Position = block.Position
                         };
-                        
+
                         modelSpace.AppendEntity(pipeLabel);
                         trans.AddNewlyCreatedDBObject(pipeLabel, true);
                     }
@@ -169,13 +154,35 @@ namespace LoopCAD.WPF
 
             //Point3d pnt1 = new Point3d(0, 0, 0);
             //Point3d pnt2 = new Point3d(10, 10, 0);
-            
+
             //Line lineObj = new Line(pnt1, pnt2);
-            
+
             //modelSpace.AppendEntity(lineObj);
             //trans.AddNewlyCreatedDBObject(lineObj, true);
             trans.Commit();
 
+        }
+
+        private static BlockTableRecord NodeLabel(Database db, Transaction trans)
+        {
+            var blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
+            BlockTableRecord nodeLabelDef;
+            if (!blkTbl.Has("NodeLabel"))
+            {
+                nodeLabelDef = NodeLabelDefFrom(db, trans, blkTbl);
+                trans.AddNewlyCreatedDBObject(nodeLabelDef, true);
+            }
+            else
+            {
+                //nodeLabelId = blkTbl["NodeLabel"];
+                nodeLabelDef = trans.GetObject(blkTbl["NodeLabel"], OpenMode.ForRead) as BlockTableRecord;
+                //if(nodeLabelDef.Id == nodeLabelId)
+                //{
+                //    Debug.WriteLine("Yep");
+                //}
+            }
+
+            return nodeLabelDef;
         }
 
         private static BlockTableRecord NodeLabelDefFrom(Database db, Transaction trans, BlockTable blkTbl)
