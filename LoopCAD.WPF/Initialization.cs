@@ -67,7 +67,7 @@ namespace LoopCAD.WPF
 
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
             
-            BlockTableRecord nodeLabelDef = NodeLabel(trans);
+           
 
             int pipeNumber = 1;
             int nodeNumber = 1;
@@ -79,7 +79,7 @@ namespace LoopCAD.WPF
                     if (string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase)
                         && block.Name.ToUpper().StartsWith("HEAD"))
                     {
-                        nodeNumber = CreateLabel(trans, modelSpace, nodeLabelDef, nodeNumber, block);
+                        CreateLabel(trans, $"N.{nodeNumber++}", block.Position);
 
                         var pipeLabel = new DBText()
                         {
@@ -98,9 +98,17 @@ namespace LoopCAD.WPF
             trans.Commit();
         }
 
-        private static int CreateLabel(Transaction trans, BlockTableRecord modelSpace, BlockTableRecord nodeLabelDef, int nodeNumber, BlockReference block)
+        private static void CreateLabel(Transaction trans, string text, Point3d position)
         {
-            var newBlockRef = new BlockReference(block.Position, nodeLabelDef.Id);
+            Database db = HostApplicationServices.WorkingDatabase;
+      
+            BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
+
+            BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
+
+
+            BlockTableRecord nodeLabelDef = NodeLabel(trans);
+            var newBlockRef = new BlockReference(position, nodeLabelDef.Id);
 
             modelSpace.AppendEntity(newBlockRef);
             trans.AddNewlyCreatedDBObject(newBlockRef, true);
@@ -119,15 +127,13 @@ namespace LoopCAD.WPF
                     using (var attRef = new AttributeReference())
                     {
                         attRef.SetAttributeFromBlock(attDef, newBlockRef.BlockTransform);
-                        attRef.TextString = $"N.{nodeNumber++}";
+                        attRef.TextString = text;
                         //Add the AttributeReference to the BlockReference
                         newBlockRef.AttributeCollection.AppendAttribute(attRef);
                         trans.AddNewlyCreatedDBObject(attRef, true);
                     }
                 }
             }
-
-            return nodeNumber;
         }
 
         private static BlockTableRecord NodeLabel(Transaction trans)
