@@ -66,16 +66,8 @@ namespace LoopCAD.WPF
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
 
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-
-            //dynamic bt = db.BlockTableId;
-
-            //Point3d pnt1 = new Point3d(0, 0, 0);
-            //Point3d pnt2 = new Point3d(10, 10, 0);
-
-            //Line lineObj = new Line(pnt1, pnt2);
-
-            //ObjectId nodeLabelId = ObjectId.Null;
-            BlockTableRecord nodeLabelDef = NodeLabel(db, trans);
+            
+            BlockTableRecord nodeLabelDef = NodeLabel(trans);
 
             int pipeNumber = 1;
             int nodeNumber = 1;
@@ -83,28 +75,27 @@ namespace LoopCAD.WPF
             {
                 if (objectId.ObjectClass.DxfName == "INSERT")
                 {
-                    Debug.WriteLine("found a block");
-                    BlockReference block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+                    var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
                     if (string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase)
                         && block.Name.ToUpper().StartsWith("HEAD"))
                     {
-                        BlockReference newBlockRef = new BlockReference(block.Position, nodeLabelDef.Id);
+                        var newBlockRef = new BlockReference(block.Position, nodeLabelDef.Id);
 
                         modelSpace.AppendEntity(newBlockRef);
                         trans.AddNewlyCreatedDBObject(newBlockRef, true);
 
-                        //Iterate block definition to find all non-constant
+                        // Iterate block definition to find all non-constant
                         // AttributeDefinitions
                         foreach (ObjectId id in nodeLabelDef)
                         {
                             DBObject obj = id.GetObject(OpenMode.ForRead);
-                            AttributeDefinition attDef = obj as AttributeDefinition;
+                            var attDef = obj as AttributeDefinition;
 
                             if ((attDef != null) && (!attDef.Constant) && attDef.Tag.ToUpper() == "NODENUMBER")
                             {
                                 //This is a non-constant AttributeDefinition
                                 //Create a new AttributeReference
-                                using (AttributeReference attRef = new AttributeReference())
+                                using (var attRef = new AttributeReference())
                                 {
                                     attRef.SetAttributeFromBlock(attDef, newBlockRef.BlockTransform);
                                     attRef.TextString = $"N.{nodeNumber++}";
@@ -115,19 +106,6 @@ namespace LoopCAD.WPF
                             }
                         }
 
-                        //foreach (ObjectId attributeId in newBlockRef.AttributeCollection)
-                        //{
-                        //    AttributeReference attribute = trans.GetObject(attributeId, OpenMode.ForRead) as AttributeReference;
-                        //    if(string.Equals(attribute.Tag, "NODENUMBER", StringComparison.OrdinalIgnoreCase))
-                        //    {
-                        //        attribute.UpgradeOpen();
-                        //        attribute.TextString = $"N.{nodeNumber++}";
-                        //        attribute.DowngradeOpen();
-                        //    }
-                        //}
-
-
-                        System.Diagnostics.Debug.WriteLine("found a head");
                         var pipeLabel = new DBText()
                         {
                             Layer = "Heads",
@@ -142,34 +120,17 @@ namespace LoopCAD.WPF
                 }
             }
 
-            //var textEnts = 
-            //    from btrs in (IEnumerable<dynamic>)bt
-            //    from ent in (IEnumerable<dynamic>)btrs
-            //    where
-            //    ((ent.IsKindOf(typeof(DBText)) &&
-            //        (ent.TextString.Contains(str))) ||
-            //    (ent.IsKindOf(typeof(MText)) &&
-            //        (ent.Contents.Contains(str))))
-            //    select ent;
-
-            //Point3d pnt1 = new Point3d(0, 0, 0);
-            //Point3d pnt2 = new Point3d(10, 10, 0);
-
-            //Line lineObj = new Line(pnt1, pnt2);
-
-            //modelSpace.AppendEntity(lineObj);
-            //trans.AddNewlyCreatedDBObject(lineObj, true);
             trans.Commit();
-
         }
 
-        private static BlockTableRecord NodeLabel(Database db, Transaction trans)
+        private static BlockTableRecord NodeLabel(Transaction trans)
         {
+            Database db = HostApplicationServices.WorkingDatabase;
             var blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
             BlockTableRecord nodeLabelDef;
             if (!blkTbl.Has("NodeLabel"))
             {
-                nodeLabelDef = NodeLabelDefFrom(db, trans, blkTbl);
+                nodeLabelDef = NodeLabelDefFrom(trans, blkTbl);
                 trans.AddNewlyCreatedDBObject(nodeLabelDef, true);
             }
             else
@@ -185,8 +146,9 @@ namespace LoopCAD.WPF
             return nodeLabelDef;
         }
 
-        private static BlockTableRecord NodeLabelDefFrom(Database db, Transaction trans, BlockTable blkTbl)
+        private static BlockTableRecord NodeLabelDefFrom(Transaction trans, BlockTable blkTbl)
         {
+            Database db = HostApplicationServices.WorkingDatabase;
             var nodeLabelDef = new BlockTableRecord();
             nodeLabelDef.Name = "NodeLabel";
 
