@@ -36,7 +36,7 @@ namespace LoopCAD.WPF
 
         void CreateNodeLabel(string text, Point3d position)
         {
-            BlockTableRecord record = Create();
+            BlockTableRecord record = ExistingOrNewLabelDef();
             var blockRef = new BlockReference(position, record.Id);
             blockRef.Layer = layer;
 
@@ -61,13 +61,13 @@ namespace LoopCAD.WPF
             }
         }
 
-        BlockTableRecord Create()
+        BlockTableRecord ExistingOrNewLabelDef()
         {
             BlockTableRecord record;
 
             if (!table.Has(blockName))
             {
-                record = NodeLabelDefFrom(table);
+                record = LabelDefFrom(table);
                 transaction.AddNewlyCreatedDBObject(record, true);
             }
             else
@@ -78,7 +78,7 @@ namespace LoopCAD.WPF
             return record;
         }
 
-        BlockTableRecord NodeLabelDefFrom(BlockTable table)
+        BlockTableRecord LabelDefFrom(BlockTable table)
         {
             var record = new BlockTableRecord
             {
