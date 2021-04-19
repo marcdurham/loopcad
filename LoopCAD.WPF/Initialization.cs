@@ -111,26 +111,6 @@ namespace LoopCAD.WPF
                 block.Name.ToUpper().StartsWith("TEE");
         }
 
-        static void CreatePipeLabel(Transaction trans, int pipeNumber, Point3d position)
-        {
-            Database db = HostApplicationServices.WorkingDatabase;
-            BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
-            BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-
-            var pipeLabel = new DBText()
-            {
-                Layer = "Heads",
-                ColorIndex = ColorsByIndex.ByLayer,
-                TextString = $"p{pipeNumber}",
-                Position = position
-            };
-
-            modelSpace.AppendEntity(pipeLabel);
-            trans.AddNewlyCreatedDBObject(pipeLabel, true);
-        }
-
-     
-
         [CommandMethod("LABELPIPES")]
         public void LabelPipesCommand()
         {
