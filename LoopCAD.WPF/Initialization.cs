@@ -64,7 +64,8 @@ namespace LoopCAD.WPF
             Database db = HostApplicationServices.WorkingDatabase;
             Transaction trans = db.TransactionManager.StartTransaction();
 
-            var labeler = new Labeler(trans);
+            var headLabeler = new Labeler(trans, "HEADNUMBER", "HeadLabel", "HeadLabels");
+            var teeLabeler = new Labeler(trans, "TEENUMBER", "TeeLabel", "TeeLabels");
 
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
@@ -80,14 +81,14 @@ namespace LoopCAD.WPF
                 {
                     var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
 
-                    labeler.CreateNodeLabel($"H.{headNumber++}", block.Position, "HEADNUMBER", "HeadLabel", "HeadLabels");
+                    headLabeler.CreateLabel($"H.{headNumber++}", block.Position);
                     //CreatePipeLabel(trans, pipeNumber, block.Position);
                 }
                 else if (IsTee(trans, objectId))
                 {
                     var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
 
-                    labeler.CreateNodeLabel($"T.{teeNumber++}", block.Position, "TEENUMBER", "TeeLabel", "TeeLabels");
+                    teeLabeler.CreateLabel($"T.{teeNumber++}", block.Position);
                 }
             }
 

@@ -13,7 +13,7 @@ namespace LoopCAD.WPF
         string blockName = "";
         string layer = "";
 
-        public Labeler(Transaction transaction)
+        public Labeler(Transaction transaction, string tag, string blockName, string layer)
         {
             this.transaction = transaction;
             db = HostApplicationServices.WorkingDatabase;
@@ -24,17 +24,18 @@ namespace LoopCAD.WPF
             modelSpace = transaction.GetObject(
                 table[BlockTableRecord.ModelSpace],
                 OpenMode.ForWrite) as BlockTableRecord;
-        }
 
-        public void CreateNodeLabel(string text, Point3d position, string tag, string blockName, string layer)
-        {
             this.tag = tag;
             this.blockName = blockName;
             this.layer = layer;
-            CreateNodeLabel(text, position);
         }
 
-        void CreateNodeLabel(string text, Point3d position)
+        public void CreateLabel(string text, Point3d position)
+        {
+            NewNodeLabel(text, position);
+        }
+
+        void NewNodeLabel(string text, Point3d position)
         {
             BlockTableRecord record = ExistingOrNewLabelDef();
             var blockRef = new BlockReference(position, record.Id);
