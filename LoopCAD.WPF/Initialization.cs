@@ -67,14 +67,23 @@ namespace LoopCAD.WPF
 
             int pipeNumber = 1;
             int nodeNumber = 1;
+            int headNumber = 1;
+            int teeNumber = 1;
+            int riserNumber = 1;
             foreach (var objectId in modelSpace)
             {
-                if(IsHead(trans, objectId))
+                if (IsHead(trans, objectId))
                 {
                     var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
 
-                    CreateNodeLabel(trans, $"N.{nodeNumber++}", block.Position);
-                    CreatePipeLabel(trans, pipeNumber, block.Position);
+                    CreateNodeLabel(trans, $"H.{headNumber++}", block.Position);
+                    //CreatePipeLabel(trans, pipeNumber, block.Position);
+                }
+                else if (IsTee(trans, objectId))
+                {
+                    var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+
+                    CreateNodeLabel(trans, $"T.{teeNumber++}", block.Position);
                 }
             }
 
@@ -87,6 +96,14 @@ namespace LoopCAD.WPF
             return objectId.ObjectClass.DxfName == "INSERT" && 
                 string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase) &&
                 block.Name.ToUpper().StartsWith("HEAD");
+        }
+
+        bool IsTee(Transaction trans, ObjectId objectId)
+        {
+            var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+            return objectId.ObjectClass.DxfName == "INSERT" &&
+                string.Equals(block.Layer, "Tees", StringComparison.OrdinalIgnoreCase) &&
+                block.Name.ToUpper().StartsWith("TEE");
         }
 
         static void CreatePipeLabel(Transaction trans, int pipeNumber, Point3d position)
