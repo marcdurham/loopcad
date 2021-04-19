@@ -1,4 +1,5 @@
-﻿using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.Colors;
+using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 
 namespace LoopCAD.WPF
@@ -12,8 +13,9 @@ namespace LoopCAD.WPF
         string tag = "";
         string blockName = "";
         string layer = "";
+        short layerColorIndex = ColorsByIndex.White;
 
-        public Labeler(Transaction transaction, string tag, string blockName, string layer)
+        public Labeler(Transaction transaction, string tag, string blockName, string layer, short layerColorIndex)
         {
             this.transaction = transaction;
             db = HostApplicationServices.WorkingDatabase;
@@ -28,6 +30,9 @@ namespace LoopCAD.WPF
             this.tag = tag;
             this.blockName = blockName;
             this.layer = layer;
+            this.layerColorIndex = layerColorIndex;
+
+            EnsureLayerExists();
         }
 
         public void CreateLabel(string text, Point3d position)
@@ -38,8 +43,11 @@ namespace LoopCAD.WPF
         void NewNodeLabel(string text, Point3d position)
         {
             BlockTableRecord record = ExistingOrNewLabelDef();
-            var blockRef = new BlockReference(position, record.Id);
-            blockRef.Layer = layer;
+            
+            var blockRef = new BlockReference(position, record.Id)
+            {
+                Layer = layer
+            };
 
             modelSpace.AppendEntity(blockRef);
             transaction.AddNewlyCreatedDBObject(blockRef, true);
@@ -90,7 +98,7 @@ namespace LoopCAD.WPF
             {
                 Height = 4.75,
                 TextStyleId = ArialStyle(),
-                ColorIndex = ColorsByIndex.ByLayer,
+                ColorIndex = layerColorIndex, //ColorsByIndex.ByLayer,
                 Tag = tag,
                 TextString = "N.99",
                 Position = new Point3d(6, -6, 0)
@@ -104,13 +112,13 @@ namespace LoopCAD.WPF
 
         ObjectId ArialStyle()
         {
-            var styles = transaction.GetObject(
+            var styles = (TextStyleTable)transaction.GetObject(
                 db.TextStyleTableId, 
-                OpenMode.ForWrite) as TextStyleTable;
+                OpenMode.ForWrite);
 
-            var currentStyle = transaction.GetObject(
+            var currentStyle = (TextStyleTableRecord)transaction.GetObject(
                 db.Textstyle, 
-                OpenMode.ForWrite) as TextStyleTableRecord;
+                OpenMode.ForWrite);
 
             var style = new TextStyleTableRecord()
             {
@@ -129,5 +137,24 @@ namespace LoopCAD.WPF
             return styleId;
         }
 
+        void EnsureLayerExists()
+        {
+            var table = (LayerTable)transaction
+                .GetObject(db.LayerTableId, OpenMode.ForRead);
+
+            if (!table.Has(layer))
+            {
+                var record = new LayerTableRecord()
+                {
+                    Name = layer,
+                    Color = Color.FromColorIndex(ColorMethod.ByAci, layerColorIndex)
+                };
+
+                table.UpgradeOpen();
+                table.Add(record);
+
+                transaction.AddNewlyCreatedDBObject(record, true);
+            }
+        }
     }
 }

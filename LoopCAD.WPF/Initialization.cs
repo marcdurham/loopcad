@@ -64,8 +64,9 @@ namespace LoopCAD.WPF
             Database db = HostApplicationServices.WorkingDatabase;
             Transaction trans = db.TransactionManager.StartTransaction();
 
-            var headLabeler = new Labeler(trans, "HEADNUMBER", "HeadLabel", "HeadLabels");
-            var teeLabeler = new Labeler(trans, "TEENUMBER", "TeeLabel", "TeeLabels");
+            var headLabeler = new Labeler(trans, "HEADNUMBER", "HeadLabel", "HeadLabels", ColorsByIndex.Magenta);
+            var teeLabeler = new Labeler(trans, "TEENUMBER", "TeeLabel", "TeeLabels", ColorsByIndex.Green);
+            var pipeLabeler = new Labeler(trans, "PIPENUMBER", "PipeLabel", "PipeLabels", ColorsByIndex.Red);
 
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
@@ -90,6 +91,18 @@ namespace LoopCAD.WPF
 
                     teeLabeler.CreateLabel($"T.{teeNumber++}", block.Position);
                 }
+                else if (IsPipe(trans, objectId))
+                {
+                    var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
+
+                    for (int i = 0; i < polyline.NumberOfVertices; i++)
+                    {
+                        Point3d vertex = polyline.GetPoint3dAt(i);
+                        pipeLabeler.CreateLabel($"p{pipeNumber}", vertex);
+                    }
+
+                    pipeNumber++;
+                }
             }
 
             trans.Commit();
@@ -109,6 +122,13 @@ namespace LoopCAD.WPF
             return objectId.ObjectClass.DxfName == "INSERT" &&
                 string.Equals(block.Layer, "Tees", StringComparison.OrdinalIgnoreCase) &&
                 block.Name.ToUpper().StartsWith("TEE");
+        }
+
+        bool IsPipe(Transaction trans, ObjectId objectId)
+        {
+            var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
+            return objectId.ObjectClass.DxfName == "LWPOLYLINE" &&
+                string.Equals(polyline.Layer, "Pipes", StringComparison.OrdinalIgnoreCase);
         }
 
         [CommandMethod("LABELPIPES")]
