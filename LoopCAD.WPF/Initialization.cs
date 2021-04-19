@@ -1,4 +1,5 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -62,6 +63,9 @@ namespace LoopCAD.WPF
 
             Database db = HostApplicationServices.WorkingDatabase;
             Transaction trans = db.TransactionManager.StartTransaction();
+
+            var labeler = new Labeler(trans);
+
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
 
@@ -76,14 +80,14 @@ namespace LoopCAD.WPF
                 {
                     var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
 
-                    CreateNodeLabel(trans, $"H.{headNumber++}", block.Position);
+                    labeler.CreateNodeLabel($"H.{headNumber++}", block.Position, "HEADNUMBER", "HeadLabel", "HeadLabels");
                     //CreatePipeLabel(trans, pipeNumber, block.Position);
                 }
                 else if (IsTee(trans, objectId))
                 {
                     var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
 
-                    CreateNodeLabel(trans, $"T.{teeNumber++}", block.Position);
+                    labeler.CreateNodeLabel($"T.{teeNumber++}", block.Position, "TEENUMBER", "TeeLabel", "TeeLabels");
                 }
             }
 
@@ -115,7 +119,7 @@ namespace LoopCAD.WPF
             var pipeLabel = new DBText()
             {
                 Layer = "Heads",
-                ColorIndex = 150,
+                ColorIndex = ColorsByIndex.ByLayer,
                 TextString = $"p{pipeNumber}",
                 Position = position
             };
@@ -124,141 +128,7 @@ namespace LoopCAD.WPF
             trans.AddNewlyCreatedDBObject(pipeLabel, true);
         }
 
-        static void CreateNodeLabel(Transaction trans, string text, Point3d position)
-        {
-            Database db = HostApplicationServices.WorkingDatabase;
-      
-            BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
-
-            BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-
-
-            BlockTableRecord nodeLabelDef = NodeLabel(trans);
-            var newBlockRef = new BlockReference(position, nodeLabelDef.Id);
-
-            modelSpace.AppendEntity(newBlockRef);
-            trans.AddNewlyCreatedDBObject(newBlockRef, true);
-
-            // Iterate block definition to find all non-constant
-            // AttributeDefinitions
-            foreach (ObjectId id in nodeLabelDef)
-            {
-                DBObject obj = id.GetObject(OpenMode.ForRead);
-                var attDef = obj as AttributeDefinition;
-
-                if ((attDef != null) && (!attDef.Constant) && attDef.Tag.ToUpper() == "NODENUMBER")
-                {
-                    //This is a non-constant AttributeDefinition
-                    //Create a new AttributeReference
-                    using (var attRef = new AttributeReference())
-                    {
-                        attRef.SetAttributeFromBlock(attDef, newBlockRef.BlockTransform);
-                        attRef.TextString = text;
-                        //Add the AttributeReference to the BlockReference
-                        newBlockRef.AttributeCollection.AppendAttribute(attRef);
-                        trans.AddNewlyCreatedDBObject(attRef, true);
-                    }
-                }
-            }
-        }
-
-        static BlockTableRecord NodeLabel(Transaction trans)
-        {
-            Database db = HostApplicationServices.WorkingDatabase;
-            var blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
-            BlockTableRecord nodeLabelDef;
-            if (!blkTbl.Has("NodeLabel"))
-            {
-                nodeLabelDef = NodeLabelDefFrom(trans, blkTbl);
-                trans.AddNewlyCreatedDBObject(nodeLabelDef, true);
-            }
-            else
-            {
-                //nodeLabelId = blkTbl["NodeLabel"];
-                nodeLabelDef = trans.GetObject(blkTbl["NodeLabel"], OpenMode.ForRead) as BlockTableRecord;
-                //if(nodeLabelDef.Id == nodeLabelId)
-                //{
-                //    Debug.WriteLine("Yep");
-                //}
-            }
-
-            return nodeLabelDef;
-        }
-
-        static BlockTableRecord NodeLabelDefFrom(Transaction trans, BlockTable blkTbl)
-        {
-            var nodeLabelDef = new BlockTableRecord();
-            nodeLabelDef.Name = "NodeLabel";
-
-            var attRef = new AttributeDefinition();
-            attRef.Height = 4.75;
-            attRef.TextStyleId = ArialStyle(trans);
-
-
-            attRef.Tag = "NODENUMBER";
-            attRef.TextString = "N.99";
-            attRef.Position = new Point3d(6, -6, 0);
-            nodeLabelDef.AppendEntity(attRef);
-            blkTbl.Add(nodeLabelDef);
-            
-            return nodeLabelDef;
-        }
-
-        static ObjectId ArialStyle(Transaction trans)
-        {
-            Database db = HostApplicationServices.WorkingDatabase;
-            var styles = trans.GetObject(db.TextStyleTableId, OpenMode.ForWrite) as TextStyleTable;
-            var currentStyle = trans.GetObject(db.Textstyle, OpenMode.ForWrite) as TextStyleTableRecord;
-
-            var style = new TextStyleTableRecord()
-            {
-                Font = new Autodesk.AutoCAD.GraphicsInterface.FontDescriptor(
-                    "ARIAL",
-                    bold: false,
-                    italic: false,
-                    characters: currentStyle.Font.CharacterSet,
-                    pitchAndFamily: currentStyle.Font.PitchAndFamily),
-            };
-
-            ObjectId styleId = styles.Add(style);
-            
-            trans.AddNewlyCreatedDBObject(style, true);
-            
-            return styleId;
-        }
-
-        [CommandMethod("LABELSTUFF")]
-        public void LabelStuffCommand()
-        {
-            Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
-            ed.WriteMessage("\nLabeling nodes...");
-
-            Database db = HostApplicationServices.WorkingDatabase;
-            Transaction trans = db.TransactionManager.StartTransaction();
-
-            dynamic bt = db.BlockTableId;
-            string str = "ABC";
-
-            var textEnts =
-                from btrs in (IEnumerable<dynamic>)bt
-                from ent in (IEnumerable<dynamic>)btrs
-                where
-                ((ent.IsKindOf(typeof(DBText)) &&
-                    (ent.TextString.Contains(str))) ||
-                (ent.IsKindOf(typeof(MText)) &&
-                    (ent.Contents.Contains(str))))
-                select ent;
-
-            Point3d pnt1 = new Point3d(0, 0, 0);
-            Point3d pnt2 = new Point3d(10, 10, 0);
-
-            Line lineObj = new Line(pnt1, pnt2);
-
-            //msBlkRec.AppendEntity(lineObj);
-            trans.AddNewlyCreatedDBObject(lineObj, true);
-            trans.Commit();
-
-        }
+     
 
         [CommandMethod("LABELPIPES")]
         public void LabelPipesCommand()
@@ -287,10 +157,8 @@ namespace LoopCAD.WPF
 
             Line lineObj = new Line(pnt1, pnt2);
 
-            //msBlkRec.AppendEntity(lineObj);
             trans.AddNewlyCreatedDBObject(lineObj, true);
             trans.Commit();
-
         }
     }
 }
