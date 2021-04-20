@@ -38,6 +38,7 @@ namespace LoopCAD.WPF
         public double TextHeight { get; set; } = 4.75;
         public double XOffset { get; set; } = 6;
         public double YOffset { get; set; } = -6;
+        public TextHorizontalMode HorizontalMode { get; set; }
 
         public void CreateLabel(string text, Point3d position)
         {
@@ -67,7 +68,7 @@ namespace LoopCAD.WPF
                     {
                         ar.SetAttributeFromBlock(def, blockRef.BlockTransform);
                         ar.TextString = text;
-                        
+
                         blockRef.AttributeCollection.AppendAttribute(ar);
                         transaction.AddNewlyCreatedDBObject(ar, true);
                     }
@@ -108,7 +109,8 @@ namespace LoopCAD.WPF
                 ColorIndex = ColorIndices.ByLayer,
                 Tag = tag,
                 TextString = "X.99",
-                Position = new Point3d(XOffset, YOffset, 0)
+                Position = new Point3d(XOffset, YOffset, 0),
+                HorizontalMode = HorizontalMode,
             };
 
             record.AppendEntity(definition);

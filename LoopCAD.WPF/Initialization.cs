@@ -69,8 +69,9 @@ namespace LoopCAD.WPF
             var pipeLabeler = new Labeler(trans, "PIPENUMBER", "PipeLabel2", "PipeLabels", ColorIndices.Blue)
             { 
                 TextHeight = 3.0,
-                XOffset = 1.0,
-                YOffset = -1.5,
+                XOffset = 0.0,
+                YOffset = 0.0,
+                HorizontalMode = TextHorizontalMode.TextCenter 
             };
 
 
@@ -103,11 +104,11 @@ namespace LoopCAD.WPF
 
                     for (int i = 1; i < polyline.NumberOfVertices; i++)
                     {
-                        Point3d lastVertext = polyline.GetPoint3dAt(i - 1);
+                        Point3d lastVertex = polyline.GetPoint3dAt(i - 1);
                         Point3d vertex = polyline.GetPoint3dAt(i);
                         pipeLabeler.CreateLabel(
                             text: $"p{pipeNumber}", 
-                            position: Midpoint(vertex, lastVertext));
+                            position: Midpoint(vertex, lastVertex));
                     }
 
                     pipeNumber++;
