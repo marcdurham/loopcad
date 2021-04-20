@@ -21,7 +21,7 @@
       (setvar "LWDISPLAY" 1)
       (setq *error* temperror)
     )
-    (setvar "INSUNITS" 2) ; 0 = not set, 1 = inches, 2 = feet
+    (setvar "INSUNITS" 1) ; 0 = not set, 1 = inches, 2 = feet
                           ; This line prevents inserted block refs from having a
                           ; different scale, being 12 times bigger than they should be.
     (setvar "OSMODE" osmode-snap-ins-pts)
