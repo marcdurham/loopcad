@@ -13,7 +13,7 @@ namespace LoopCAD.WPF
         string tag = "";
         string blockName = "";
         string layer = "";
-        short layerColorIndex = ColorsByIndex.White;
+        short layerColorIndex = ColorIndices.White;
 
         public Labeler(Transaction transaction, string tag, string blockName, string layer, short layerColorIndex)
         {
@@ -35,6 +35,10 @@ namespace LoopCAD.WPF
             EnsureLayerExists();
         }
 
+        public double TextHeight { get; set; } = 4.75;
+        public double XOffset { get; set; } = 6;
+        public double YOffset { get; set; } = -6;
+
         public void CreateLabel(string text, Point3d position)
         {
             NewNodeLabel(text, position);
@@ -46,7 +50,8 @@ namespace LoopCAD.WPF
             
             var blockRef = new BlockReference(position, record.Id)
             {
-                Layer = layer
+                Layer = layer,
+                ColorIndex = ColorIndices.ByLayer
             };
 
             modelSpace.AppendEntity(blockRef);
@@ -96,12 +101,14 @@ namespace LoopCAD.WPF
 
             var definition = new AttributeDefinition()
             {
-                Height = 4.75,
+                //IsMTextAttributeDefinition = true,
+                Height = TextHeight,
                 TextStyleId = ArialStyle(),
-                ColorIndex = layerColorIndex, //ColorsByIndex.ByLayer,
+                Layer = layer,
+                ColorIndex = ColorIndices.ByLayer,
                 Tag = tag,
-                TextString = "N.99",
-                Position = new Point3d(6, -6, 0)
+                TextString = "X.99",
+                Position = new Point3d(XOffset, YOffset, 0)
             };
 
             record.AppendEntity(definition);
@@ -147,7 +154,7 @@ namespace LoopCAD.WPF
                 var record = new LayerTableRecord()
                 {
                     Name = layer,
-                    Color = Color.FromColorIndex(ColorMethod.ByAci, layerColorIndex)
+                    Color = Color.FromColorIndex(ColorMethod.ByLayer, layerColorIndex)
                 };
 
                 table.UpgradeOpen();

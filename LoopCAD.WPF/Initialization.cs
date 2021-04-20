@@ -64,9 +64,15 @@ namespace LoopCAD.WPF
             Database db = HostApplicationServices.WorkingDatabase;
             Transaction trans = db.TransactionManager.StartTransaction();
 
-            var headLabeler = new Labeler(trans, "HEADNUMBER", "HeadLabel", "HeadLabels", ColorsByIndex.Magenta);
-            var teeLabeler = new Labeler(trans, "TEENUMBER", "TeeLabel", "TeeLabels", ColorsByIndex.Green);
-            var pipeLabeler = new Labeler(trans, "PIPENUMBER", "PipeLabel", "PipeLabels", ColorsByIndex.Red);
+            var headLabeler = new Labeler(trans, "HEADNUMBER", "HeadLabel2", "HeadLabels", ColorIndices.Magenta);
+            var teeLabeler = new Labeler(trans, "TEENUMBER", "TeeLabel2", "TeeLabels", ColorIndices.Green);
+            var pipeLabeler = new Labeler(trans, "PIPENUMBER", "PipeLabel2", "PipeLabels", ColorIndices.Blue)
+            { 
+                TextHeight = 3.0,
+                XOffset = 1.0,
+                YOffset = -1.5,
+            };
+
 
             BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
             BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
@@ -95,10 +101,13 @@ namespace LoopCAD.WPF
                 {
                     var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
 
-                    for (int i = 0; i < polyline.NumberOfVertices; i++)
+                    for (int i = 1; i < polyline.NumberOfVertices; i++)
                     {
+                        Point3d lastVertext = polyline.GetPoint3dAt(i - 1);
                         Point3d vertex = polyline.GetPoint3dAt(i);
-                        pipeLabeler.CreateLabel($"p{pipeNumber}", vertex);
+                        pipeLabeler.CreateLabel(
+                            text: $"p{pipeNumber}", 
+                            position: Midpoint(vertex, lastVertext));
                     }
 
                     pipeNumber++;
@@ -129,6 +138,14 @@ namespace LoopCAD.WPF
             var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
             return objectId.ObjectClass.DxfName == "LWPOLYLINE" &&
                 string.Equals(polyline.Layer, "Pipes", StringComparison.OrdinalIgnoreCase);
+        }
+
+        Point3d Midpoint(Point3d a, Point3d b)
+        {
+            return new Point3d(
+                x: (b.X - a.X) / 2 + a.X,
+                y: (b.Y - a.Y) / 2 + a.Y,
+                z: 0);
         }
 
         [CommandMethod("LABELPIPES")]

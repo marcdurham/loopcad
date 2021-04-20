@@ -1,8 +1,8 @@
 ﻿namespace LoopCAD.WPF
 {
-    public class ColorsByIndex
+    public class ColorIndices
     {
-        public const short ByLayer = 255;
+        public const short ByLayer = 256;
 
         public const short White = 7;
         public const short Red = 1;
