@@ -11,7 +11,7 @@
         (command-s "-COLOR" "BYLAYER")
         (command-s "-LAYER" "SET" "0" "")
     )
-    (setvar "INSUNITS" 0) ;This line prevents inserted block refs from having 
+    (setvar "INSUNITS" 1) ;This line prevents inserted block refs from having 
     ; a different scale, being 12 time bigger than they should be
     (setvar "OSMODE" 0)
     (command-s "-LAYER" "ON" "HeadPairs" "")
