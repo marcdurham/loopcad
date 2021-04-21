@@ -101,6 +101,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LayerCreator.cs" />
+    <Compile Include="ModelSpace.cs" />
     <Compile Include="RiserDefinition.cs" />
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>

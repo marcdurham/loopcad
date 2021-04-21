@@ -5,12 +5,11 @@ namespace LoopCAD.WPF
 {
     public class RiserDefinition
     {
-        const string blockName = "Riser";
-        const string layer = "Risers";
+        public const string BlockName = "FloorConnector";
+        public const string Layer = "Floor Connectors";
         readonly Database db;
         readonly BlockTable table;
-
-        Transaction transaction;
+        readonly Transaction transaction;
 
         public RiserDefinition(Transaction transaction)
         {
@@ -21,24 +20,46 @@ namespace LoopCAD.WPF
                 OpenMode.ForWrite) as BlockTable;
         }
 
-        public static BlockTableRecord Define(Transaction transaction)
+        public static void Insert(Point3d position)
         {
-            return new RiserDefinition(transaction)
-                .Ensure();
+            new RiserDefinition(StartTransaction())
+                .InsertAt(position);
         }
-        
-        BlockTableRecord Ensure()
+
+        void InsertAt(Point3d position)
+        {
+            var blockRef = new BlockReference(position, Define().Id)
+            {
+                Layer = "Floor Connectors",
+                ColorIndex = ColorIndices.ByLayer
+            };
+
+            ModelSpace.From(transaction).AppendEntity(blockRef);
+            transaction.AddNewlyCreatedDBObject(blockRef, true);
+
+            transaction.Commit();
+        }
+
+        static Transaction StartTransaction()
+        {
+            return HostApplicationServices
+                .WorkingDatabase
+                .TransactionManager
+                .StartTransaction();
+        }
+
+        BlockTableRecord Define()
         {
             BlockTableRecord record;
 
-            if (!table.Has(blockName))
+            if (!table.Has(BlockName))
             {
                 record = DefinitionFrom(table);
                 transaction.AddNewlyCreatedDBObject(record, true);
             }
             else
             {
-                record = transaction.GetObject(table[blockName], OpenMode.ForRead) as BlockTableRecord;
+                record = transaction.GetObject(table[BlockName], OpenMode.ForRead) as BlockTableRecord;
             }
 
             return record;
@@ -46,21 +67,18 @@ namespace LoopCAD.WPF
 
         BlockTableRecord DefinitionFrom(BlockTable table)
         {
-            LayerCreator.Ensure(
-                transaction, 
-                name: layer, 
-                colorIndex: ColorIndices.Cyan);
+            LayerCreator.Ensure(transaction, Layer, ColorIndices.Cyan);
 
             var record = new BlockTableRecord
             {
-                Name = blockName
+                Name = BlockName
             };
 
             var circle = new Circle()
             {
                 Center = new Point3d(0, 0, 0),
                 Radius = 9.0, // inches
-                Layer = layer,
+                Layer = Layer,
                 ColorIndex = ColorIndices.ByLayer,
             };
 

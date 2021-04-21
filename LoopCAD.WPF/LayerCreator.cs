@@ -7,20 +7,20 @@ namespace LoopCAD.WPF
     {
         readonly Transaction transaction;
 
-        public static void Ensure(
-            Transaction transaction, 
-            string name, 
-            short colorIndex)
-        {
-            new LayerCreator(transaction).Create(name, colorIndex);
-        }
-
         public LayerCreator(Transaction transaction)
         {
             this.transaction = transaction;
         }
 
-        void Create(string name, short colorIndex = ColorIndices.White)
+        public static void Ensure(
+            Transaction transaction, 
+            string name, 
+            short colorIndex)
+        {
+            new LayerCreator(transaction).Ensure(name, colorIndex);
+        }
+
+        public void Ensure(string name, short colorIndex = ColorIndices.White)
         {
             var table = (LayerTable)transaction
                 .GetObject(

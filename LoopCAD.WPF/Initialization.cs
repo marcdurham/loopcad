@@ -1,15 +1,9 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
-using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoopCAD.WPF
 {
@@ -30,7 +24,7 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling nodes...");
 
-            Transaction trans = StartTransaction();
+            Transaction trans = ModelSpace.StartTransaction();
 
             var headLabeler = new Labeler(trans, "HEADNUMBER", "HeadLabel2", "HeadLabels", ColorIndices.Magenta);
             var teeLabeler = new Labeler(trans, "TEENUMBER", "TeeLabel2", "TeeLabels", ColorIndices.Green);
@@ -38,7 +32,7 @@ namespace LoopCAD.WPF
             int headNumber = 1;
             int teeNumber = 1;
             int riserNumber = 1;
-            foreach (var objectId in ModelSpace(trans))
+            foreach (var objectId in ModelSpace.From(trans))
             {
                 if (IsHead(trans, objectId))
                 {
@@ -70,7 +64,7 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling pipes...");
 
-            Transaction trans = StartTransaction();
+            Transaction trans = ModelSpace.StartTransaction();
 
             var pipeLabeler = new Labeler(trans, "PIPENUMBER", "PipeLabel2", "PipeLabels", ColorIndices.Blue)
             {
@@ -81,7 +75,7 @@ namespace LoopCAD.WPF
             };
 
             int pipeNumber = 1;
-            foreach (var objectId in ModelSpace(trans))
+            foreach (var objectId in ModelSpace.From(trans))
             {
                 if (IsPipe(trans, objectId))
                 {
@@ -119,26 +113,7 @@ namespace LoopCAD.WPF
 
             if (point.Status == PromptStatus.OK)
             {
-                NewRiser(point.Value);
-            }
-        }
-
-        void NewRiser(Point3d position)
-        {
-            using (Transaction transaction = StartTransaction())
-            {
-                var record = RiserDefinition.Define(transaction);
-
-                var blockRef = new BlockReference(position, record.Id)
-                {
-                    Layer = "FloorConnectors",
-                    ColorIndex = ColorIndices.ByLayer
-                };
-
-                ModelSpace(transaction).AppendEntity(blockRef);
-                transaction.AddNewlyCreatedDBObject(blockRef, true);
-
-                transaction.Commit();
+                RiserDefinition.Insert(point.Value);
             }
         }
 
@@ -146,28 +121,6 @@ namespace LoopCAD.WPF
         {
             return Application.DocumentManager.MdiActiveDocument.Editor;
         }
-
-        static Transaction StartTransaction()
-        {
-            return HostApplicationServices
-                .WorkingDatabase
-                .TransactionManager
-                .StartTransaction();
-        }
-
-        static BlockTableRecord ModelSpace(Transaction transaction)
-        {
-            BlockTable table = transaction.GetObject(
-                HostApplicationServices.WorkingDatabase.BlockTableId, 
-                OpenMode.ForWrite) as BlockTable;
-            
-            BlockTableRecord modelSpace = transaction.GetObject(
-                table[BlockTableRecord.ModelSpace], 
-                OpenMode.ForWrite) as BlockTableRecord;
-
-            return modelSpace;
-        }
-
 
         bool IsHead(Transaction trans, ObjectId objectId)
         {
