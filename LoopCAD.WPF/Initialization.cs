@@ -134,7 +134,43 @@ namespace LoopCAD.WPF
             Editor().WriteMessage($"\n{pipeNumber} pipes labeled.");
         }
 
-        private static Editor Editor()
+        [CommandMethod("RISER")]
+        public void InsertRiserCommand()
+        {
+            Editor().WriteMessage("\nInserting riser...");
+
+            var options = new PromptPointOptions(
+                "Click location to insert riser")
+            {
+                AllowArbitraryInput = true,
+            };
+
+            var point = Editor().GetPoint(options);
+
+            if (point.Status == PromptStatus.OK)
+            {
+                NewRiser(point.Value);
+            }
+        }
+
+        void NewRiser(Point3d position)
+        {
+            Transaction transaction = StartTransaction();
+            var record = RiserDefinition.ExistingOrNew(transaction);
+
+            var blockRef = new BlockReference(position, record.Id)
+            {
+                Layer = "FloorConnectors",
+                ColorIndex = ColorIndices.ByLayer
+            };
+
+            ModelSpace(transaction).AppendEntity(blockRef);
+            transaction.AddNewlyCreatedDBObject(blockRef, true);
+
+            transaction.Commit();
+        }
+
+        static Editor Editor()
         {
             return Application.DocumentManager.MdiActiveDocument.Editor;
         }
