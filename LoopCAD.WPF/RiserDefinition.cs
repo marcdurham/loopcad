@@ -1,17 +1,12 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LoopCAD.WPF
 {
     public class RiserDefinition
     {
         const string blockName = "Riser";
-        readonly BlockTableRecord definition;
+        const string layer = "Risers";
         readonly Database db;
         readonly BlockTable table;
 
@@ -24,17 +19,15 @@ namespace LoopCAD.WPF
             table = transaction.GetObject(
                 db.BlockTableId,
                 OpenMode.ForWrite) as BlockTable;
-
-            definition = DefinitionFrom(null);
         }
 
-        public static BlockTableRecord ExistingOrNew(Transaction transaction)
+        public static BlockTableRecord Define(Transaction transaction)
         {
             return new RiserDefinition(transaction)
-                .ExistingOrNewDefinition();
+                .Ensure();
         }
         
-        BlockTableRecord ExistingOrNewDefinition()
+        BlockTableRecord Ensure()
         {
             BlockTableRecord record;
 
@@ -53,6 +46,11 @@ namespace LoopCAD.WPF
 
         BlockTableRecord DefinitionFrom(BlockTable table)
         {
+            LayerCreator.Ensure(
+                transaction, 
+                name: layer, 
+                colorIndex: ColorIndices.Cyan);
+
             var record = new BlockTableRecord
             {
                 Name = blockName
@@ -62,7 +60,7 @@ namespace LoopCAD.WPF
             {
                 Center = new Point3d(0, 0, 0),
                 Radius = 9.0, // inches
-                Layer = "Risers",
+                Layer = layer,
                 ColorIndex = ColorIndices.ByLayer,
             };
 

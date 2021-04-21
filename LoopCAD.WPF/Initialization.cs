@@ -25,36 +25,6 @@ namespace LoopCAD.WPF
             
         }
 
-        [CommandMethod("TESTLABELNODES")]
-        public void TestLabelNodesCommand()
-        {
-            Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
-            ed.WriteMessage("\nI have created my first command");
-            
-            Database db = HostApplicationServices.WorkingDatabase;
-            Transaction trans = db.TransactionManager.StartTransaction();
-
-            BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForRead) as BlockTable;
-            BlockTableRecord msBlkRec = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-
-            Point3d pnt1 = new Point3d(0, 0, 0);
-            //Point3d pnt2 = new Point3d(10, 10, 0);
-            //Point3d pnt2 = ed.GetPoint("Give me another point").Value;
-            PromptPointOptions prPtOpt = new PromptPointOptions("\nSpecify start point: ");
-            prPtOpt.AllowArbitraryInput = false;
-            prPtOpt.AllowNone = true;
-
-            PromptPointResult prPtRes1 = ed.GetPoint(prPtOpt);
-            if (prPtRes1.Status != PromptStatus.OK) return;
-            Point3d pnt2 = prPtRes1.Value;
-
-            Line lineObj = new Line(pnt1, pnt2);
-            msBlkRec.AppendEntity(lineObj);
-            trans.AddNewlyCreatedDBObject(lineObj, true);
-            trans.Commit();
-
-        }
-
         [CommandMethod("LABEL-NODES")]
         public void LabelNodesCommand()
         {
@@ -155,19 +125,21 @@ namespace LoopCAD.WPF
 
         void NewRiser(Point3d position)
         {
-            Transaction transaction = StartTransaction();
-            var record = RiserDefinition.ExistingOrNew(transaction);
-
-            var blockRef = new BlockReference(position, record.Id)
+            using (Transaction transaction = StartTransaction())
             {
-                Layer = "FloorConnectors",
-                ColorIndex = ColorIndices.ByLayer
-            };
+                var record = RiserDefinition.Define(transaction);
 
-            ModelSpace(transaction).AppendEntity(blockRef);
-            transaction.AddNewlyCreatedDBObject(blockRef, true);
+                var blockRef = new BlockReference(position, record.Id)
+                {
+                    Layer = "FloorConnectors",
+                    ColorIndex = ColorIndices.ByLayer
+                };
 
-            transaction.Commit();
+                ModelSpace(transaction).AppendEntity(blockRef);
+                transaction.AddNewlyCreatedDBObject(blockRef, true);
+
+                transaction.Commit();
+            }
         }
 
         static Editor Editor()

@@ -107,6 +107,9 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="ColorIndices.cs" />
+    <Compile Include="CustomControl1.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Initialization.cs" />

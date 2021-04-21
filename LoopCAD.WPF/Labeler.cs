@@ -1,5 +1,4 @@
-﻿using Autodesk.AutoCAD.Colors;
-using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 
 namespace LoopCAD.WPF
@@ -13,7 +12,6 @@ namespace LoopCAD.WPF
         string tag = "";
         string blockName = "";
         string layer = "";
-        short layerColorIndex = ColorIndices.White;
 
         public Labeler(Transaction transaction, string tag, string blockName, string layer, short layerColorIndex)
         {
@@ -30,9 +28,8 @@ namespace LoopCAD.WPF
             this.tag = tag;
             this.blockName = blockName;
             this.layer = layer;
-            this.layerColorIndex = layerColorIndex;
 
-            EnsureLayerExists();
+            LayerCreator.Ensure(transaction, layer, layerColorIndex);
         }
 
         public double TextHeight { get; set; } = 4.75;
@@ -102,7 +99,6 @@ namespace LoopCAD.WPF
 
             var definition = new AttributeDefinition()
             {
-                //IsMTextAttributeDefinition = true,
                 Height = TextHeight,
                 TextStyleId = ArialStyle(),
                 Layer = layer,
@@ -144,26 +140,6 @@ namespace LoopCAD.WPF
             transaction.AddNewlyCreatedDBObject(style, true);
 
             return styleId;
-        }
-
-        void EnsureLayerExists()
-        {
-            var table = (LayerTable)transaction
-                .GetObject(db.LayerTableId, OpenMode.ForRead);
-
-            if (!table.Has(layer))
-            {
-                var record = new LayerTableRecord()
-                {
-                    Name = layer,
-                    Color = Color.FromColorIndex(ColorMethod.ByLayer, layerColorIndex)
-                };
-
-                table.UpgradeOpen();
-                table.Add(record);
-
-                transaction.AddNewlyCreatedDBObject(record, true);
-            }
         }
     }
 }
