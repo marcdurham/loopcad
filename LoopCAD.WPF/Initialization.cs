@@ -61,10 +61,7 @@ namespace LoopCAD.WPF
             Editor editor = Application.DocumentManager.MdiActiveDocument.Editor;
             editor.WriteMessage("\nLabeling nodes...");
 
-            Database db = HostApplicationServices.WorkingDatabase;
-            Transaction trans = db.TransactionManager.StartTransaction();
-            BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
-            BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
+            Transaction trans = StartTransaction();
 
             var headLabeler = new Labeler(trans, "HEADNUMBER", "HeadLabel2", "HeadLabels", ColorIndices.Magenta);
             var teeLabeler = new Labeler(trans, "TEENUMBER", "TeeLabel2", "TeeLabels", ColorIndices.Green);
@@ -72,7 +69,7 @@ namespace LoopCAD.WPF
             int headNumber = 1;
             int teeNumber = 1;
             int riserNumber = 1;
-            foreach (var objectId in modelSpace)
+            foreach (var objectId in ModelSpace(trans))
             {
                 if (IsHead(trans, objectId))
                 {
@@ -99,10 +96,7 @@ namespace LoopCAD.WPF
             Editor editor = Application.DocumentManager.MdiActiveDocument.Editor;
             editor.WriteMessage("\nLabeling pipes...");
 
-            Database db = HostApplicationServices.WorkingDatabase;
-            Transaction trans = db.TransactionManager.StartTransaction();
-            BlockTable blkTbl = trans.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable;
-            BlockTableRecord modelSpace = trans.GetObject(blkTbl[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
+            Transaction trans = StartTransaction();
 
             var pipeLabeler = new Labeler(trans, "PIPENUMBER", "PipeLabel2", "PipeLabels", ColorIndices.Blue)
             {
@@ -113,7 +107,7 @@ namespace LoopCAD.WPF
             };
 
             int pipeNumber = 1;
-            foreach (var objectId in modelSpace)
+            foreach (var objectId in ModelSpace(trans))
             {
                 if (IsPipe(trans, objectId))
                 {
@@ -135,6 +129,28 @@ namespace LoopCAD.WPF
             trans.Commit();
             editor.WriteMessage($"\n{pipeNumber} pipes labeled.");
         }
+
+        static Transaction StartTransaction()
+        {
+            return HostApplicationServices
+                .WorkingDatabase
+                .TransactionManager
+                .StartTransaction();
+        }
+
+        static BlockTableRecord ModelSpace(Transaction trans)
+        {
+            BlockTable blkTbl = trans.GetObject(
+                HostApplicationServices.WorkingDatabase.BlockTableId, 
+                OpenMode.ForWrite) as BlockTable;
+            
+            BlockTableRecord modelSpace = trans.GetObject(
+                blkTbl[BlockTableRecord.ModelSpace], 
+                OpenMode.ForWrite) as BlockTableRecord;
+
+            return modelSpace;
+        }
+
 
         bool IsHead(Transaction trans, ObjectId objectId)
         {
