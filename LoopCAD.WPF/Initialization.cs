@@ -113,7 +113,7 @@ namespace LoopCAD.WPF
 
             if (point.Status == PromptStatus.OK)
             {
-                RiserDefinition.Insert(point.Value);
+                Riser.Insert(point.Value);
             }
         }
 

@@ -103,7 +103,7 @@
   <ItemGroup>
     <Compile Include="LayerCreator.cs" />
     <Compile Include="ModelSpace.cs" />
-    <Compile Include="RiserDefinition.cs" />
+    <Compile Include="Riser.cs" />
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

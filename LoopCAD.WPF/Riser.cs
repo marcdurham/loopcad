@@ -3,7 +3,7 @@ using Autodesk.AutoCAD.Geometry;
 
 namespace LoopCAD.WPF
 {
-    public class RiserDefinition
+    public class Riser
     {
         public const string BlockName = "FloorConnector";
         public const string Layer = "Floor Connectors";
@@ -11,7 +11,7 @@ namespace LoopCAD.WPF
         readonly BlockTable table;
         readonly Transaction transaction;
 
-        public RiserDefinition(Transaction transaction)
+        public Riser(Transaction transaction)
         {
             this.transaction = transaction;
             db = HostApplicationServices.WorkingDatabase;
@@ -22,7 +22,7 @@ namespace LoopCAD.WPF
 
         public static void Insert(Point3d position)
         {
-            new RiserDefinition(StartTransaction())
+            new Riser(StartTransaction())
                 .InsertAt(position);
         }
 
