@@ -58,8 +58,7 @@ namespace LoopCAD.WPF
         [CommandMethod("LABEL-NODES")]
         public void LabelNodesCommand()
         {
-            Editor editor = Application.DocumentManager.MdiActiveDocument.Editor;
-            editor.WriteMessage("\nLabeling nodes...");
+            Editor().WriteMessage("\nLabeling nodes...");
 
             Transaction trans = StartTransaction();
 
@@ -83,18 +82,23 @@ namespace LoopCAD.WPF
 
                     teeLabeler.CreateLabel($"T.{teeNumber++}", block.Position);
                 }
+                else if (IsRiser(trans, objectId))
+                {
+                    var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+
+                    teeLabeler.CreateLabel($"R.{riserNumber++}", block.Position); // TODO: Add Suffix!
+                }
             }
 
-            editor.WriteMessage($"\n{headNumber} heads labeled.");
-            editor.WriteMessage($"\n{teeNumber} tees labeled.");
+            Editor().WriteMessage($"\n{headNumber} heads labeled.");
+            Editor().WriteMessage($"\n{teeNumber} tees labeled.");
             trans.Commit();
         }
 
         [CommandMethod("LABEL-PIPES")]
         public void LabelPipesCommand()
         {
-            Editor editor = Application.DocumentManager.MdiActiveDocument.Editor;
-            editor.WriteMessage("\nLabeling pipes...");
+            Editor().WriteMessage("\nLabeling pipes...");
 
             Transaction trans = StartTransaction();
 
@@ -118,7 +122,7 @@ namespace LoopCAD.WPF
                         Point3d lastVertex = polyline.GetPoint3dAt(i - 1);
                         Point3d vertex = polyline.GetPoint3dAt(i);
                         pipeLabeler.CreateLabel(
-                            text: $"p{pipeNumber}",
+                            text: $"P{pipeNumber}",
                             position: Midpoint(vertex, lastVertex));
                     }
 
@@ -127,7 +131,12 @@ namespace LoopCAD.WPF
             }
 
             trans.Commit();
-            editor.WriteMessage($"\n{pipeNumber} pipes labeled.");
+            Editor().WriteMessage($"\n{pipeNumber} pipes labeled.");
+        }
+
+        private static Editor Editor()
+        {
+            return Application.DocumentManager.MdiActiveDocument.Editor;
         }
 
         static Transaction StartTransaction()
@@ -138,14 +147,14 @@ namespace LoopCAD.WPF
                 .StartTransaction();
         }
 
-        static BlockTableRecord ModelSpace(Transaction trans)
+        static BlockTableRecord ModelSpace(Transaction transaction)
         {
-            BlockTable blkTbl = trans.GetObject(
+            BlockTable table = transaction.GetObject(
                 HostApplicationServices.WorkingDatabase.BlockTableId, 
                 OpenMode.ForWrite) as BlockTable;
             
-            BlockTableRecord modelSpace = trans.GetObject(
-                blkTbl[BlockTableRecord.ModelSpace], 
+            BlockTableRecord modelSpace = transaction.GetObject(
+                table[BlockTableRecord.ModelSpace], 
                 OpenMode.ForWrite) as BlockTableRecord;
 
             return modelSpace;
@@ -166,6 +175,15 @@ namespace LoopCAD.WPF
             return objectId.ObjectClass.DxfName == "INSERT" &&
                 string.Equals(block.Layer, "Tees", StringComparison.OrdinalIgnoreCase) &&
                 block.Name.ToUpper().StartsWith("TEE");
+        }
+
+        bool IsRiser(Transaction trans, ObjectId objectId)
+        {
+            var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+            return objectId.ObjectClass.DxfName == "INSERT" &&
+                (string.Equals(block.Layer, "Risers", StringComparison.OrdinalIgnoreCase) ||
+                 string.Equals(block.Layer, "FloorConnectors", StringComparison.OrdinalIgnoreCase))&&
+                (block.Name.ToUpper().StartsWith("FLOORCONNECTOR") || block.Name.ToUpper().StartsWith("RISER"));
         }
 
         bool IsPipe(Transaction trans, ObjectId objectId)
