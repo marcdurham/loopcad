@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeReader.cs" />
+    <Compile Include="ElevationBox.cs" />
     <Compile Include="LayerCreator.cs" />
     <Compile Include="ModelSpace.cs" />
     <Compile Include="Riser.cs" />
