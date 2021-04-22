@@ -7,8 +7,8 @@ namespace LoopCAD.WPF
     {
         readonly Transaction transaction;
         readonly Database db;
-        readonly BlockTable table;
-        readonly BlockTableRecord modelSpace;
+        BlockTable table;
+        BlockTableRecord modelSpace;
         string tag = "";
         string blockName = "";
         string layer = "";
@@ -17,19 +17,12 @@ namespace LoopCAD.WPF
         {
             this.transaction = transaction;
             db = HostApplicationServices.WorkingDatabase;
-            table = transaction.GetObject(
-                db.BlockTableId,
-                OpenMode.ForWrite) as BlockTable;
-            
-            modelSpace = transaction.GetObject(
-                table[BlockTableRecord.ModelSpace],
-                OpenMode.ForWrite) as BlockTableRecord;
 
             this.tag = tag;
             this.blockName = blockName;
             this.layer = layer;
 
-            LayerCreator.Ensure(transaction, layer, layerColorIndex);
+            LayerCreator.Ensure(layer, layerColorIndex);
         }
 
         public double TextHeight { get; set; } = 4.75;
@@ -44,30 +37,37 @@ namespace LoopCAD.WPF
 
         void NewNodeLabel(string text, Point3d position)
         {
-            BlockTableRecord record = ExistingOrNewLabelDef();
-            
-            var blockRef = new BlockReference(position, record.Id)
+            using (table = transaction.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable)
             {
-                Layer = layer,
-                ColorIndex = ColorIndices.ByLayer
-            };
+                modelSpace = transaction.GetObject(
+                    table[BlockTableRecord.ModelSpace],
+                    OpenMode.ForWrite) as BlockTableRecord;
 
-            modelSpace.AppendEntity(blockRef);
-            transaction.AddNewlyCreatedDBObject(blockRef, true);
+                BlockTableRecord record = ExistingOrNewLabelDef();
 
-            foreach (ObjectId id in record)
-            {
-                var def = id.GetObject(OpenMode.ForRead) as AttributeDefinition;
-
-                if ((def != null) && (!def.Constant) && def.Tag.ToUpper() == tag)
+                var blockRef = new BlockReference(position, record.Id)
                 {
-                    using (var ar = new AttributeReference())
-                    {
-                        ar.SetAttributeFromBlock(def, blockRef.BlockTransform);
-                        ar.TextString = text;
+                    Layer = layer,
+                    ColorIndex = ColorIndices.ByLayer
+                };
 
-                        blockRef.AttributeCollection.AppendAttribute(ar);
-                        transaction.AddNewlyCreatedDBObject(ar, true);
+                modelSpace.AppendEntity(blockRef);
+                transaction.AddNewlyCreatedDBObject(blockRef, true);
+
+                foreach (ObjectId id in record)
+                {
+                    var def = id.GetObject(OpenMode.ForRead) as AttributeDefinition;
+
+                    if ((def != null) && (!def.Constant) && def.Tag.ToUpper() == tag)
+                    {
+                        using (var ar = new AttributeReference())
+                        {
+                            ar.SetAttributeFromBlock(def, blockRef.BlockTransform);
+                            ar.TextString = text;
+
+                            blockRef.AttributeCollection.AppendAttribute(ar);
+                            transaction.AddNewlyCreatedDBObject(ar, true);
+                        }
                     }
                 }
             }

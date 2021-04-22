@@ -69,7 +69,7 @@ namespace LoopCAD.WPF
 
         BlockTableRecord DefinitionFrom(BlockTable table)
         {
-            LayerCreator.Ensure(transaction, Layer, ColorIndices.Cyan);
+            LayerCreator.Ensure(Layer, ColorIndices.Cyan);
 
             var record = new BlockTableRecord
             {
