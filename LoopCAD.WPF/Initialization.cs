@@ -115,63 +115,20 @@ namespace LoopCAD.WPF
 
             if (point.Status == PromptStatus.OK)
             {
-                Riser.Insert(point.Value);
                 using (var transaction = ModelSpace.StartTransaction())
                 {
-                    int number = LastRiserNumber() + 1;
+                    new Riser(transaction).InsertAt(point.Value);
+                    int number = RiserLabel.HighestNumber() + 1;
                     new Labeler(
                             transaction,
-                            "RISERNUMBER",
-                            "RiserLabel",
-                            "RiserLabels",
+                            RiserLabel.TagName,
+                            RiserLabel.BlockName,
+                            RiserLabel.LayerName,
                             ColorIndices.Cyan)
                         .CreateLabel($"R.{number}.X", point.Value);
 
                     transaction.Commit();
                 }
-            }
-        }
-
-        int LastRiserNumber()
-        {
-            using (Transaction transaction = ModelSpace.StartTransaction())
-            {
-                int lastNumber = 0;
-                var labelIds = GetRiserLabelIds();
-
-                foreach (var id in labelIds)
-                {
-                    string text = AttributeReader.TextString(transaction, id, "RiserLabel", tag: "RISERNUMBER");
-                    var match = Regex.Match(text, @"R\.(\d+)\.[A-Z]");
-                    if(match.Success)
-                    {
-                        string numberString = match.Groups[1].Value;
-                        int number = int.Parse(numberString);
-                        if(number > lastNumber)
-                        {
-                            lastNumber = number;
-                        }
-                    }
-                }
-
-                return lastNumber;
-            }
-        }
-
-        List<ObjectId> GetRiserLabelIds()
-        {
-            using (Transaction trans = ModelSpace.StartTransaction())
-            {
-                var labels = new List<ObjectId>();
-                foreach (var objectId in ModelSpace.From(trans))
-                {
-                    if (IsRiserLabel(trans, objectId))
-                    {
-                        labels.Add(objectId);
-                    }
-                }
-
-                return labels;
             }
         }
 
@@ -203,14 +160,6 @@ namespace LoopCAD.WPF
                 (string.Equals(block.Layer, "Risers", StringComparison.OrdinalIgnoreCase) ||
                  string.Equals(block.Layer, "FloorConnectors", StringComparison.OrdinalIgnoreCase))&&
                 (block.Name.ToUpper().StartsWith("FLOORCONNECTOR") || block.Name.ToUpper().StartsWith("RISER"));
-        }
-
-        bool IsRiserLabel(Transaction trans, ObjectId objectId)
-        {
-            var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-            return objectId.ObjectClass.DxfName == "INSERT" &&
-                string.Equals(block.Layer, "RiserLabels", StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(block.Name, "RiserLabel", StringComparison.OrdinalIgnoreCase);
         }
 
         bool IsPipe(Transaction trans, ObjectId objectId)

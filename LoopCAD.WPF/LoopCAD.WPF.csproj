@@ -105,6 +105,7 @@
     <Compile Include="LayerCreator.cs" />
     <Compile Include="ModelSpace.cs" />
     <Compile Include="Riser.cs" />
+    <Compile Include="RiserLabel.cs" />
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

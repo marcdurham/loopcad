@@ -1,5 +1,7 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace LoopCAD.WPF
 {
@@ -26,7 +28,7 @@ namespace LoopCAD.WPF
                 .InsertAt(position);
         }
 
-        void InsertAt(Point3d position)
+        public void InsertAt(Point3d position)
         {
             var blockRef = new BlockReference(position, Define().Id)
             {
