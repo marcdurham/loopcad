@@ -4,6 +4,8 @@ using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace LoopCAD.WPF
 {
@@ -116,16 +118,56 @@ namespace LoopCAD.WPF
                 Riser.Insert(point.Value);
                 using (var transaction = ModelSpace.StartTransaction())
                 {
+                    int number = LastRiserNumber() + 1;
                     new Labeler(
                             transaction,
                             "RISERNUMBER",
                             "FloorConnectorLabel",
                             "FloorConnectorLabels",
                             ColorIndices.Cyan)
-                        .CreateLabel("R.#.X", point.Value);
+                        .CreateLabel($"R.{number}.X", point.Value);
 
                     transaction.Commit();
                 }
+            }
+        }
+
+        int LastRiserNumber()
+        {
+            using (Transaction transaction = ModelSpace.StartTransaction())
+            {
+                int lastNumber = 0;
+                var labelIds = GetRiserLabelIds();
+
+                foreach (var id in labelIds)
+                {
+                    string text = AttributeReader.TextString(transaction, id, "FloorConnectorLabel", tag: "RISERNUMBER");
+                    var match = Regex.Match(text, @"R\.(\d+)\.[A-Z]");
+                    if(match.Success)
+                    {
+                        string numberString = match.Groups[1].Value;
+                        return int.Parse(numberString);
+                    }
+                }
+
+                return lastNumber;
+            }
+        }
+
+        List<ObjectId> GetRiserLabelIds()
+        {
+            using (Transaction trans = ModelSpace.StartTransaction())
+            {
+                var labels = new List<ObjectId>();
+                foreach (var objectId in ModelSpace.From(trans))
+                {
+                    if (IsRiserLabel(trans, objectId))
+                    {
+                        labels.Add(objectId);
+                    }
+                }
+
+                return labels;
             }
         }
 
@@ -157,6 +199,14 @@ namespace LoopCAD.WPF
                 (string.Equals(block.Layer, "Risers", StringComparison.OrdinalIgnoreCase) ||
                  string.Equals(block.Layer, "FloorConnectors", StringComparison.OrdinalIgnoreCase))&&
                 (block.Name.ToUpper().StartsWith("FLOORCONNECTOR") || block.Name.ToUpper().StartsWith("RISER"));
+        }
+
+        bool IsRiserLabel(Transaction trans, ObjectId objectId)
+        {
+            var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+            return objectId.ObjectClass.DxfName == "INSERT" &&
+                string.Equals(block.Layer, "FloorConnectorLabels", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(block.Name, "FloorConnectorLabel", StringComparison.OrdinalIgnoreCase);
         }
 
         bool IsPipe(Transaction trans, ObjectId objectId)
