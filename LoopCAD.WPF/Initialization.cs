@@ -117,6 +117,7 @@ namespace LoopCAD.WPF
             {
                 using (var transaction = ModelSpace.StartTransaction())
                 {
+                    var boxes = ElevationBox.GetElevationBoxes(transaction);
                     new Riser(transaction).InsertAt(point.Value);
                     int number = RiserLabel.HighestNumber() + 1;
                     new Labeler(
