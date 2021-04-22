@@ -114,6 +114,18 @@ namespace LoopCAD.WPF
             if (point.Status == PromptStatus.OK)
             {
                 Riser.Insert(point.Value);
+                using (var transaction = ModelSpace.StartTransaction())
+                {
+                    new Labeler(
+                            transaction,
+                            "RISERNUMBER",
+                            "FloorConnectorLabel",
+                            "FloorConnectorLabels",
+                            ColorIndices.Cyan)
+                        .CreateLabel("R.#.X", point.Value);
+
+                    transaction.Commit();
+                }
             }
         }
 
