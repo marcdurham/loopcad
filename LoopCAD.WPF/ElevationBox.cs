@@ -1,5 +1,7 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Geometry;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
@@ -9,11 +11,34 @@ namespace LoopCAD.WPF
     {
         public const string LayerName = "ElevationBox";
 
-        public ObjectId Id { get; set; }
-        public MText Label { get; set; }
-        public Polyline Box { get; set; }
+        public ElevationBox(Polyline box)
+        {
+            Id = box.Id;
+            SetSides(box);
+        }
 
-        public static List<ElevationBox> GetElevationBoxes(Transaction transaction)
+        public ObjectId Id { get; set; }
+        public double Top { get; set; }
+        public double Bottom { get; set; }
+        public double Left { get; set; }
+        public double Right { get; set; }
+
+        public static List<ElevationBox> InsideElevationBoxes(Transaction transaction, Point3d point)
+        {
+            var boxes = GetElevationBoxes(transaction);
+            var inside = new List<ElevationBox>();
+            foreach(var box in boxes)
+            {
+                if(box.IsInside(point))
+                {
+                    inside.Add(box);
+                }
+            }
+
+            return inside;
+        }
+
+        static List<ElevationBox> GetElevationBoxes(Transaction transaction)
         {
             var boxes = new List<ObjectId>();
             var labels = new List<ObjectId>();
@@ -46,13 +71,13 @@ namespace LoopCAD.WPF
                         if(PointExtensions.IsNear(mtext.Location, polyline.GetPoint3dAt(i))
                             && !elevationsBoxes.Exists(b => b.Id == polyline.Id))
                         {
-                            elevationsBoxes.Add(
-                                new ElevationBox
-                                {
-                                    Id = polyline.Id,
-                                    Box = polyline,
-                                    Label = mtext
-                                });
+                            var b = new ElevationBox(polyline)
+                            {
+                                Id = polyline.Id,
+                            };
+
+                            b.SetSides(polyline);
+                            elevationsBoxes.Add(b);
 
                             continue;
                         }
@@ -61,6 +86,14 @@ namespace LoopCAD.WPF
             }
 
             return elevationsBoxes;
+        }
+
+        public bool IsInside(Point3d point)
+        {
+            return point.X >= Left &&
+                point.X <= Right &&
+                point.Y >= Bottom &&
+                point.Y <= Top;
         }
 
         static bool IsElevationBoxPolyline(Transaction transaction, ObjectId objectId)
@@ -79,6 +112,25 @@ namespace LoopCAD.WPF
                 string.Equals(mtext.Layer, LayerName, StringComparison.OrdinalIgnoreCase) &&
                 mtext.Contents != null &&
                 Regex.IsMatch(mtext.Contents, @"Elevation \d+");
+        }
+
+        void SetSides(Polyline box)
+        {
+            if (box == null)
+            {
+                throw new ArgumentNullException(nameof(box));
+            }
+
+            var points = new List<Point3d>();
+            for (int i = 0; i < box.NumberOfVertices; i++)
+            {
+                points.Add(box.GetPoint3dAt(i));
+            }
+
+            Left = points.Min(p => p.X);
+            Right = points.Max(p => p.X);
+            Top = points.Max(p => p.Y);
+            Bottom = points.Min(p => p.Y);
         }
     }
 }
