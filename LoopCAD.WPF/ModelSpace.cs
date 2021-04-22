@@ -7,8 +7,8 @@ namespace LoopCAD.WPF
         public static BlockTableRecord From(Transaction transaction)
         {
             BlockTable table = transaction.GetObject(
-                HostApplicationServices.WorkingDatabase.BlockTableId,
-                OpenMode.ForWrite) as BlockTable;
+                Database().BlockTableId,
+                OpenMode.ForRead) as BlockTable;
 
             BlockTableRecord modelSpace = transaction.GetObject(
                 table[BlockTableRecord.ModelSpace],
@@ -23,6 +23,11 @@ namespace LoopCAD.WPF
                 .WorkingDatabase
                 .TransactionManager
                 .StartTransaction();
+        }
+
+        public static Database Database()
+        {
+            return HostApplicationServices.WorkingDatabase;
         }
     }
 }

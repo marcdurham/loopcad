@@ -8,7 +8,7 @@ namespace LoopCAD.WPF
         readonly Database db;
         Transaction transaction;
         BlockTable table;
-        BlockTableRecord modelSpace;
+        ObjectId arialStyle;
         string tag = "";
         string blockName = "";
         string layer = "";
@@ -21,6 +21,8 @@ namespace LoopCAD.WPF
             this.blockName = blockName;
             this.layer = layer;
 
+            arialStyle = ArialStyle();
+
             LayerCreator.Ensure(layer, layerColorIndex);
         }
 
@@ -32,8 +34,17 @@ namespace LoopCAD.WPF
         public void CreateLabel(string text, Point3d position)
         {
             using (var transaction = ModelSpace.StartTransaction())
+            using (var modelSpace = ModelSpace.From(transaction))
             {
                 this.transaction = transaction;
+                var circle = new Circle()
+                {
+                    Center = position,
+                    Radius = 4.0
+                };
+                
+                modelSpace.AppendEntity(circle);
+                transaction.AddNewlyCreatedDBObject(circle, true);
                 NewNodeLabel(text, position);
                 transaction.Commit();
             }
@@ -44,7 +55,7 @@ namespace LoopCAD.WPF
             using (table = transaction.GetObject(
                 HostApplicationServices.WorkingDatabase.BlockTableId, 
                 OpenMode.ForWrite) as BlockTable)
-            using (modelSpace = transaction.GetObject(
+            using (var modelSpace = transaction.GetObject(
                 table[BlockTableRecord.ModelSpace],
                 OpenMode.ForWrite) as BlockTableRecord)
             {
@@ -107,7 +118,7 @@ namespace LoopCAD.WPF
             var definition = new AttributeDefinition()
             {
                 Height = TextHeight,
-                TextStyleId = ArialStyle(),
+                TextStyleId = arialStyle,
                 Layer = layer,
                 ColorIndex = ColorIndices.ByLayer,
                 Tag = tag,
@@ -122,13 +133,14 @@ namespace LoopCAD.WPF
             return record;
         }
 
-        ObjectId ArialStyle()
+        static ObjectId ArialStyle()
         {
+            using(var transaction = ModelSpace.StartTransaction())
             using (var styles = (TextStyleTable)transaction.GetObject(
-                db.TextStyleTableId,
+                HostApplicationServices.WorkingDatabase.TextStyleTableId,
                 OpenMode.ForWrite))
             using (var currentStyle = (TextStyleTableRecord)transaction.GetObject(
-                db.Textstyle,
+                HostApplicationServices.WorkingDatabase.Textstyle,
                 OpenMode.ForWrite))
             {
                 var style = new TextStyleTableRecord()
