@@ -23,19 +23,22 @@ namespace LoopCAD.WPF
         public double Left { get; set; }
         public double Right { get; set; }
 
-        public static List<ElevationBox> InsideElevationBoxes(Transaction transaction, Point3d point)
+        public static List<ElevationBox> InsideElevationBoxes(Point3d point)
         {
-            var boxes = GetElevationBoxes(transaction);
-            var inside = new List<ElevationBox>();
-            foreach(var box in boxes)
+            using (var transaction = ModelSpace.StartTransaction())
             {
-                if(box.IsInside(point))
+                var boxes = GetElevationBoxes(transaction);
+                var inside = new List<ElevationBox>();
+                foreach (var box in boxes)
                 {
-                    inside.Add(box);
+                    if (box.IsInside(point))
+                    {
+                        inside.Add(box);
+                    }
                 }
-            }
 
-            return inside;
+                return inside;
+            }
         }
 
         static List<ElevationBox> GetElevationBoxes(Transaction transaction)

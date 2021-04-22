@@ -26,39 +26,40 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling nodes...");
 
-            Transaction trans = ModelSpace.StartTransaction();
+            var headLabeler = new Labeler("HEADNUMBER", "HeadLabel2", "HeadLabels", ColorIndices.Magenta);
+            var teeLabeler = new Labeler("TEENUMBER", "TeeLabel2", "TeeLabels", ColorIndices.Green);
 
-            var headLabeler = new Labeler(trans, "HEADNUMBER", "HeadLabel2", "HeadLabels", ColorIndices.Magenta);
-            var teeLabeler = new Labeler(trans, "TEENUMBER", "TeeLabel2", "TeeLabels", ColorIndices.Green);
-
-            int headNumber = 1;
-            int teeNumber = 1;
-            int riserNumber = 1;
-            foreach (var objectId in ModelSpace.From(trans))
+            using (var trans = ModelSpace.StartTransaction())
             {
-                if (IsHead(trans, objectId))
+                int headNumber = 1;
+                int teeNumber = 1;
+                int riserNumber = 1;
+                foreach (var objectId in ModelSpace.From(trans))
                 {
-                    var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+                    if (IsHead(trans, objectId))
+                    {
+                        var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
 
-                    headLabeler.CreateLabel($"H.{headNumber++}", block.Position);
-                }
-                else if (IsTee(trans, objectId))
-                {
-                    var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+                        headLabeler.CreateLabel($"H.{headNumber++}", block.Position);
+                    }
+                    else if (IsTee(trans, objectId))
+                    {
+                        var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
 
-                    teeLabeler.CreateLabel($"T.{teeNumber++}", block.Position);
-                }
-                else if (IsRiser(trans, objectId))
-                {
-                    var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+                        teeLabeler.CreateLabel($"T.{teeNumber++}", block.Position);
+                    }
+                    else if (IsRiser(trans, objectId))
+                    {
+                        var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
 
-                    teeLabeler.CreateLabel($"R.{riserNumber++}", block.Position); // TODO: Add Suffix!
+                        teeLabeler.CreateLabel($"R.{riserNumber++}", block.Position); // TODO: Add Suffix!
+                    }
                 }
+
+                Editor().WriteMessage($"\n{headNumber} heads labeled.");
+                Editor().WriteMessage($"\n{teeNumber} tees labeled.");
+                trans.Commit();
             }
-
-            Editor().WriteMessage($"\n{headNumber} heads labeled.");
-            Editor().WriteMessage($"\n{teeNumber} tees labeled.");
-            trans.Commit();
         }
 
         [CommandMethod("LABEL-PIPES")]
@@ -66,9 +67,7 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling pipes...");
 
-            Transaction trans = ModelSpace.StartTransaction();
-
-            var pipeLabeler = new Labeler(trans, "PIPENUMBER", "PipeLabel2", "PipeLabels", ColorIndices.Blue)
+            var pipeLabeler = new Labeler("PIPENUMBER", "PipeLabel2", "PipeLabels", ColorIndices.Blue)
             {
                 TextHeight = 3.0,
                 XOffset = 0.0,
@@ -77,27 +76,54 @@ namespace LoopCAD.WPF
             };
 
             int pipeNumber = 1;
-            foreach (var objectId in ModelSpace.From(trans))
+
+            var ids = new List<ObjectId>();
+            using (var trans = ModelSpace.StartTransaction())
             {
-                if (IsPipe(trans, objectId))
+                foreach(ObjectId id in ModelSpace.From(trans))
                 {
-                    var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
-
-                    for (int i = 1; i < polyline.NumberOfVertices; i++)
-                    {
-                        Point3d lastVertex = polyline.GetPoint3dAt(i - 1);
-                        Point3d vertex = polyline.GetPoint3dAt(i);
-                        pipeLabeler.CreateLabel(
-                            text: $"P{pipeNumber}",
-                            position: Midpoint(vertex, lastVertex));
-                    }
-
-                    pipeNumber++;
+                    ids.Add(id);
                 }
             }
 
-            trans.Commit();
+            foreach (ObjectId objectId in ids)
+            {
+                //Point3d lastVertex;
+                //Point3d vertex;
+                var vertices = new List<Point3d>();
+                using (var trans = ModelSpace.StartTransaction())
+                {
+                    if (IsPipe(trans, objectId))
+                    {
+                        var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
+
+                        //for (int i = 1; i < polyline.NumberOfVertices; i++)
+                        for (int i = 0; i < polyline.NumberOfVertices; i++)
+                        {
+                            vertices.Add(polyline.GetPoint3dAt(i));
+                            ////lastVertex = polyline.GetPoint3dAt(i - 1);
+                            ////vertex = polyline.GetPoint3dAt(i);
+                            //pipeLabeler.CreateLabel(
+                            //    text: $"P{pipeNumber}",
+                            //    position: Midpoint(vertex, lastVertex));
+                        }
+
+                        pipeNumber++;
+                    }
+
+                    trans.Commit();
+                }
+
+                for (int i = 1; i < vertices.Count; i++)
+                {
+                    pipeLabeler.CreateLabel(
+                        text: $"P{pipeNumber}",
+                        position: Midpoint(vertices[i], vertices[i-1]));
+                }
+            }
+
             Editor().WriteMessage($"\n{pipeNumber} pipes labeled.");
+            
         }
 
         [CommandMethod("RISER")]
@@ -115,27 +141,22 @@ namespace LoopCAD.WPF
 
             if (point.Status == PromptStatus.OK)
             {
-                using (var transaction = ModelSpace.StartTransaction())
+                var boxes = ElevationBox.InsideElevationBoxes(point.Value);
+                if(boxes.Count == 0)
                 {
-                    var boxes = ElevationBox.InsideElevationBoxes(transaction, point.Value);
-                    if(boxes.Count == 0)
-                    {
-                        Editor().WriteMessage("\nError!  You must insert a riser inside an elevation box.");
-                        return;
-                    }
-
-                    new Riser(transaction).InsertAt(point.Value);
-                    int number = RiserLabel.HighestNumber() + 1;
-                    new Labeler(
-                            transaction,
-                            RiserLabel.TagName,
-                            RiserLabel.BlockName,
-                            RiserLabel.LayerName,
-                            ColorIndices.Cyan)
-                        .CreateLabel($"R.{number}.X", point.Value);
-
-                    transaction.Commit();
+                    Editor().WriteMessage("\nError!  You must insert a riser inside an elevation box.");
+                    return;
                 }
+
+                Riser.Insert(point.Value);
+       
+                int number = RiserLabel.HighestNumber() + 1;
+                new Labeler(
+                        RiserLabel.BlockName,
+                        RiserLabel.LayerName,
+                        "RISERNUMBER",
+                        ColorIndices.Cyan)
+                    .CreateLabel($"R.{number}.X", point.Value);
             }
         }
 

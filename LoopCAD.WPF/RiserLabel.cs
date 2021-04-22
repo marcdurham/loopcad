@@ -13,7 +13,7 @@ namespace LoopCAD.WPF
 
         public static int HighestNumber()
         {
-            using (Transaction transaction = ModelSpace.StartTransaction())
+            using (var transaction = ModelSpace.StartTransaction())
             {
                 int lastNumber = 0;
                 var labelIds = GetRiserLabelIds(transaction);

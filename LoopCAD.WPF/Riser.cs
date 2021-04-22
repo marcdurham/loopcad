@@ -28,7 +28,7 @@ namespace LoopCAD.WPF
                 .InsertAt(position);
         }
 
-        public void InsertAt(Point3d position)
+        void InsertAt(Point3d position)
         {
             var blockRef = new BlockReference(position, Define().Id)
             {

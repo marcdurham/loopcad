@@ -5,17 +5,16 @@ namespace LoopCAD.WPF
 {
     public class Labeler
     {
-        readonly Transaction transaction;
         readonly Database db;
+        Transaction transaction;
         BlockTable table;
         BlockTableRecord modelSpace;
         string tag = "";
         string blockName = "";
         string layer = "";
 
-        public Labeler(Transaction transaction, string tag, string blockName, string layer, short layerColorIndex)
+        public Labeler(string tag, string blockName, string layer, short layerColorIndex)
         {
-            this.transaction = transaction;
             db = HostApplicationServices.WorkingDatabase;
 
             this.tag = tag;
@@ -32,41 +31,49 @@ namespace LoopCAD.WPF
 
         public void CreateLabel(string text, Point3d position)
         {
-            NewNodeLabel(text, position);
+            using (var transaction = ModelSpace.StartTransaction())
+            {
+                this.transaction = transaction;
+                NewNodeLabel(text, position);
+                transaction.Commit();
+            }
         }
 
         void NewNodeLabel(string text, Point3d position)
         {
-            using (table = transaction.GetObject(db.BlockTableId, OpenMode.ForWrite) as BlockTable)
+            using (table = transaction.GetObject(
+                HostApplicationServices.WorkingDatabase.BlockTableId, 
+                OpenMode.ForWrite) as BlockTable)
+            using (modelSpace = transaction.GetObject(
+                table[BlockTableRecord.ModelSpace],
+                OpenMode.ForWrite) as BlockTableRecord)
             {
-                modelSpace = transaction.GetObject(
-                    table[BlockTableRecord.ModelSpace],
-                    OpenMode.ForWrite) as BlockTableRecord;
-
                 BlockTableRecord record = ExistingOrNewLabelDef();
 
-                var blockRef = new BlockReference(position, record.Id)
+                using (var blockRef = new BlockReference(position, record.Id)
                 {
                     Layer = layer,
                     ColorIndex = ColorIndices.ByLayer
-                };
-
-                modelSpace.AppendEntity(blockRef);
-                transaction.AddNewlyCreatedDBObject(blockRef, true);
-
-                foreach (ObjectId id in record)
+                })
                 {
-                    var def = id.GetObject(OpenMode.ForRead) as AttributeDefinition;
+                    modelSpace.AppendEntity(blockRef);
+                    transaction.AddNewlyCreatedDBObject(blockRef, true);
 
-                    if ((def != null) && (!def.Constant) && def.Tag.ToUpper() == tag)
+                    foreach (ObjectId id in record)
                     {
-                        using (var ar = new AttributeReference())
+                        using (var def = id.GetObject(OpenMode.ForRead) as AttributeDefinition)
                         {
-                            ar.SetAttributeFromBlock(def, blockRef.BlockTransform);
-                            ar.TextString = text;
+                            if ((def != null) && (!def.Constant) && def.Tag.ToUpper() == tag)
+                            {
+                                using (var ar = new AttributeReference())
+                                {
+                                    ar.SetAttributeFromBlock(def, blockRef.BlockTransform);
+                                    ar.TextString = text;
 
-                            blockRef.AttributeCollection.AppendAttribute(ar);
-                            transaction.AddNewlyCreatedDBObject(ar, true);
+                                    blockRef.AttributeCollection.AppendAttribute(ar);
+                                    transaction.AddNewlyCreatedDBObject(ar, true);
+                                }
+                            }
                         }
                     }
                 }
@@ -117,29 +124,30 @@ namespace LoopCAD.WPF
 
         ObjectId ArialStyle()
         {
-            var styles = (TextStyleTable)transaction.GetObject(
-                db.TextStyleTableId, 
-                OpenMode.ForWrite);
-
-            var currentStyle = (TextStyleTableRecord)transaction.GetObject(
-                db.Textstyle, 
-                OpenMode.ForWrite);
-
-            var style = new TextStyleTableRecord()
+            using (var styles = (TextStyleTable)transaction.GetObject(
+                db.TextStyleTableId,
+                OpenMode.ForWrite))
+            using (var currentStyle = (TextStyleTableRecord)transaction.GetObject(
+                db.Textstyle,
+                OpenMode.ForWrite))
             {
-                Font = new Autodesk.AutoCAD.GraphicsInterface.FontDescriptor(
-                    "ARIAL",
-                    bold: false,
-                    italic: false,
-                    characters: currentStyle.Font.CharacterSet,
-                    pitchAndFamily: currentStyle.Font.PitchAndFamily),
-            };
+                var style = new TextStyleTableRecord()
+                {
+                    Font = new Autodesk.AutoCAD.GraphicsInterface.FontDescriptor(
+                        "ARIAL",
+                        bold: false,
+                        italic: false,
+                        characters: currentStyle.Font.CharacterSet,
+                        pitchAndFamily: currentStyle.Font.PitchAndFamily),
+                };
 
-            ObjectId styleId = styles.Add(style);
+                ObjectId styleId = styles.Add(style);
 
-            transaction.AddNewlyCreatedDBObject(style, true);
+                transaction.AddNewlyCreatedDBObject(style, true);
+                transaction.Commit();
 
-            return styleId;
+                return styleId;
+            }
         }
     }
 }
