@@ -122,8 +122,8 @@ namespace LoopCAD.WPF
                     new Labeler(
                             transaction,
                             "RISERNUMBER",
-                            "FloorConnectorLabel",
-                            "FloorConnectorLabels",
+                            "RiserLabel",
+                            "RiserLabels",
                             ColorIndices.Cyan)
                         .CreateLabel($"R.{number}.X", point.Value);
 
@@ -141,12 +141,16 @@ namespace LoopCAD.WPF
 
                 foreach (var id in labelIds)
                 {
-                    string text = AttributeReader.TextString(transaction, id, "FloorConnectorLabel", tag: "RISERNUMBER");
+                    string text = AttributeReader.TextString(transaction, id, "RiserLabel", tag: "RISERNUMBER");
                     var match = Regex.Match(text, @"R\.(\d+)\.[A-Z]");
                     if(match.Success)
                     {
                         string numberString = match.Groups[1].Value;
-                        return int.Parse(numberString);
+                        int number = int.Parse(numberString);
+                        if(number > lastNumber)
+                        {
+                            lastNumber = number;
+                        }
                     }
                 }
 
@@ -205,8 +209,8 @@ namespace LoopCAD.WPF
         {
             var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
             return objectId.ObjectClass.DxfName == "INSERT" &&
-                string.Equals(block.Layer, "FloorConnectorLabels", StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(block.Name, "FloorConnectorLabel", StringComparison.OrdinalIgnoreCase);
+                string.Equals(block.Layer, "RiserLabels", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(block.Name, "RiserLabel", StringComparison.OrdinalIgnoreCase);
         }
 
         bool IsPipe(Transaction trans, ObjectId objectId)
