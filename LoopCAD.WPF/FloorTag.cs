@@ -2,6 +2,7 @@
 using Autodesk.AutoCAD.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LoopCAD.WPF
 {
@@ -46,6 +47,8 @@ namespace LoopCAD.WPF
                         Elevation = elevation
                     });
                 }
+
+                floorTags = floorTags.OrderBy(t => t.Elevation).ToList();
 
                 return floorTags;
             }

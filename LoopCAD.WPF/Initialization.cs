@@ -161,7 +161,13 @@ namespace LoopCAD.WPF
                     0);
 
                 var allFloorTags = FloorTag.GetFloorTags();
-                var chosenFloorTags = new List<FloorTag>()
+                if(allFloorTags.Count > 10)
+                {
+                    Editor().WriteMessage("\nError! LoopCAD cannot handle more than ten floors.");
+                    return;
+                }
+
+                var selectedFloorTags = new List<FloorTag>()
                 {
                     floorTag
                 };
@@ -173,40 +179,36 @@ namespace LoopCAD.WPF
                     {
                         if (ft.Name != floorTag.Name)
                         {
-                            int floorIndex = allFloorTags.IndexOf(ft);
-                            char floorChar = (char)((byte)'A' + (byte)floorIndex);
-                            pko.Keywords.Add($"{floorChar}: {ft.Name}");
+                            pko.Keywords.Add($"{allFloorTags.IndexOf(ft)}: {ft.Name}");
                         }
                     }
 
                     pko.Message = "\nPick a floor ";
-                        pko.AllowNone = false;
+                    pko.AllowNone = false;
 
                     PromptResult result = Editor().GetKeywords(pko);
 
-                    FloorTag floor;
                     if(result.Status == PromptStatus.OK)
                     {
-                        char floorLetter = result.StringResult[0];
-                        floor = allFloorTags[(byte)floorLetter - 'A'];
-                        chosenFloorTags.Add(floor);
+                        int floorIndex = int.Parse(result.StringResult[0].ToString());
+                        selectedFloorTags.Add(allFloorTags[floorIndex]);
                     }
                 }
 
-                if(chosenFloorTags.Count != 2)
+                if(selectedFloorTags.Count != 2)
                 {
-                    Editor()
-                        .WriteMessage("Error! The riser could not be inserted on two floors.");
+                    Editor().WriteMessage("Error! The riser could not be inserted on two floors.");
 
                     return;
                 }
 
-                foreach (var ft in chosenFloorTags)
+                foreach (var ft in selectedFloorTags)
                 {
+                    // This point will be disposed, so clone it
                     var newPoint = new Point3d(
                         x: ft.Position.X + offset.X,
                         y: ft.Position.Y + offset.Y,
-                        0);
+                        z: ft.Position.Z + offset.Z);
 
                     Riser.Insert(newPoint);
 
