@@ -160,7 +160,64 @@ namespace LoopCAD.WPF
                     y: point.Value.Y - floorTag.Position.Y,
                     0);
 
-                foreach (var ft in FloorTag.GetFloorTags())
+                var floorTags = FloorTag.GetFloorTags();
+                if(floorTags.Count > 1)
+                {
+                    // Pick which floors
+                    //var dialog = new ChooseFloor(floorTags);
+                    //bool? result = dialog.ShowDialog();
+                    var pko = new PromptKeywordOptions("");
+                    // Add our keywords
+                    foreach (var ft in floorTags)
+                    {
+                        pko.Keywords.Add(ft.Name);
+                    }
+
+                    //// Set our prompts to include our keywords
+                    ////string kws = pso.Keywords.GetDisplayString(true);
+
+                    //pso.KeywordInput +=
+
+                    //   delegate (object sender, SelectionTextInputEventArgs e)
+
+                    //   {
+
+                    //       Editor().WriteMessage("\nKeyword entered: {0}", e.Input);
+
+                    //   };
+
+                    //PromptKeywordOptions pKeyOpts = new PromptKeywordOptions("");
+                    pko.Message = "\nPick a floor ";
+                    //pKeyOpts.Keywords.Add("Line");
+                    //pKeyOpts.Keywords.Add("Circle");
+                    //pKeyOpts.Keywords.Add("Arc");
+                    //pKeyOpts.AllowNone = false;
+
+                    PromptResult result = Editor().GetKeywords(pko);
+
+                    FloorTag floor;
+                    if(result.Status == PromptStatus.OK)
+                    {
+                        floor = floorTags
+                            .SingleOrDefault(
+                                t => string.Equals(
+                                    t.Name, 
+                                    result.StringResult, 
+                                    StringComparison.OrdinalIgnoreCase));
+                    }
+
+                    //PromptSelectionResult result = Editor().GetSelection(pso);
+                    //string selectedFloor = string.Empty;
+                    //foreach(var val in result.Value)
+                    //{
+                    //    selectedFloor = val as string;
+                    //}
+
+                    //////var floor = floorTags
+                    //////    .SingleOrDefault(t => string.Equals(t.Name, selectedFloor, StringComparison.OrdinalIgnoreCase));
+                }
+
+                foreach (var ft in floorTags)
                 {
                     var newPoint = new Point3d(
                         x: ft.Position.X + offset.X,

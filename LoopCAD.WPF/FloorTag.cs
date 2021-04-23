@@ -48,6 +48,11 @@ namespace LoopCAD.WPF
             }
         }
 
+        public override string ToString()
+        {
+            return Name;
+        }
+
         static List<ObjectId> GetFloorTagIds(Transaction transaction)
         {
             var floorTags = new List<ObjectId>();
