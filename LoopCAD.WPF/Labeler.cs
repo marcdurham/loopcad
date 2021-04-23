@@ -37,14 +37,6 @@ namespace LoopCAD.WPF
             using (var modelSpace = ModelSpace.From(transaction))
             {
                 this.transaction = transaction;
-                var circle = new Circle()
-                {
-                    Center = position,
-                    Radius = 4.0
-                };
-                
-                modelSpace.AppendEntity(circle);
-                transaction.AddNewlyCreatedDBObject(circle, true);
                 NewNodeLabel(text, position);
                 transaction.Commit();
             }
