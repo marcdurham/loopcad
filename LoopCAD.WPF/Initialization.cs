@@ -152,9 +152,9 @@ namespace LoopCAD.WPF
        
                 int number = RiserLabel.HighestNumber() + 1;
                 new Labeler(
+                        "RISERNUMBER",
                         RiserLabel.BlockName,
                         RiserLabel.LayerName,
-                        "RISERNUMBER",
                         ColorIndices.Cyan)
                     .CreateLabel($"R.{number}.X", point.Value);
             }
