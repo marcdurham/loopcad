@@ -77,7 +77,8 @@ namespace LoopCAD.WPF
         {
             var block = transaction.GetObject(objectId, OpenMode.ForRead) as BlockReference;
             return objectId.ObjectClass.DxfName == "INSERT" &&
-                string.Equals(block.Layer, LayerName, StringComparison.OrdinalIgnoreCase) &&
+                (string.Equals(block.Layer, LayerName, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(block.Layer, "Floor Tags", StringComparison.OrdinalIgnoreCase)) &&
                 string.Equals(block.Name, BlockName, StringComparison.OrdinalIgnoreCase);
         }
     }

@@ -10,6 +10,11 @@
     )
     
     (setvar "INSUNITS" 1) ; 0 = not set, 1 = inches, 2 = feet
+    (setvar "OSMODE" osmode-snap-ins-pts)
+    (command "-LAYER" "NEW" "Floor Tags" "")
+    (command "-LAYER" "COLOR" "Cyan" "Floor Tags" "")
+    (setvar "LWDISPLAY" 0)
+    (command "-LAYER" "SET" "Floor Tags" "")
     (setq p (getpoint "Click insertion point for floor tag"))
     (setq floor-name (getstring T "Enter floor name")) ; getstring with T allows spaces
     (setq elevation (get-elevation p))

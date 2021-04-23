@@ -37,6 +37,47 @@ namespace LoopCAD.WPF
             }
         }
 
+        public static char HighestSuffix()
+        {
+            using (var transaction = ModelSpace.StartTransaction())
+            {
+                byte lastNumber = 'A' - 1;
+
+                foreach (string text in GetRiserLabelTexts())
+                {
+                    var match = Regex.Match(text, @"R\.(\d+)\.([A-Z])");
+                    if (match.Success)
+                    {
+                        string suffixString = match.Groups[2].Value;
+                        byte number = (byte)suffixString[0];
+                        if (number > lastNumber)
+                        {
+                            lastNumber = number;
+                        }
+                    }
+                }
+
+                return (char)lastNumber;
+            }
+        }
+
+        static List<string> GetRiserLabelTexts()
+        {
+            using (var transaction = ModelSpace.StartTransaction())
+            {
+                var texts = new List<string>();
+                var labelIds = GetRiserLabelIds(transaction);
+
+                foreach (var id in labelIds)
+                {
+                    string text = AttributeReader.TextString(transaction, id, BlockName, tag: TagName);
+                    texts.Add(text);
+                }
+
+                return texts;
+            }
+        }
+
         static List<ObjectId> GetRiserLabelIds(Transaction transaction)
         {
             var labels = new List<ObjectId>();

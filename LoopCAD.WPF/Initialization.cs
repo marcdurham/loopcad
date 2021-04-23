@@ -202,6 +202,9 @@ namespace LoopCAD.WPF
                     return;
                 }
 
+                char suffix = (char)((byte)RiserLabel.HighestSuffix() + 1);
+                int number = RiserLabel.HighestNumber() + 1;
+
                 foreach (var ft in selectedFloorTags)
                 {
                     // This point will be disposed, so clone it
@@ -212,15 +215,23 @@ namespace LoopCAD.WPF
 
                     Riser.Insert(newPoint);
 
-                    int number = RiserLabel.HighestNumber() + 1;
-                    byte floorIndex = (byte)allFloorTags.Select(t => t.Name).ToList().IndexOf(ft.Name);
-                    char floorLetter = (char)((byte)'A' + floorIndex);
-                    new Labeler(
-                            "RISERNUMBER",
-                            RiserLabel.BlockName,
-                            RiserLabel.LayerName,
-                            ColorIndices.Cyan)
-                        .CreateLabel($"R.{number}.{floorLetter}", position: newPoint);
+                    //byte floorIndex = (byte)allFloorTags.Select(t => t.Name).ToList().IndexOf(ft.Name);
+                    //char floorLetter = (char)((byte)'A' + floorIndex);
+                    var labeler = new Labeler(
+                        RiserLabel.TagName,
+                        RiserLabel.BlockName,
+                        RiserLabel.LayerName,
+                        ColorIndices.Cyan)
+                    {
+                         XOffset = 15.0,
+                         TextHeight = 8.0
+                    };
+
+                    labeler.CreateLabel($"R.{number}.{suffix}", position: newPoint);
+                    
+                    // Number increments, but suffix is shared between the
+                    // upper and lower riser, and used to match them.
+                    number++;
                 }
             }
         }
