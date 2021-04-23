@@ -4,8 +4,8 @@ using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using System;
+using System.Linq;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace LoopCAD.WPF
 {
@@ -142,21 +142,41 @@ namespace LoopCAD.WPF
             if (point.Status == PromptStatus.OK)
             {
                 var boxes = ElevationBox.InsideElevationBoxes(point.Value);
-                if(boxes.Count == 0)
+                if (boxes.Count == 0)
                 {
                     Editor().WriteMessage("\nError!  You must insert a riser inside an elevation box.");
                     return;
                 }
 
-                Riser.Insert(point.Value);
-       
-                int number = RiserLabel.HighestNumber() + 1;
-                new Labeler(
-                        "RISERNUMBER",
-                        RiserLabel.BlockName,
-                        RiserLabel.LayerName,
-                        ColorIndices.Cyan)
-                    .CreateLabel($"R.{number}.X", point.Value);
+                if (boxes.Count(b => b.FloorTag != null) != 1)
+                {
+                    Editor().WriteMessage("\nError!  You must insert a floor tag on each floor.");
+                    return;
+                }
+
+                var floorTag = boxes.Select(b => b.FloorTag).Single();
+                var offset = new Point3d(
+                    x: point.Value.X - floorTag.Position.X,
+                    y: point.Value.Y - floorTag.Position.Y,
+                    0);
+
+                foreach (var ft in FloorTag.GetFloorTags())
+                {
+                    var newPoint = new Point3d(
+                        x: ft.Position.X + offset.X,
+                        y: ft.Position.Y + offset.Y,
+                        0);
+
+                    Riser.Insert(newPoint);
+
+                    int number = RiserLabel.HighestNumber() + 1;
+                    new Labeler(
+                            "RISERNUMBER",
+                            RiserLabel.BlockName,
+                            RiserLabel.LayerName,
+                            ColorIndices.Cyan)
+                        .CreateLabel($"R.{number}.X", position: newPoint);
+                }
             }
         }
 

@@ -23,6 +23,7 @@ namespace LoopCAD.WPF
         public double Left { get; set; }
         public double Right { get; set; }
         public int Elevation { get; set; }
+        public FloorTag FloorTag { get; set; }
 
         public static List<ElevationBox> InsideElevationBoxes(Point3d point)
         {
@@ -57,35 +58,58 @@ namespace LoopCAD.WPF
                 {
                     boxes.Add(objectId);
                 }
-                else if(IsElevationBoxLabel(transaction, objectId))
+                else if (IsElevationBoxLabel(transaction, objectId))
                 {
                     labels.Add(objectId);
                 }
             }
 
-            var elevationsBoxes = new List<ElevationBox>();
-            foreach(var box in boxes)
+            var elevationBoxes = BuildElevationBoxesFrom(transaction, boxes, labels);
+            var floorTags = FloorTag.GetFloorTags();
+
+            foreach(var box in elevationBoxes)
+            {
+                foreach(var floorTag in floorTags)
+                {
+                    if(box.IsInside(floorTag.Position))
+                    {
+                        box.FloorTag = floorTag;
+                    }
+                }
+            }
+
+            return elevationBoxes;
+        }
+
+        static List<ElevationBox> BuildElevationBoxesFrom(
+            Transaction transaction,
+            List<ObjectId> boxes,
+            List<ObjectId> labels)
+        {
+            var elevationBoxes = new List<ElevationBox>();
+
+            foreach (var box in boxes)
             {
                 var polyline = transaction.GetObject(box, OpenMode.ForRead) as Polyline;
                 foreach (var label in labels)
                 {
                     var mtext = transaction.GetObject(label, OpenMode.ForRead) as MText;
-                    if(mtext == null)
+                    if (mtext == null)
                     {
                         continue;
                     }
 
                     for (int i = 0; i < polyline.NumberOfVertices; i++)
                     {
-                        if(PointExtensions.IsNear(mtext.Location, polyline.GetPoint3dAt(i))
-                            && !elevationsBoxes.Exists(b => b.Id == polyline.Id))
+                        if (PointExtensions.IsNear(mtext.Location, polyline.GetPoint3dAt(i))
+                            && !elevationBoxes.Exists(b => b.Id == polyline.Id))
                         {
                             var match = Regex.Match(
                                 mtext.Text,
                                 @"Elevation (\d+)",
                                 RegexOptions.IgnoreCase);
 
-                            if(!match.Success)
+                            if (!match.Success)
                             {
                                 continue;
                             }
@@ -99,7 +123,7 @@ namespace LoopCAD.WPF
                             };
 
                             b.SetSides(polyline);
-                            elevationsBoxes.Add(b);
+                            elevationBoxes.Add(b);
 
                             continue;
                         }
@@ -107,7 +131,7 @@ namespace LoopCAD.WPF
                 }
             }
 
-            return elevationsBoxes;
+            return elevationBoxes;
         }
 
         public bool IsInside(Point3d point)
