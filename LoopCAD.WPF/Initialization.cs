@@ -215,8 +215,6 @@ namespace LoopCAD.WPF
 
                     Riser.Insert(newPoint);
 
-                    //byte floorIndex = (byte)allFloorTags.Select(t => t.Name).ToList().IndexOf(ft.Name);
-                    //char floorLetter = (char)((byte)'A' + floorIndex);
                     var labeler = new Labeler(
                         RiserLabel.TagName,
                         RiserLabel.BlockName,
