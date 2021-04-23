@@ -33,7 +33,10 @@ namespace LoopCAD.WPF
                     int.TryParse(elevationString, out int elevation);
                     floorTags.Add(new FloorTag
                     {
-                        Position = block.Position,
+                        Position = new Point3d(
+                            x: block.Position.X,
+                            y: block.Position.Y,
+                            z: block.Position.Z),
                         Name = AttributeReader.TextString(
                             transaction,
                             id,

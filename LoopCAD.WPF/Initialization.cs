@@ -160,64 +160,48 @@ namespace LoopCAD.WPF
                     y: point.Value.Y - floorTag.Position.Y,
                     0);
 
-                var floorTags = FloorTag.GetFloorTags();
-                if(floorTags.Count > 1)
+                var allFloorTags = FloorTag.GetFloorTags();
+                var chosenFloorTags = new List<FloorTag>()
                 {
-                    // Pick which floors
-                    //var dialog = new ChooseFloor(floorTags);
-                    //bool? result = dialog.ShowDialog();
+                    floorTag
+                };
+
+                if(allFloorTags.Count > 1)
+                {
                     var pko = new PromptKeywordOptions("");
-                    // Add our keywords
-                    foreach (var ft in floorTags)
+                    foreach (var ft in allFloorTags)
                     {
-                        pko.Keywords.Add(ft.Name);
+                        if (ft.Name != floorTag.Name)
+                        {
+                            int floorIndex = allFloorTags.IndexOf(ft);
+                            char floorChar = (char)((byte)'A' + (byte)floorIndex);
+                            pko.Keywords.Add($"{floorChar}: {ft.Name}");
+                        }
                     }
 
-                    //// Set our prompts to include our keywords
-                    ////string kws = pso.Keywords.GetDisplayString(true);
-
-                    //pso.KeywordInput +=
-
-                    //   delegate (object sender, SelectionTextInputEventArgs e)
-
-                    //   {
-
-                    //       Editor().WriteMessage("\nKeyword entered: {0}", e.Input);
-
-                    //   };
-
-                    //PromptKeywordOptions pKeyOpts = new PromptKeywordOptions("");
                     pko.Message = "\nPick a floor ";
-                    //pKeyOpts.Keywords.Add("Line");
-                    //pKeyOpts.Keywords.Add("Circle");
-                    //pKeyOpts.Keywords.Add("Arc");
-                    //pKeyOpts.AllowNone = false;
+                        pko.AllowNone = false;
 
                     PromptResult result = Editor().GetKeywords(pko);
 
                     FloorTag floor;
                     if(result.Status == PromptStatus.OK)
                     {
-                        floor = floorTags
-                            .SingleOrDefault(
-                                t => string.Equals(
-                                    t.Name, 
-                                    result.StringResult, 
-                                    StringComparison.OrdinalIgnoreCase));
+                        char floorLetter = result.StringResult[0];
+                        floor = allFloorTags[(byte)floorLetter - 'A'];
+                        chosenFloorTags.Add(floor);
                     }
-
-                    //PromptSelectionResult result = Editor().GetSelection(pso);
-                    //string selectedFloor = string.Empty;
-                    //foreach(var val in result.Value)
-                    //{
-                    //    selectedFloor = val as string;
-                    //}
-
-                    //////var floor = floorTags
-                    //////    .SingleOrDefault(t => string.Equals(t.Name, selectedFloor, StringComparison.OrdinalIgnoreCase));
                 }
 
-                foreach (var ft in floorTags)
+                if(chosenFloorTags.Count != 2)
+                {
+                    Editor()
+                        .WriteMessage("Error! The riser could not be inserted on two floors.");
+
+                    return;
+                }
+
+                foreach (var ft in chosenFloorTags)
                 {
                     var newPoint = new Point3d(
                         x: ft.Position.X + offset.X,
@@ -227,12 +211,14 @@ namespace LoopCAD.WPF
                     Riser.Insert(newPoint);
 
                     int number = RiserLabel.HighestNumber() + 1;
+                    byte floorIndex = (byte)allFloorTags.Select(t => t.Name).ToList().IndexOf(ft.Name);
+                    char floorLetter = (char)((byte)'A' + floorIndex);
                     new Labeler(
                             "RISERNUMBER",
                             RiserLabel.BlockName,
                             RiserLabel.LayerName,
                             ColorIndices.Cyan)
-                        .CreateLabel($"R.{number}.X", position: newPoint);
+                        .CreateLabel($"R.{number}.{floorLetter}", position: newPoint);
                 }
             }
         }
