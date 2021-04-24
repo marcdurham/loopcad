@@ -26,8 +26,8 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling nodes...");
 
-            var headLabeler = new Labeler("HEADNUMBER", "HeadLabel2", "HeadLabels", ColorIndices.Magenta);
-            var teeLabeler = new Labeler("TEENUMBER", "TeeLabel2", "TeeLabels", ColorIndices.Green);
+            var headLabeler = new Labeler("HEADNUMBER", "HeadLabel", "HeadLabels", ColorIndices.Magenta);
+            var teeLabeler = new Labeler("TEENUMBER", "TeeLabel", "TeeLabels", ColorIndices.Green);
 
             using (var trans = ModelSpace.StartTransaction())
             {
@@ -67,7 +67,7 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling pipes...");
 
-            var pipeLabeler = new Labeler("PIPENUMBER", "PipeLabel2", "PipeLabels", ColorIndices.Blue)
+            var pipeLabeler = new Labeler("PIPENUMBER", "PipeLabel", "PipeLabels", ColorIndices.Blue)
             {
                 TextHeight = 3.0,
                 XOffset = 0.0,
@@ -88,8 +88,6 @@ namespace LoopCAD.WPF
 
             foreach (ObjectId objectId in ids)
             {
-                //Point3d lastVertex;
-                //Point3d vertex;
                 var vertices = new List<Point3d>();
                 using (var trans = ModelSpace.StartTransaction())
                 {
@@ -97,15 +95,9 @@ namespace LoopCAD.WPF
                     {
                         var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
 
-                        //for (int i = 1; i < polyline.NumberOfVertices; i++)
                         for (int i = 0; i < polyline.NumberOfVertices; i++)
                         {
                             vertices.Add(polyline.GetPoint3dAt(i));
-                            ////lastVertex = polyline.GetPoint3dAt(i - 1);
-                            ////vertex = polyline.GetPoint3dAt(i);
-                            //pipeLabeler.CreateLabel(
-                            //    text: $"P{pipeNumber}",
-                            //    position: Midpoint(vertex, lastVertex));
                         }
 
                         pipeNumber++;
