@@ -26,8 +26,15 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling nodes...");
 
-            var headLabeler = new Labeler("HEADNUMBER", "HeadLabel", "HeadLabels", ColorIndices.Magenta);
-            var teeLabeler = new Labeler("TEENUMBER", "TeeLabel", "TeeLabels", ColorIndices.Green);
+            var headLabeler = new Labeler("HEADNUMBER", "HeadLabel", "HeadLabels", ColorIndices.Blue)
+            {
+                TextHeight = 4.8
+            };
+
+            var teeLabeler = new Labeler("TEENUMBER", "TeeLabel", "TeeLabels", ColorIndices.Green)
+            {
+                TextHeight = 4.8
+            };
 
             using (var trans = ModelSpace.StartTransaction())
             {
