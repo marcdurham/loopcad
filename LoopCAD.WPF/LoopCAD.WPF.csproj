@@ -102,9 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeReader.cs" />
-    <Compile Include="ChooseFloor.xaml.cs">
-      <DependentUpon>ChooseFloor.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ElevationBox.cs" />
     <Compile Include="FloorTag.cs" />
     <Compile Include="LayerCreator.cs" />
@@ -112,10 +109,6 @@
     <Compile Include="PointExtensions.cs" />
     <Compile Include="Riser.cs" />
     <Compile Include="RiserLabel.cs" />
-    <Page Include="ChooseFloor.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
