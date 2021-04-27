@@ -27,10 +27,11 @@
     (if (= result 1) ; 1 = User clicked 'OK'
         (foreach key job_data:keys 
             (progn
-                (save-job-data key (vlax-ldata-get "job_data_temp" key))
+                (princ "\n\nSaving job data after loading form...")
+                (save-job-data key (get-dict-data "job_data_temp" key))
             )
         )
-        (princ "\nCancelled. Job data not set.\n")
+        (princ "\nUser clicked cancel. Job data not set.\n")
     )
     (unload_dialog id)
 )
@@ -65,20 +66,89 @@
     )
 )
 
-; Called only by job_data dialog.
-; Live data in the dialog
+; JOB-DATA functions, called only by job_data dialog.
 (defun set-job-data ( key value )
-  (vlax-ldata-put "job_data_temp" key value)
+    (set-dict-data "job_data_temp" key value)
 )
 
 ; Data saved to the file
 ; Both dictionaries are actually saved, but job_data_temp is ignored
 ; There's no reason to delete it
 (defun load-job-data ( key default / a b)
-    (setq a (vlax-ldata-get "job_data" key))
+    ; First try getting it from the "job_data" dictionary entry
+    (setq a (get-dict-data "job_data" key))
+    ; Next try getting it from the config in the Windows registry
     (setq b (getcfg (strcat "AppData/LoopCAD/" key)))
+    ; Last, if it's in none of the above locations: return the default
     (if a a (if b b default))
 )
+
 (defun save-job-data ( key value )
-  (vlax-ldata-put "job_data" key value)
+    (if (= value nil)
+        (set-dict-data "job_data" key "")
+        (set-dict-data "job_data" key value)
+    )
+    nil
+)
+
+; Generic DICT-DATA functions
+; ****************************************************************
+; Get a text value from the named dictionary
+(defun get-dict-data (dict-name key / value)
+    (setq value (cdr (assoc 1 (dictsearch (get-data-dict dict-name) key))))
+    (if (= value nill)
+        (setq value "")
+    )
+    value
+)
+
+; Set a text value in the named dictionary
+(defun set-dict-data (dict-name key value / data-dict xrecord)
+    (if (= value nil)
+        (setq value "") ; We must convert any nil values to empty strings
+                        ; so we don't break the DCL form which can't use
+                        ; nill in a text box
+    )
+    (setq data-dict (get-data-dict dict-name))
+    ; Check to see if the XRecord exists
+    (if (setq xrecord (dictsearch data-dict key))
+        (progn ; It does exist, remove it, and re-create it
+            (dictremove (get-data-dict dict-name) key)
+            (setq xrecord (entmakex 
+                (list 
+                  '(0 . "XRECORD")
+                  '(100 . "AcDbXrecord")
+                  (cons 1 value) ; Text value
+                ))
+            )
+            ; Add it to the dictionary
+            (if xrecord (setq xrecord (dictadd data-dict key xrecord)))
+        )
+        (progn ; It does not exist so create the XRecord
+            (setq xrecord (entmakex 
+                (list 
+                  '(0 . "XRECORD")
+                  '(100 . "AcDbXrecord")
+                  (cons 1 value) ; Text value
+                ))
+            )
+            ; Add it to the dictionary
+            (if xrecord (setq xrecord (dictadd data-dict key xrecord)))
+        )
+    )
+)
+
+; Get the named dictionary, create it first if needed
+(defun get-data-dict (dict-name / data-dict)
+    ; If "data-dict" is already present in the main dictionary
+    (if (not (setq data-dict (dictsearch (namedobjdict) dict-name)))
+        ; Create the "data-dict" dictionary set the main dictionary as owner
+        (progn
+            (setq data-dict (entmakex '((0 . "DICTIONARY")(100 . "AcDbDictionary"))))
+            ; if succesfully created, add it to the main dictionary
+            (if data-dict (setq data-dict (dictadd (namedobjdict) dict-name data-dict)))
+        )
+        ; If "data-dict" exists then return its entity name
+        (setq data-dict (cdr (assoc -1 data-dict)))
+    )
 )

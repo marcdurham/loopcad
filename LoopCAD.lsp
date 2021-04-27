@@ -1,3 +1,6 @@
+(command "NETLOAD" "/Code/LoopCAD/LoopCAD.dll")
+(princ "\nLoaded LoopCAD.dll .NET Module\n")
+
 (prompt "\nLoading LoopCAD LISP modules...\n")
 ; Global Variables
 (setq *failed-to-load* 0)

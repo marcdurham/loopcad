@@ -668,36 +668,6 @@
     )
 )
 
-; Riser
-(defun define-riser ( / label-color layer )
-    (setq layer "Risers")
-    (entmake 
-        (list
-            (cons 0 "BLOCK")
-            (cons 2 "Riser") ; Block name
-        )
-    )
-    
-    ; Outer Circle
-    (entmake
-        (list
-            (cons 0 "CIRCLE")      
-            (cons 10 (list 0 0 0)) ; Center Point
-            ; Radius: 5.0 copied from old block so it looks the same
-            (cons 40 4.5)        ; Radius
-            (cons 62 color-cyan)  ; Color
-            (cons 8 layer)           ; Layer
-        )
-    )
-    
-    (entmake 
-        (list
-            (cons 0 "ENDBLK")
-        )
-    )
-    (princ)
-)
-
 ; Convert feet to inches
 (defun feet->inches (feet)
     (* feet 12)

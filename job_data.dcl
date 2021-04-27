@@ -47,7 +47,7 @@ job_data : dialog
             fixed_width = true;
             alignment = left;
             is_tab_stop = true;     
-            action = "(set-job-data $key $value)";        
+            action = "(set-job-data $key $value)";
         }
         
         : edit_box 
@@ -60,7 +60,7 @@ job_data : dialog
             width = 50;
             alignment = right;
             is_tab_stop = true; 
-            action = "(set-job-data $key $value)";        
+            action = "(set-job-data $key $value)";
         }
     }
             
@@ -201,7 +201,7 @@ job_data : dialog
             {
                 allow_accept = true;
                 key = "supply_pipe_length";
-                label = "Pipe Lenght (ft): ";
+                label = "Pipe Length (ft): ";
                 value = ""; 
                 width = 40;
                 fixed_width = true;
@@ -326,7 +326,7 @@ job_data : dialog
             width = 40;
             fixed_width = true;
             alignment = left;
-            is_tab_stop = true;         
+            is_tab_stop = true;
             action = "(set-job-data $key $value)";
         }
         
@@ -339,7 +339,7 @@ job_data : dialog
             width = 40;
             fixed_width = true;
             alignment = left;
-            is_tab_stop = true;         
+            is_tab_stop = true;
             action = "(set-job-data $key $value)";
         }
     }
