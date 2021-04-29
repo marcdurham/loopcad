@@ -106,8 +106,11 @@
     <Compile Include="FloorTag.cs" />
     <Compile Include="LayerCreator.cs" />
     <Compile Include="ModelSpace.cs" />
+    <Compile Include="NodeLabeler.cs" />
+    <Compile Include="PipeLabeler.cs" />
     <Compile Include="PointExtensions.cs" />
     <Compile Include="Riser.cs" />
+    <Compile Include="RiserBuilder.cs" />
     <Compile Include="RiserLabel.cs" />
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
