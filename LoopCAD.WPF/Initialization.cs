@@ -22,7 +22,11 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling nodes...");
             
-            NodeLabeler.Run();
+            int heads = HeadLabeler.Run();
+            Editor().WriteMessage($"\n{heads} tees labeled.");
+
+            int tees = TeeLabeler.Run();
+            Editor().WriteMessage($"\n{tees} heads labeled.");
         }
 
         [CommandMethod("LABEL-PIPES")]
@@ -30,10 +34,9 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling pipes...");
 
-            int count = PipeLabeler.Run();
+            int pipes = PipeLabeler.Run();
 
-            Editor().WriteMessage($"\n{count} pipes labeled.");
-            
+            Editor().WriteMessage($"\n{pipes} pipes labeled.");
         }
 
         [CommandMethod("RISER")]

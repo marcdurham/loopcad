@@ -106,7 +106,8 @@
     <Compile Include="FloorTag.cs" />
     <Compile Include="LayerCreator.cs" />
     <Compile Include="ModelSpace.cs" />
-    <Compile Include="NodeLabeler.cs" />
+    <Compile Include="HeadLabeler.cs" />
+    <Compile Include="TeeLabeler.cs" />
     <Compile Include="PipeLabeler.cs" />
     <Compile Include="PointExtensions.cs" />
     <Compile Include="Riser.cs" />
