@@ -28,11 +28,21 @@ namespace LoopCAD.WPF
                 }
             }
 
-            foreach (ObjectId objectId in ids)
+            using (var trans = ModelSpace.StartTransaction())
             {
-                var vertices = new List<Point3d>();
-                using (var trans = ModelSpace.StartTransaction())
+                foreach (ObjectId objectId in ids)
                 {
+                    if (IsLabel(trans, objectId))
+                    {
+                        var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+
+                        block.Erase(true);
+                    }
+                }
+
+                foreach (ObjectId objectId in ids)
+                {
+                    var vertices = new List<Point3d>();
                     if (IsPipe(trans, objectId))
                     {
                         var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
@@ -45,18 +55,18 @@ namespace LoopCAD.WPF
                         pipeNumber++;
                     }
 
-                    trans.Commit();
+                    for (int i = 1; i < vertices.Count; i++)
+                    {
+                        pipeLabeler.CreateLabel(
+                            text: $"P{pipeNumber}",
+                            position: Midpoint(vertices[i], vertices[i - 1]));
+                    }
                 }
 
-                for (int i = 1; i < vertices.Count; i++)
-                {
-                    pipeLabeler.CreateLabel(
-                        text: $"P{pipeNumber}",
-                        position: Midpoint(vertices[i], vertices[i - 1]));
-                }
+                trans.Commit();
+
+                return pipeNumber;
             }
-
-            return pipeNumber;
         }
 
         static bool IsPipe(Transaction trans, ObjectId objectId)
@@ -69,9 +79,19 @@ namespace LoopCAD.WPF
         static bool IsLabel(Transaction trans, ObjectId objectId)
         {
             var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-            return objectId.ObjectClass.DxfName == "INSERT" &&
-                string.Equals(block.Layer, "PipeLabels", StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(block.Name, "PipeLabel", StringComparison.OrdinalIgnoreCase);
+            if (block != null)
+            {
+                return string.Equals(block.Layer, "PipeLabels", StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(block.Name, "PipeLabel", StringComparison.OrdinalIgnoreCase);
+            }
+
+            var text = trans.GetObject(objectId, OpenMode.ForRead) as DBText;
+            if (text != null)
+            {
+                return string.Equals(block.Layer, "Pipe Labels", StringComparison.OrdinalIgnoreCase);
+            }
+
+            return false;
         }
 
         static Point3d Midpoint(Point3d a, Point3d b)
