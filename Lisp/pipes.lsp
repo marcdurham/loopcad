@@ -47,7 +47,7 @@
 ; 64 = OSMODE: Snap to insertion points
 (setq osmode-snap-ins-pts 64)
 ; Layer for pipes is "Pipe" not "Pipes"
-(setq layer-pipe "Pipe")
+(setq layer-pipe "Pipes")
 
 (setq pipe-width 2.0)
 
