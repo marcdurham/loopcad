@@ -66,6 +66,14 @@ namespace LoopCAD.WPF
                 string.Equals(polyline.Layer, "Pipes", StringComparison.OrdinalIgnoreCase);
         }
 
+        static bool IsLabel(Transaction trans, ObjectId objectId)
+        {
+            var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+            return objectId.ObjectClass.DxfName == "INSERT" &&
+                string.Equals(block.Layer, "PipeLabels", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(block.Name, "PipeLabel", StringComparison.OrdinalIgnoreCase);
+        }
+
         static Point3d Midpoint(Point3d a, Point3d b)
         {
             return new Point3d(

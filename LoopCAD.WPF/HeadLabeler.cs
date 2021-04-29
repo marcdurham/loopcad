@@ -14,6 +14,16 @@ namespace LoopCAD.WPF
 
             using (var trans = ModelSpace.StartTransaction())
             {
+                foreach (var objectId in ModelSpace.From(trans))
+                {
+                    if (IsLabel(trans, objectId))
+                    {
+                        var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+
+                        block.Erase(true);
+                    }
+                }
+
                 int headNumber = 1;
                 foreach (var objectId in ModelSpace.From(trans))
                 {
@@ -37,6 +47,14 @@ namespace LoopCAD.WPF
             return objectId.ObjectClass.DxfName == "INSERT" &&
                 string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase) &&
                 block.Name.ToUpper().StartsWith("HEAD");
+        }
+
+        static bool IsLabel(Transaction trans, ObjectId objectId)
+        {
+            var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+            return objectId.ObjectClass.DxfName == "INSERT" &&
+                string.Equals(block.Layer, "HeadLabels", StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(block.Name, "HeadLabel", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
