@@ -233,6 +233,35 @@ namespace LoopCAD.WPF
             }
         }
 
+        [CommandMethod("SAVE-DXF")]
+        public void SaveAsDxfCommand()
+        {
+            Editor().WriteMessage("\nSaving as DXF...");
+
+            string path = Application.DocumentManager.MdiActiveDocument.Name.Replace(".dwg", ".dxf");
+            string directory = System.IO.Path.GetDirectoryName(path);
+            string fileName = System.IO.Path.GetFileName(path);
+
+            var dialog = new Microsoft.Win32.SaveFileDialog()
+            {
+                Filter = "Drawing EXchange Files (*.dxf)|*.dxf|All Files (*.*)|*.*",
+                DefaultExt = ".dxf",
+                FileName = fileName,
+                InitialDirectory = directory
+            };
+
+            var result = dialog.ShowDialog();
+            if (result.HasValue)
+            {
+                HostApplicationServices.WorkingDatabase.DxfOut(fileName: dialog.FileName, precision: 8, DwgVersion.Current);
+                Editor().WriteMessage("\nDone");
+            }
+            else
+            {
+                Editor().WriteMessage("\nSave As DXF cancelled");
+            }
+        }
+
         static Editor Editor()
         {
             return Application.DocumentManager.MdiActiveDocument.Editor;

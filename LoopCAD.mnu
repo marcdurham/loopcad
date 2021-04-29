@@ -18,6 +18,7 @@ ID_Label_Pipes [_Button("Label pipes", LabelPipes.bmp, LabelPipes.bmp)]^C^CLABEL
 //ID_Break_Pipes [_Button("Break pipes", BreakPipes.bmp, BreakPipes.bmp)]^C^CBREAK-PIPES
 ID_Insert_Job_Data [_Button("Insert job data", InsertJobData.bmp, InsertJobData.bmp)]^C^CJOB
 //ID_Scan_To_CDS [_Button("Scan to CDS File", ScanToFSDX.bmp, ScanToFSDX.bmp)]^C^C(princ "Doing nothing, please save as DXF instead.")
+ID_Save_To_DXF [_Button("Save to DXF File", SaveAsDxf.bmp, SaveAsDxf.bmp)]^C^CSAVE-DXF
 
 ***HELPSTRINGS
 TBAR_LoopCADMain [LoopCADMain]
