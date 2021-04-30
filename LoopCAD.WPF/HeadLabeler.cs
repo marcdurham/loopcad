@@ -18,7 +18,7 @@ namespace LoopCAD.WPF
                 {
                     if (IsLabel(trans, objectId))
                     {
-                        var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+                        var block = trans.GetObject(objectId, OpenMode.ForWrite) as BlockReference;
 
                         block.Erase(true);
                     }
