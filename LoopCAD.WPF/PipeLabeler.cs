@@ -34,9 +34,17 @@ namespace LoopCAD.WPF
                 {
                     if (IsLabel(trans, objectId))
                     {
-                        var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+                        var block = trans.GetObject(objectId, OpenMode.ForWrite) as BlockReference;
+                        if (block != null)
+                        {
+                            block.Erase(true);
+                        }
 
-                        block.Erase(true);
+                        var text = trans.GetObject(objectId, OpenMode.ForWrite) as DBText;
+                        if (text != null)
+                        {
+                            text.Erase(true);
+                        }
                     }
                 }
 
@@ -88,7 +96,7 @@ namespace LoopCAD.WPF
             var text = trans.GetObject(objectId, OpenMode.ForRead) as DBText;
             if (text != null)
             {
-                return string.Equals(block.Layer, "Pipe Labels", StringComparison.OrdinalIgnoreCase);
+                return string.Equals(text.Layer, "Pipe Labels", StringComparison.OrdinalIgnoreCase);
             }
 
             return false;
