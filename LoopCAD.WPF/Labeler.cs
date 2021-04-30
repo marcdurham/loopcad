@@ -6,8 +6,10 @@ namespace LoopCAD.WPF
     public class Labeler
     {
         readonly Database db;
+        
+        static ObjectId labelBlockDefId = ObjectId.Null;
+
         Transaction transaction;
-        BlockTable table;
         ObjectId arialStyle;
         string tag = "";
         string blockName = "";
@@ -21,9 +23,21 @@ namespace LoopCAD.WPF
             this.blockName = blockName;
             this.layer = layer;
 
-            arialStyle = ArialStyle();
-
             LayerCreator.Ensure(layer, layerColorIndex);
+
+            //using (var tab = transaction.GetObject(
+            //    HostApplicationServices.WorkingDatabase.BlockTableId,
+            //    OpenMode.ForWrite) as BlockTable)
+            {
+                arialStyle = ArialStyle();
+                //if (labelBlockDefId == ObjectId.Null)
+                //{
+                    labelBlockDefId = ExistingOrNewLabelDefId();
+                //}
+
+                //transaction.Commit();
+            }
+
         }
 
         public double TextHeight { get; set; } = 8.0;
@@ -33,27 +47,23 @@ namespace LoopCAD.WPF
 
         public void CreateLabel(string text, Point3d position)
         {
-            using (var transaction = ModelSpace.StartTransaction())
-            using (var modelSpace = ModelSpace.From(transaction))
-            {
-                this.transaction = transaction;
-                NewNodeLabel(text, position);
-                transaction.Commit();
-            }
+            NewNodeLabel(text, position);
         }
 
         void NewNodeLabel(string text, Point3d position)
         {
-            using (table = transaction.GetObject(
+            using (var transaction = ModelSpace.StartTransaction())
+            using (var table = transaction.GetObject(
                 HostApplicationServices.WorkingDatabase.BlockTableId, 
                 OpenMode.ForWrite) as BlockTable)
             using (var modelSpace = transaction.GetObject(
                 table[BlockTableRecord.ModelSpace],
                 OpenMode.ForWrite) as BlockTableRecord)
             {
-                BlockTableRecord record = ExistingOrNewLabelDef();
-
-                using (var blockRef = new BlockReference(position, record.Id)
+                using(var labelBlockDef = transaction.GetObject(
+                    labelBlockDefId, 
+                    OpenMode.ForRead) as BlockTableRecord)
+                using (var blockRef = new BlockReference(position, labelBlockDefId)
                 {
                     Layer = layer,
                     ColorIndex = ColorIndices.ByLayer
@@ -62,7 +72,7 @@ namespace LoopCAD.WPF
                     modelSpace.AppendEntity(blockRef);
                     transaction.AddNewlyCreatedDBObject(blockRef, true);
 
-                    foreach (ObjectId id in record)
+                    foreach (ObjectId id in labelBlockDef)
                     {
                         using (var def = id.GetObject(OpenMode.ForRead) as AttributeDefinition)
                         {
@@ -79,28 +89,56 @@ namespace LoopCAD.WPF
                             }
                         }
                     }
+
+                    transaction.Commit();
                 }
             }
         }
 
-        BlockTableRecord ExistingOrNewLabelDef()
+        ObjectId ExistingOrNewLabelDefId()
         {
-            BlockTableRecord record;
-
-            if (!table.Has(blockName))
+            using (var trans = ModelSpace.StartTransaction())
+            using (var tab = trans.GetObject(
+                HostApplicationServices.WorkingDatabase.BlockTableId,
+                OpenMode.ForWrite) as BlockTable)
             {
-                record = LabelDefFrom(table);
-                transaction.AddNewlyCreatedDBObject(record, true);
-            }
-            else
-            {
-                record = transaction.GetObject(table[blockName], OpenMode.ForRead) as BlockTableRecord;
-            }
+                if (tab.Has(blockName))
+                {
+                    using (var existing = tab[blockName].GetObject(OpenMode.ForRead) as BlockTableRecord)
+                    {
+                        if (!PropertiesMatch(trans, existing))
+                        {
+                            existing.UpgradeOpen();
+                            existing.Erase(true);
+                            trans.Commit();
+                        }
+                        else
+                        {
+                            return existing.Id;
+                        }
+                    }
+                }
 
-            return record;
+                BlockTableRecord record = NewLabelDefIdFrom(tab);
+                trans.AddNewlyCreatedDBObject(record, true);
+                trans.Commit();
+                return record.Id;
+            }
         }
 
-        BlockTableRecord LabelDefFrom(BlockTable table)
+        bool PropertiesMatch(Transaction transaction, BlockTableRecord record)
+        {
+            var attDef = AttributeReader.AttributeDefWithTagNamed(transaction, record.Id, tag);
+
+            return attDef != null &&
+                attDef.Position.X == XOffset &&
+                attDef.Position.Y == YOffset &&
+                attDef.Height == TextHeight &&
+                attDef.Layer == layer &&
+                attDef.ColorIndex == ColorIndices.ByLayer;
+        }
+
+        BlockTableRecord NewLabelDefIdFrom(BlockTable table)
         {
             var record = new BlockTableRecord
             {
@@ -121,6 +159,7 @@ namespace LoopCAD.WPF
 
             record.AppendEntity(definition);
             table.Add(record);
+            
 
             return record;
         }

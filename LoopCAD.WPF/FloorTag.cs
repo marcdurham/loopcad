@@ -28,7 +28,6 @@ namespace LoopCAD.WPF
                     var elevationString = AttributeReader.TextString(
                         transaction,
                         id,
-                        BlockName,
                         tag: "ELEVATION");
 
                     int.TryParse(elevationString, out int elevation);
@@ -41,7 +40,6 @@ namespace LoopCAD.WPF
                         Name = AttributeReader.TextString(
                             transaction,
                             id,
-                            BlockName,
                             tag: "NAME"),
 
                         Elevation = elevation
