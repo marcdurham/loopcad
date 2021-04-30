@@ -11,7 +11,7 @@ namespace LoopCAD.WPF
         {
             var pipeLabeler = new Labeler("PIPENUMBER", "PipeLabel", "PipeLabels", ColorIndices.Blue)
             {
-                TextHeight = 3.0,
+                TextHeight = 5.0,
                 XOffset = 0.0,
                 YOffset = 0.0,
                 HorizontalMode = TextHorizontalMode.TextCenter

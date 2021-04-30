@@ -26,9 +26,9 @@ namespace LoopCAD.WPF
             LayerCreator.Ensure(layer, layerColorIndex);
         }
 
-        public double TextHeight { get; set; } = 4.75;
-        public double XOffset { get; set; } = 6;
-        public double YOffset { get; set; } = -6;
+        public double TextHeight { get; set; } = 8.0;
+        public double XOffset { get; set; } = 10.0;
+        public double YOffset { get; set; } = -10.0;
         public TextHorizontalMode HorizontalMode { get; set; }
 
         public void CreateLabel(string text, Point3d position)

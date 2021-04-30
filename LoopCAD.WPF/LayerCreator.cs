@@ -16,6 +16,12 @@ namespace LoopCAD.WPF
 
                 if (table.Has(name))
                 {
+                    var layer = transaction.GetObject(
+                        table[name],
+                        OpenMode.ForWrite) as LayerTableRecord;
+
+                    layer.Color = Color.FromColorIndex(ColorMethod.ByLayer, colorIndex);
+                    transaction.Commit();
                     return;
                 }
 

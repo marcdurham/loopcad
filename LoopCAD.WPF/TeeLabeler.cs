@@ -7,10 +7,7 @@ namespace LoopCAD.WPF
     {
         public static int Run()
         {
-            var labeler = new Labeler("TEENUMBER", "TeeLabel", "TeeLabels", ColorIndices.Green)
-            {
-                TextHeight = 4.8
-            };
+            var labeler = new Labeler("TEENUMBER", "TeeLabel", "TeeLabels", ColorIndices.Green);
 
             using (var trans = ModelSpace.StartTransaction())
             {
