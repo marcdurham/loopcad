@@ -47,7 +47,7 @@ namespace LoopCAD.WPF
             foreach (ObjectId attId in blockDef)
             {
                 var attDef = transaction.GetObject(attId, OpenMode.ForRead) as AttributeDefinition;
-                if (string.Equals(attDef.Tag, tag, System.StringComparison.OrdinalIgnoreCase))
+                if (attDef != null && string.Equals(attDef.Tag, tag, System.StringComparison.OrdinalIgnoreCase))
                 {
                     return attDef;
                 }

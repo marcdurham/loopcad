@@ -98,9 +98,9 @@ namespace LoopCAD.WPF
         ObjectId ExistingOrNewLabelDefId()
         {
             using (var trans = ModelSpace.StartTransaction())
-            using (var tab = trans.GetObject(
+            using (var tab = (BlockTable)trans.GetObject(
                 HostApplicationServices.WorkingDatabase.BlockTableId,
-                OpenMode.ForWrite) as BlockTable)
+                OpenMode.ForRead))
             {
                 if (tab.Has(blockName))
                 {
@@ -118,9 +118,24 @@ namespace LoopCAD.WPF
                         }
                     }
                 }
+            }
 
-                BlockTableRecord record = NewLabelDefIdFrom(tab);
+            using (var trans = ModelSpace.StartTransaction())
+            using (var tab = (BlockTable)trans.GetObject(
+                HostApplicationServices.WorkingDatabase.BlockTableId,
+                OpenMode.ForRead))
+            {
+
+                BlockTableRecord record = NewLabelDefIdFrom();
+
+                tab.UpgradeOpen();
+                tab.Add(record);
                 trans.AddNewlyCreatedDBObject(record, true);
+
+                var attDef = NewAttributeDef();
+                record.AppendEntity(attDef);
+                trans.AddNewlyCreatedDBObject(attDef, true);
+
                 trans.Commit();
                 return record.Id;
             }
@@ -138,13 +153,34 @@ namespace LoopCAD.WPF
                 attDef.ColorIndex == ColorIndices.ByLayer;
         }
 
-        BlockTableRecord NewLabelDefIdFrom(BlockTable table)
+        BlockTableRecord NewLabelDefIdFrom()
         {
             var record = new BlockTableRecord
             {
                 Name = blockName
             };
 
+            //var definition = new AttributeDefinition()
+            //{
+            //    Height = TextHeight,
+            //    TextStyleId = arialStyle,
+            //    Layer = layer,
+            //    ColorIndex = ColorIndices.ByLayer,
+            //    Tag = tag,
+            //    TextString = "X.99",
+            //    Position = new Point3d(XOffset, YOffset, 0),
+            //    HorizontalMode = HorizontalMode,
+            //};
+
+            //record.AppendEntity(definition);
+        
+            
+
+            return record;
+        }
+
+        AttributeDefinition NewAttributeDef()
+        {
             var definition = new AttributeDefinition()
             {
                 Height = TextHeight,
@@ -157,11 +193,7 @@ namespace LoopCAD.WPF
                 HorizontalMode = HorizontalMode,
             };
 
-            record.AppendEntity(definition);
-            table.Add(record);
-            
-
-            return record;
+            return definition;
         }
 
         static ObjectId ArialStyle()

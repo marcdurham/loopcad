@@ -21,6 +21,11 @@ namespace LoopCAD.WPF
                     }
                 }
 
+                trans.Commit();
+            }
+
+            using (var trans = ModelSpace.StartTransaction())
+            {
                 int headNumber = 1;
                 foreach (var objectId in ModelSpace.From(trans))
                 {
@@ -33,25 +38,47 @@ namespace LoopCAD.WPF
                 }
 
                 trans.Commit();
-
                 return headNumber;
             }
         }
 
         static bool IsHead(Transaction trans, ObjectId objectId)
         {
+            if(objectId.IsErased)
+            {
+                return false;
+            }
+
             var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-            return objectId.ObjectClass.DxfName == "INSERT" &&
+            if (block == null)
+            {
+                return false;
+            }
+
+            return
                 string.Equals(block.Layer, "Heads", StringComparison.OrdinalIgnoreCase) &&
                 block.Name.ToUpper().StartsWith("HEAD");
         }
 
         static bool IsLabel(Transaction trans, ObjectId objectId)
         {
+            if (objectId.IsErased)
+            {
+                return false;
+            }
+
             var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-            return objectId.ObjectClass.DxfName == "INSERT" &&
-                string.Equals(block.Layer, "HeadLabels", StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(block.Name, "HeadLabel", StringComparison.OrdinalIgnoreCase);
+            if(block == null)
+            {
+                return false;
+            }
+
+            // I'd check the block name, but it can't be accessed if the entity has
+            // been erased, and causes and error, even though IsErased returns false
+            return
+                string.Equals(block.Layer, "HeadLabels", StringComparison.OrdinalIgnoreCase);
+            //&&
+            //    string.Equals(block.Name, "HeadLabel", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

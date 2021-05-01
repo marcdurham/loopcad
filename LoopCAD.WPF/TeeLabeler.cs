@@ -38,20 +38,57 @@ namespace LoopCAD.WPF
             }
         }
 
+        //static bool IsTee(Transaction trans, ObjectId objectId)
+        //{
+        //    var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+        //    return objectId.ObjectClass.DxfName == "INSERT" &&
+        //        string.Equals(block.Layer, "Tees", StringComparison.OrdinalIgnoreCase) &&
+        //        block.Name.ToUpper().StartsWith("TEE");
+        //}
+
+        //static bool IsLabel(Transaction trans, ObjectId objectId)
+        //{
+        //    var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+        //    return objectId.ObjectClass.DxfName == "INSERT" &&
+        //        string.Equals(block.Layer, "TeeLabels", StringComparison.OrdinalIgnoreCase) &&
+        //        string.Equals(block.Name, "TeeLabel", StringComparison.OrdinalIgnoreCase);
+        //}
+
         static bool IsTee(Transaction trans, ObjectId objectId)
         {
+            if (objectId.IsErased)
+            {
+                return false;
+            }
+
             var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-            return objectId.ObjectClass.DxfName == "INSERT" &&
+            if (block == null)
+            {
+                return false;
+            }
+
+            return
                 string.Equals(block.Layer, "Tees", StringComparison.OrdinalIgnoreCase) &&
                 block.Name.ToUpper().StartsWith("TEE");
         }
 
         static bool IsLabel(Transaction trans, ObjectId objectId)
         {
+            if (objectId.IsErased)
+            {
+                return false;
+            }
+
             var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-            return objectId.ObjectClass.DxfName == "INSERT" &&
-                string.Equals(block.Layer, "TeeLabels", StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(block.Name, "TeeLabel", StringComparison.OrdinalIgnoreCase);
+            if (block == null)
+            {
+                return false;
+            }
+
+            return
+                string.Equals(block.Layer, "TeeLabels", StringComparison.OrdinalIgnoreCase);
+            //&&
+            //    string.Equals(block.Name, "HeadLabel", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
