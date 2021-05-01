@@ -22,6 +22,9 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nLabeling nodes...");
             
+            int domesticTees = DomesticTeeLabeler.Run();
+            Editor().WriteMessage($"\n{domesticTees} domestic tees labeled.");
+
             int heads = HeadLabeler.Run();
             Editor().WriteMessage($"\n{heads} tees labeled.");
 

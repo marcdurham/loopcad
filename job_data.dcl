@@ -290,7 +290,7 @@ job_data : dialog
         {
             allow_accept = true;
             key = "water_flow_switch_make_model";
-            label = "Make && Model: ";
+            label = "Make n Model: ";
             value = ""; 
             width = 40;
             fixed_width = true;
@@ -322,19 +322,6 @@ job_data : dialog
             allow_accept = true;
             key = "head_model_default";
             label = "Head Model Default: ";
-            value = ""; 
-            width = 40;
-            fixed_width = true;
-            alignment = left;
-            is_tab_stop = true;
-            action = "(set-job-data $key $value)";
-        }
-        
-        : edit_box 
-        {
-            allow_accept = true;
-            key = "head_coverage_default";
-            label = "Head Coverage Default (ft): ";
             value = ""; 
             width = 40;
             fixed_width = true;
