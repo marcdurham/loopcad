@@ -680,10 +680,10 @@
     (setq headLayer (vla-Add temp:layers "Heads"))
     (setq headCoverageLayer (vla-Add temp:layers "HeadCoverage"))  
     (setq headPairsLayer (vla-Add temp:layers "HeadPairs"))  
-    (setq pipesLayer (vla-Add temp:layers "Pipe"))  
+    (setq pipesLayer (vla-Add temp:layers "Pipes"))  
     (setq pipesLayer (vla-Add temp:layers "Tees"))  
 
-    (command "-LAYER" "COLOR" "White" "Pipe" "")
+    (command "-LAYER" "COLOR" "White" "Pipes" "")
     (command "-LAYER" "COLOR" "Yellow" "HeadPairs" "")
     (command "-LAYER" "COLOR" "White" "Tee" "")
 ;)
