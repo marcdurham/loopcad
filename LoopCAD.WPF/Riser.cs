@@ -1,7 +1,5 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace LoopCAD.WPF
 {

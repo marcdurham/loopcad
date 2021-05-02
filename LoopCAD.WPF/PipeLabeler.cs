@@ -7,7 +7,7 @@ namespace LoopCAD.WPF
 {
     public class PipeLabeler
     {
-        public static int Run()
+        public static int LabelAllPipes()
         {
             var pipeLabeler = new Labeler("PIPENUMBER", "PipeLabel", "PipeLabels", ColorIndices.Blue)
             {

@@ -5,11 +5,8 @@ namespace LoopCAD.WPF
 {
     public class Labeler
     {
-        readonly Database db;
-        
         static ObjectId labelBlockDefId = ObjectId.Null;
 
-        Transaction transaction;
         ObjectId arialStyle;
         string tag = "";
         string blockName = "";
@@ -17,27 +14,14 @@ namespace LoopCAD.WPF
 
         public Labeler(string tag, string blockName, string layer, short layerColorIndex)
         {
-            db = HostApplicationServices.WorkingDatabase;
-
             this.tag = tag;
             this.blockName = blockName;
             this.layer = layer;
 
             LayerCreator.Ensure(layer, layerColorIndex);
 
-            //using (var tab = transaction.GetObject(
-            //    HostApplicationServices.WorkingDatabase.BlockTableId,
-            //    OpenMode.ForWrite) as BlockTable)
-            {
-                arialStyle = ArialStyle();
-                //if (labelBlockDefId == ObjectId.Null)
-                //{
-                    labelBlockDefId = ExistingOrNewLabelDefId();
-                //}
-
-                //transaction.Commit();
-            }
-
+            arialStyle = ArialStyle();
+            labelBlockDefId = ExistingOrNewLabelDefId();
         }
 
         public double TextHeight { get; set; } = 8.0;
@@ -159,22 +143,6 @@ namespace LoopCAD.WPF
             {
                 Name = blockName
             };
-
-            //var definition = new AttributeDefinition()
-            //{
-            //    Height = TextHeight,
-            //    TextStyleId = arialStyle,
-            //    Layer = layer,
-            //    ColorIndex = ColorIndices.ByLayer,
-            //    Tag = tag,
-            //    TextString = "X.99",
-            //    Position = new Point3d(XOffset, YOffset, 0),
-            //    HorizontalMode = HorizontalMode,
-            //};
-
-            //record.AppendEntity(definition);
-        
-            
 
             return record;
         }
