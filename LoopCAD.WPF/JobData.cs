@@ -7,17 +7,15 @@ namespace LoopCAD.WPF
 {
     public class JobData
     {
-        public const string BlockName = "FloorConnector";
-        public const string Layer = "Floor Connectors";
         readonly Database db;
-        readonly DBDictionary table;
+        readonly DBDictionary namedObjectDict;
         readonly Transaction transaction;
 
         public JobData(Transaction transaction)
         {
             this.transaction = transaction;
             db = HostApplicationServices.WorkingDatabase;
-            table = (DBDictionary)transaction.GetObject(
+            namedObjectDict = (DBDictionary)transaction.GetObject(
                 db.NamedObjectsDictionaryId,
                 OpenMode.ForRead);
         }
@@ -32,28 +30,8 @@ namespace LoopCAD.WPF
 
         void StartTest()
         {
-            if(!table.Contains("job_data"))
-            {
-                Editor().WriteMessage("\nJob data does not exist in this file");
-            }
-
-            var dict = transaction.GetObject(table.GetAt("job_data"), OpenMode.ForRead) as DBDictionary;
-
-            if(!dict.Contains("job_number"))
-            {
-                Editor().WriteMessage("\nJob number does not exist");
-            }
-
-            var xrec = (Xrecord)transaction.GetObject(dict.GetAt("job_number"), OpenMode.ForRead);
-
-            string jobNumber = string.Empty;
-            foreach (TypedValue value in xrec.Data.AsArray())
-            {
-                if (value.TypeCode == 1)
-                {
-                    jobNumber = value.Value as string;
-                }
-            }
+            string jobNumber = NamedObjectDictionary
+                .KeyValue("job_data", "job_number");
 
             Editor().WriteMessage($"Job number is {jobNumber}");
         }
