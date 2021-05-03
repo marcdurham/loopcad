@@ -20,13 +20,15 @@ namespace LoopCAD.WPF
 
             LayerCreator.Ensure(layer, layerColorIndex);
 
-            arialStyle = ArialStyle();
+            //arialStyle = ArialStyle();
             labelBlockDefId = ExistingOrNewLabelDefId();
         }
 
+        // Defaults set here
         public double TextHeight { get; set; } = 8.0;
         public double XOffset { get; set; } = 10.0;
         public double YOffset { get; set; } = -10.0;
+
         public TextHorizontalMode HorizontalMode { get; set; }
 
         public void CreateLabel(string text, Point3d position)

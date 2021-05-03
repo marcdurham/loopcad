@@ -90,6 +90,15 @@ namespace LoopCAD.WPF
             }
         }
 
+        [CommandMethod("GET-JOB-DATA")]
+        public void GetJobDataCommand()
+        {
+            Editor().WriteMessage("\nGetting job data...");
+            JobData.Test();
+            Editor().WriteMessage("\nDone.");
+        }
+
+
         static Editor Editor()
         {
             return Application.DocumentManager.MdiActiveDocument.Editor;

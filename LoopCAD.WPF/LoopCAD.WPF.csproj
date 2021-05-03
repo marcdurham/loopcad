@@ -108,6 +108,7 @@
     <Compile Include="ModelSpace.cs" />
     <Compile Include="HeadLabeler.cs" />
     <Compile Include="DomesticTeeLabeler.cs" />
+    <Compile Include="JobData.cs" />
     <Compile Include="TeeLabeler.cs" />
     <Compile Include="PipeLabeler.cs" />
     <Compile Include="PointExtensions.cs" />
