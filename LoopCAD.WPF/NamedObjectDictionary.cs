@@ -13,7 +13,6 @@ namespace LoopCAD.WPF
                     db.NamedObjectsDictionaryId,
                     OpenMode.ForRead))
             {
-
                 if (!namedObjectDict.Contains(dictionaryName))
                 {
                     throw new Exception(
@@ -44,6 +43,18 @@ namespace LoopCAD.WPF
                 }
 
                 return value;
+            }
+        }
+
+        public static bool HasDictionaryNamed(string dictionaryName)
+        {
+            using (var transaction = ModelSpace.StartTransaction())
+            using (var db = HostApplicationServices.WorkingDatabase)
+            using (var namedObjectDict = (DBDictionary)transaction.GetObject(
+                    db.NamedObjectsDictionaryId,
+                    OpenMode.ForRead))
+            {
+                return namedObjectDict.Contains(dictionaryName);
             }
         }
     }

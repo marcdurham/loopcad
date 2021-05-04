@@ -114,6 +114,7 @@
     <Compile Include="JobData.cs" />
     <Compile Include="NamedObjectDictionary.cs" />
     <Compile Include="SnakeCase.cs" />
+    <Compile Include="JobDataBlock.cs" />
     <Compile Include="TeeLabeler.cs" />
     <Compile Include="PipeLabeler.cs" />
     <Compile Include="PointExtensions.cs" />

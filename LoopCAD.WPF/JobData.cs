@@ -2,6 +2,7 @@
 {
     public class JobData
     {
+        public bool HasJobDataDictionary { get; set; }
         public string JobNumber { get; set; }
         public string JobName { get; set; }
         public string JobSiteAddress { get; set; }
@@ -30,7 +31,19 @@
         public static JobData Load()
         {
             var data = new JobData();
-            data.GetValues();
+
+            data.HasJobDataDictionary = NamedObjectDictionary
+                .HasDictionaryNamed("job_data");
+
+            if (data.HasJobDataDictionary)
+            {
+                data.GetValues();
+            }
+            else
+            {
+                data = JobDataBlock.Load();
+            }
+
             return data;
         }
 
