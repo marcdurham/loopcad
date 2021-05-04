@@ -52,7 +52,7 @@ namespace LoopCAD.WPF
                     }
                 }
 
-                pko.Message = "\nPick a floor ";
+                pko.Message = "\nChoose floor to run riser pipe to ";
                 pko.AllowNone = false;
 
                 PromptResult result = Editor().GetKeywords(pko);
