@@ -104,6 +104,7 @@
     <Compile Include="AttributeReader.cs" />
     <Compile Include="ElevationBox.cs" />
     <Compile Include="FloorTag.cs" />
+    <Compile Include="HeadSideWall.cs" />
     <Compile Include="JobDataForm.xaml.cs">
       <DependentUpon>JobDataForm.xaml</DependentUpon>
     </Compile>
