@@ -104,18 +104,26 @@
     <Compile Include="AttributeReader.cs" />
     <Compile Include="ElevationBox.cs" />
     <Compile Include="FloorTag.cs" />
+    <Compile Include="JobDataForm.xaml.cs">
+      <DependentUpon>JobDataForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="LayerCreator.cs" />
     <Compile Include="ModelSpace.cs" />
     <Compile Include="HeadLabeler.cs" />
     <Compile Include="DomesticTeeLabeler.cs" />
     <Compile Include="JobData.cs" />
     <Compile Include="NamedObjectDictionary.cs" />
+    <Compile Include="SnakeCase.cs" />
     <Compile Include="TeeLabeler.cs" />
     <Compile Include="PipeLabeler.cs" />
     <Compile Include="PointExtensions.cs" />
     <Compile Include="Riser.cs" />
     <Compile Include="RiserBuilder.cs" />
     <Compile Include="RiserLabel.cs" />
+    <Page Include="JobDataForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

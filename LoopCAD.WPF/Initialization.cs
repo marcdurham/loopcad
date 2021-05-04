@@ -94,7 +94,8 @@ namespace LoopCAD.WPF
         public void GetJobDataCommand()
         {
             Editor().WriteMessage("\nGetting job data...");
-            JobData.Test();
+            var data = JobData.Load();
+            Editor().WriteMessage($"\nJob Number: {data.JobNumber}");
             Editor().WriteMessage("\nDone.");
         }
 

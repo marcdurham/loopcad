@@ -1,44 +1,52 @@
-﻿using Autodesk.AutoCAD.ApplicationServices;
-using Autodesk.AutoCAD.DatabaseServices;
-using Autodesk.AutoCAD.EditorInput;
-using Autodesk.AutoCAD.Geometry;
-
-namespace LoopCAD.WPF
+﻿namespace LoopCAD.WPF
 {
     public class JobData
     {
-        readonly Database db;
-        readonly DBDictionary namedObjectDict;
-        readonly Transaction transaction;
+        public string JobNumber { get; set; }
+        public string JobName { get; set; }
+        public string JobSiteAddress { get; set; }
+        public string CalculatedByCompany { get; set; }
+        public string SprinklerPipeType { get; set; }
+        public string SprinklerFittingType { get; set; }
+        public string SupplyStaticPressure { get; set; }
+        public string SupplyResidualPressure { get; set; }
+        public string SupplyAvailableFlow { get; set; }
+        public string SupplyElevation { get; set; }
+        public string SupplyPipeType { get; set; }
+        public string SupplyPipeSize { get; set; }
+        public string SupplyPipeInternalDiameter { get; set; }
+        public string SupplyPipeCFactor { get; set; }
+        public string SupplyPipeLength { get; set; }
+        public string SupplyName { get; set; }
+        public string DomesticFlowAdded { get; set; }
+        public string WaterFlowSwitchMakeModel { get; set; }
+        public string WaterFlowSwitchPressureLoss { get; set; }
+        public string SupplyPipeFittingsSummary { get; set; }
+        public string SupplyPipeFittingsEquivLength { get; set; }
+        public string SupplyPipeAddPressureLoss { get; set; }
+        public string HeadModelDefault { get; set; }
+        public string HeadCoverageDefault { get; set; }
 
-        public JobData(Transaction transaction)
+        public static JobData Load()
         {
-            this.transaction = transaction;
-            db = HostApplicationServices.WorkingDatabase;
-            namedObjectDict = (DBDictionary)transaction.GetObject(
-                db.NamedObjectsDictionaryId,
-                OpenMode.ForRead);
+            var data = new JobData();
+            data.GetValues();
+            return data;
         }
 
-        public static void Test()
+        void GetValues()
         {
-            using (var trans = ModelSpace.StartTransaction())
+            var form = new JobDataForm();
+            form.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            form.ShowDialog();
+
+            var properties = typeof(JobData).GetProperties();
+            foreach(var property in properties)
             {
-                new JobData(trans).StartTest();
+                string key = SnakeCase.Convert(property.Name);
+                string value = NamedObjectDictionary.KeyValue("job_data", key);
+                property.SetValue(this, value);
             }
-        }
-
-        void StartTest()
-        {
-            string jobNumber = NamedObjectDictionary
-                .KeyValue("job_data", "job_number");
-
-            Editor().WriteMessage($"Job number is {jobNumber}");
-        }
-
-        Editor Editor()
-        {
-            return Application.DocumentManager.MdiActiveDocument.Editor;
         }
     }
 }
