@@ -61,5 +61,16 @@
                 property.SetValue(this, value);
             }
         }
+
+        void SetValues()
+        {
+            var properties = typeof(JobData).GetProperties();
+            foreach (var property in properties)
+            {
+                string key = SnakeCase.Convert(property.Name);
+                string value = NamedObjectDictionary.KeyValue("job_data", key);
+                property.SetValue(this, value);
+            }
+        }
     }
 }
