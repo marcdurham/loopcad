@@ -7,7 +7,14 @@ namespace LoopCAD.WPF
     {
         public static int Run()
         {
-            var labeler = new Labeler("TEENUMBER", "TeeLabel", "TeeLabels", ColorIndices.Green);
+            var labeler = new Labeler(
+                new LabelSpecs
+                {
+                    Tag = "TEENUMBER",
+                    BlockName = "TeeLabel",
+                    Layer = "TeeLabels",
+                    LayerColorIndex = ColorIndices.Green
+                });
 
             using (var trans = ModelSpace.StartTransaction())
             {

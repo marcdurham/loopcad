@@ -85,14 +85,15 @@ namespace LoopCAD.WPF
                 Riser.Insert(newPoint);
 
                 var labeler = new Labeler(
-                    RiserLabel.TagName,
-                    RiserLabel.BlockName,
-                    RiserLabel.LayerName,
-                    ColorIndices.Cyan)
-                {
-                    XOffset = 15.0,
-                    TextHeight = 8.0
-                };
+                     new LabelSpecs
+                     {
+                         Tag = RiserLabel.TagName,
+                         BlockName = RiserLabel.BlockName,
+                         Layer = RiserLabel.LayerName,
+                         LayerColorIndex = ColorIndices.Cyan,
+                         TextHeight = 8.0,
+                         XOffset = 15.0,
+                     });
 
                 labeler.CreateLabel($"R.{number}.{suffix}", position: newPoint);
 

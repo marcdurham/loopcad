@@ -9,13 +9,18 @@ namespace LoopCAD.WPF
     {
         public static int LabelAllPipes()
         {
-            var pipeLabeler = new Labeler("PIPENUMBER", "PipeLabel", "PipeLabels", ColorIndices.Blue)
-            {
-                TextHeight = 5.0,
-                XOffset = 0.0,
-                YOffset = 0.0,
-                HorizontalMode = TextHorizontalMode.TextCenter
-            };
+            var pipeLabeler = new Labeler(
+                 new LabelSpecs
+                 {
+                     Tag = "PIPENUMBER",
+                     BlockName = "PipeLabel",
+                     Layer = "PipeLabels",
+                     LayerColorIndex = ColorIndices.Blue,
+                     TextHeight = 4.0,
+                     XOffset = 0.0,
+                     YOffset = 0.0,
+                     HorizontalMode = TextHorizontalMode.TextCenter
+                 });
 
             int pipeNumber = 1;
 

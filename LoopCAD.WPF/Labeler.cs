@@ -3,33 +3,33 @@ using Autodesk.AutoCAD.Geometry;
 
 namespace LoopCAD.WPF
 {
+    public class LabelSpecs
+    {
+        public string Tag { get; set; } = "NUMBER";
+        public string BlockName { get; set; } = "Label";
+        public string Layer { get; set; } = "Labels";
+        public short LayerColorIndex { get; set; } = ColorIndices.ByLayer;
+        public TextHorizontalMode HorizontalMode { get; set; }
+        public double TextHeight { get; set; } = 8.0;
+        public double XOffset { get; set; } = 10.0;
+        public double YOffset { get; set; } = -10.0;
+    }
+
     public class Labeler
     {
         static ObjectId labelBlockDefId = ObjectId.Null;
 
-        ObjectId arialStyle;
-        string tag = "";
-        string blockName = "";
-        string layer = "";
+        readonly LabelSpecs specs = new LabelSpecs();
 
-        public Labeler(string tag, string blockName, string layer, short layerColorIndex)
+        public Labeler(LabelSpecs labelSpecs) //string tag, string blockName, string layer, short layerColorIndex)
         {
-            this.tag = tag;
-            this.blockName = blockName;
-            this.layer = layer;
+            specs = labelSpecs;
 
-            LayerCreator.Ensure(layer, layerColorIndex);
+            LayerCreator.Ensure(specs.Layer, specs.LayerColorIndex);
 
             //arialStyle = ArialStyle();
             labelBlockDefId = ExistingOrNewLabelDefId();
         }
-
-        // Defaults set here
-        public double TextHeight { get; set; } = 8.0;
-        public double XOffset { get; set; } = 10.0;
-        public double YOffset { get; set; } = -10.0;
-
-        public TextHorizontalMode HorizontalMode { get; set; }
 
         public void CreateLabel(string text, Point3d position)
         {
@@ -51,7 +51,7 @@ namespace LoopCAD.WPF
                     OpenMode.ForRead) as BlockTableRecord)
                 using (var blockRef = new BlockReference(position, labelBlockDefId)
                 {
-                    Layer = layer,
+                    Layer = specs.Layer,
                     ColorIndex = ColorIndices.ByLayer
                 })
                 {
@@ -62,7 +62,8 @@ namespace LoopCAD.WPF
                     {
                         using (var def = id.GetObject(OpenMode.ForRead) as AttributeDefinition)
                         {
-                            if ((def != null) && (!def.Constant) && def.Tag.ToUpper() == tag)
+                            if ((def != null) && (!def.Constant) 
+                                && def.Tag.ToUpper() == specs.Tag)
                             {
                                 using (var ar = new AttributeReference())
                                 {
@@ -88,9 +89,9 @@ namespace LoopCAD.WPF
                 HostApplicationServices.WorkingDatabase.BlockTableId,
                 OpenMode.ForRead))
             {
-                if (tab.Has(blockName))
+                if (tab.Has(specs.BlockName))
                 {
-                    using (var existing = tab[blockName].GetObject(OpenMode.ForRead) as BlockTableRecord)
+                    using (var existing = tab[specs.BlockName].GetObject(OpenMode.ForRead) as BlockTableRecord)
                     {
                         if (!PropertiesMatch(trans, existing))
                         {
@@ -129,13 +130,16 @@ namespace LoopCAD.WPF
 
         bool PropertiesMatch(Transaction transaction, BlockTableRecord record)
         {
-            var attDef = AttributeReader.AttributeDefWithTagNamed(transaction, record.Id, tag);
+            var attDef = AttributeReader.AttributeDefWithTagNamed(
+                transaction, 
+                record.Id, 
+                specs.Tag);
 
             return attDef != null &&
-                attDef.Position.X == XOffset &&
-                attDef.Position.Y == YOffset &&
-                attDef.Height == TextHeight &&
-                attDef.Layer == layer &&
+                attDef.Position.X == specs.XOffset &&
+                attDef.Position.Y == specs.YOffset &&
+                attDef.Height == specs.TextHeight &&
+                attDef.Layer == specs.Layer &&
                 attDef.ColorIndex == ColorIndices.ByLayer;
         }
 
@@ -143,7 +147,7 @@ namespace LoopCAD.WPF
         {
             var record = new BlockTableRecord
             {
-                Name = blockName
+                Name = specs.BlockName
             };
 
             return record;
@@ -153,14 +157,14 @@ namespace LoopCAD.WPF
         {
             var definition = new AttributeDefinition()
             {
-                Height = TextHeight,
-                TextStyleId = arialStyle,
-                Layer = layer,
+                Height = specs.TextHeight,
+                //TextStyleId = arialStyle,
+                Layer = specs.Layer,
                 ColorIndex = ColorIndices.ByLayer,
-                Tag = tag,
+                Tag = specs.Tag,
                 TextString = "X.99",
-                Position = new Point3d(XOffset, YOffset, 0),
-                HorizontalMode = HorizontalMode,
+                Position = new Point3d(specs.XOffset, specs.YOffset, 0),
+                HorizontalMode = specs.HorizontalMode,
             };
 
             return definition;

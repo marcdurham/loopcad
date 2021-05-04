@@ -6,7 +6,7 @@
 (setq head-label:prompt "Head number label")
 (setq head-label:label-color color-blue)
 (setq head-label:layer "HeadLabels")
-(setq head-label:x-offset 9.132)
+(setq head-label:x-offset 3.0)
 (setq head-label:y-offset 0.0)
 
 ; Tee Label Properties
