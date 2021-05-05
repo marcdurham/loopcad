@@ -2,6 +2,7 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Runtime;
+using System;
 
 namespace LoopCAD.WPF
 {
@@ -53,12 +54,17 @@ namespace LoopCAD.WPF
                 AllowArbitraryInput = true,
             };
 
+            Object osmode = Application.GetSystemVariable("OSMODE");
+            Application.SetSystemVariable("OSMODE", 65);
+
             var result = Editor().GetPoint(options);
 
             if (result.Status == PromptStatus.OK)
             {
                 RiserBuilder.Insert(result.Value);
             }
+
+            Application.SetSystemVariable("OSMODE", osmode);
         }
 
         [CommandMethod("SAVE-DXF")]
