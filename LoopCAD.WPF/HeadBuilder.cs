@@ -7,12 +7,11 @@ namespace LoopCAD.WPF
 {
     public class HeadBuilder
     {
-        public static void Insert()
+        public static void Insert(int coverage)
         {
             // TODO: int number = HeadLabel.HighestNumber() + 1;
             int number = 1;
             var jobData = JobData.Load();
-            int coverage = 12;
 
             using (var transaction = ModelSpace.StartTransaction())
             {
