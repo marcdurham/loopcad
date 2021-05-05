@@ -20,6 +20,13 @@ ID_Insert_Job_Data [_Button("Insert job data", InsertJobData.bmp, InsertJobData.
 //ID_Scan_To_CDS [_Button("Scan to CDS File", ScanToFSDX.bmp, ScanToFSDX.bmp)]^C^C(princ "Doing nothing, please save as DXF instead.")
 ID_Save_To_DXF [_Button("Save to DXF File", SaveAsDxf.bmp, SaveAsDxf.bmp)]^C^CSAVE-DXF
 
+// Heads
+ID_Insert_Head12 [_Button("Insert 12 x 12 head", 12.bmp, 12.bmp)]^C^CH12
+ID_Insert_Head14 [_Button("Insert 14 x 14 head", 14.bmp, 14.bmp)]^C^CH14
+ID_Insert_Head16 [_Button("Insert 16 x 16 head", 16.bmp, 16.bmp)]^C^CH16
+ID_Insert_Head18 [_Button("Insert 18 x 18 head", 18.bmp, 18.bmp)]^C^CH18
+ID_Insert_Head20 [_Button("Insert 20 x 20 head", 20.bmp, 20.bmp)]^C^CH20
+
 ***HELPSTRINGS
 TBAR_LoopCADMain [LoopCADMain]
 ID_Draw_Elevation_Box [Insert new elevation box]

@@ -10,7 +10,7 @@ namespace LoopCAD.WPF
         public static void Insert(int coverage)
         {
             // TODO: int number = HeadLabel.HighestNumber() + 1;
-            int number = 1;
+            //int number = 1;
             var jobData = JobData.Load();
 
             using (var transaction = ModelSpace.StartTransaction())
@@ -26,7 +26,7 @@ namespace LoopCAD.WPF
                 var jig = new BlockJig();
                 PromptResult res = jig.DragMe(jigBlock.ObjectId, out Point3d point);
 
-                // This point will be disposed, so clone it
+                // This point will be disposed outside of this block, so clone it
                 var pointClone = new Point3d(
                     x: point.X,
                     y: point.Y,
@@ -37,18 +37,18 @@ namespace LoopCAD.WPF
                     new Head(transaction).InsertAt(pointClone, model: jobData?.HeadModelDefault ?? "", coverage: coverage);
                 }
 
-                var labeler = new Labeler(
-                        new LabelSpecs
-                        {
-                            Tag = "HEADNUMBER", //RiserLabel.TagName,
-                            BlockName = "HeadLabel", //RiserLabel.BlockName,
-                            Layer = "HeadLabels", //RiserLabel.LayerName,
-                            LayerColorIndex = ColorIndices.Red,
-                            TextHeight = 5.0,
-                            XOffset = 15.0,
-                        });
+                //var labeler = new Labeler(
+                //        new LabelSpecs
+                //        {
+                //            Tag = "HEADNUMBER", //RiserLabel.TagName,
+                //            BlockName = "HeadLabel", //RiserLabel.BlockName,
+                //            Layer = "HeadLabels", //RiserLabel.LayerName,
+                //            LayerColorIndex = ColorIndices.Red,
+                //            TextHeight = 5.0,
+                //            XOffset = 15.0,
+                //        });
 
-                labeler.CreateLabel($"H.{number}", position: pointClone);
+                //labeler.CreateLabel($"H.{number}", position: pointClone);
 
                 transaction.Commit();
             }
