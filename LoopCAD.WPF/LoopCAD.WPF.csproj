@@ -102,6 +102,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeReader.cs" />
+    <Compile Include="BlockJig.cs" />
     <Compile Include="ElevationBox.cs" />
     <Compile Include="FloorTag.cs" />
     <Compile Include="HeadSideWall.cs" />
@@ -114,6 +115,8 @@
     <Compile Include="DomesticTeeLabeler.cs" />
     <Compile Include="JobData.cs" />
     <Compile Include="NamedObjectDictionary.cs" />
+    <Compile Include="HeadBuilder.cs" />
+    <Compile Include="Head.cs" />
     <Compile Include="SnakeCase.cs" />
     <Compile Include="JobDataBlock.cs" />
     <Compile Include="TeeLabeler.cs" />

@@ -106,6 +106,41 @@ namespace LoopCAD.WPF
         }
 
 
+        [CommandMethod("IH2")]
+        public void InsertHeadCommand()
+        {
+            Editor().WriteMessage("\nInserting head...");
+
+            var options = new PromptPointOptions(
+                "Click location to insert head")
+            {
+                AllowArbitraryInput = true,
+            };
+
+            Object osmode = Application.GetSystemVariable("OSMODE");
+            Application.SetSystemVariable("OSMODE", 65);
+
+            var result = Editor().GetPoint(options);
+
+            if (result.Status == PromptStatus.OK)
+            {
+
+                //PromptPointResult ppr = Editor().GetPoint("\nCenter: ");
+                //if (ppr.Status != PromptStatus.OK) return;
+
+                PromptDistanceOptions pdo = new PromptDistanceOptions("\nRadius: ");
+                pdo.BasePoint = result.Value;
+                pdo.UseBasePoint = true;
+                PromptDoubleResult pdr = Editor().GetDistance(pdo);
+                
+                if (pdr.Status != PromptStatus.OK) return;
+                
+                HeadBuilder.Insert(result.Value);
+            }
+
+            Application.SetSystemVariable("OSMODE", osmode);
+        }
+
         static Editor Editor()
         {
             return Application.DocumentManager.MdiActiveDocument.Editor;

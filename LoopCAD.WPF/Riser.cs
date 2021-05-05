@@ -28,14 +28,14 @@ namespace LoopCAD.WPF
 
         void InsertAt(Point3d position)
         {
-            var blockRef = new BlockReference(position, Define().Id)
+            var labelBlockDef = new BlockReference(position, Define().Id)
             {
                 Layer = "Floor Connectors",
                 ColorIndex = ColorIndices.ByLayer
             };
 
-            ModelSpace.From(transaction).AppendEntity(blockRef);
-            transaction.AddNewlyCreatedDBObject(blockRef, true);
+            ModelSpace.From(transaction).AppendEntity(labelBlockDef);
+            transaction.AddNewlyCreatedDBObject(labelBlockDef, true);
 
             transaction.Commit();
         }
