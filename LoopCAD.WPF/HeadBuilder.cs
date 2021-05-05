@@ -22,7 +22,7 @@ namespace LoopCAD.WPF
                     y: point.Y + 5,
                     z: point.Z);
 
-                Head.Insert(newPoint);
+                Head.Insert(newPoint, model: "ABC-1000");
 
                 var labeler = new Labeler(
                      new LabelSpecs

@@ -1,6 +1,7 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using System;
 
@@ -117,25 +118,29 @@ namespace LoopCAD.WPF
                 AllowArbitraryInput = true,
             };
 
-            Object osmode = Application.GetSystemVariable("OSMODE");
+            object osmode = Application.GetSystemVariable("OSMODE");
             Application.SetSystemVariable("OSMODE", 65);
 
-            var result = Editor().GetPoint(options);
-
-            if (result.Status == PromptStatus.OK)
+            using (var transaction = ModelSpace.StartTransaction())
             {
+                var table = (BlockTable)transaction.GetObject(
+                    Editor().Document.Database.BlockTableId, 
+                    OpenMode.ForRead);
 
-                //PromptPointResult ppr = Editor().GetPoint("\nCenter: ");
-                //if (ppr.Status != PromptStatus.OK) return;
+                var jigBlock = (BlockTableRecord)transaction.GetObject(
+                    table["Head12"], 
+                    OpenMode.ForRead);
 
-                PromptDistanceOptions pdo = new PromptDistanceOptions("\nRadius: ");
-                pdo.BasePoint = result.Value;
-                pdo.UseBasePoint = true;
-                PromptDoubleResult pdr = Editor().GetDistance(pdo);
-                
-                if (pdr.Status != PromptStatus.OK) return;
-                
-                HeadBuilder.Insert(result.Value);
+                var jig = new BlockJig();
+                Point3d point;
+                PromptResult res = jig.DragMe(jigBlock.ObjectId, out point);
+
+                if (res.Status == PromptStatus.OK)
+                {
+                    HeadBuilder.Insert(point);
+                }
+
+                transaction.Commit();
             }
 
             Application.SetSystemVariable("OSMODE", osmode);

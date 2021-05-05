@@ -4,7 +4,6 @@ using Autodesk.AutoCAD.Geometry;
 namespace LoopCAD.WPF
 {
     public class Head
-
     {
         public const string BlockName = "HeadTest16";
         public const string Layer = "Heads";
@@ -21,12 +20,12 @@ namespace LoopCAD.WPF
                 OpenMode.ForWrite) as BlockTable;
         }
 
-        public static void Insert(Point3d position)
+        public static void Insert(Point3d position, string model)
         {
-            new Head(ModelSpace.StartTransaction()).InsertAt(position);
+            new Head(ModelSpace.StartTransaction()).InsertAt(position, model);
         }
 
-        void InsertAt(Point3d position)
+        void InsertAt(Point3d position, string model)
         {
             BlockTableRecord record = Define();
 
@@ -49,7 +48,7 @@ namespace LoopCAD.WPF
                         using (var ar = new AttributeReference())
                         {
                             ar.SetAttributeFromBlock(def, blockRef.BlockTransform);
-                            ar.TextString = "XYZ-124";
+                            ar.TextString = model;
 
                             blockRef.AttributeCollection.AppendAttribute(ar);
                             transaction.AddNewlyCreatedDBObject(ar, true);
