@@ -5,13 +5,12 @@ namespace LoopCAD.WPF
 {
     public class Head
     {
-        public const string BlockName = "HeadTest16";
+        public const string BlockName = "TestHead";
         public const string Layer = "Heads";
+        public const string CoverageLayer = "HeadCoverage";
         readonly Database db;
         readonly BlockTable table;
         readonly Transaction transaction;
-
-        public int Coverage { get; set; }
 
         public Head(Transaction transaction)
         {
@@ -24,11 +23,9 @@ namespace LoopCAD.WPF
 
         public void InsertAt(Point3d position, string model, int coverage)
         {
-            Coverage = Coverage;
+            BlockTableRecord record = Define(coverage);
 
-            BlockTableRecord record = Define();
-
-            var blockRef = new BlockReference(position, Define().Id)
+            var blockRef = new BlockReference(position, Define(coverage).Id)
             {
                 Layer = Layer,
                 ColorIndex = ColorIndices.ByLayer
@@ -59,33 +56,33 @@ namespace LoopCAD.WPF
            // transaction.Commit();
         }
 
-        BlockTableRecord Define()
+        public BlockTableRecord Define(int coverage)
         {
             BlockTableRecord record;
 
-            if (!table.Has(BlockName))
+            if (!table.Has($"{BlockName}{coverage}"))
             {
-                record = DefinitionFrom(table);
+                record = DefinitionFrom(table, coverage);
                 transaction.AddNewlyCreatedDBObject(record, true);
             }
             else
             {
                 record = transaction.GetObject(
-                    table[BlockName], 
+                    table[$"{BlockName}{coverage}"], 
                     OpenMode.ForRead) as BlockTableRecord;
             }
 
             return record;
         }
 
-        BlockTableRecord DefinitionFrom(BlockTable table)
+        BlockTableRecord DefinitionFrom(BlockTable table, int coverage)
         {
             WPF.Layer.Ensure(Layer, ColorIndices.Red);
-            WPF.Layer.Ensure("HeadCoverage", ColorIndices.Yellow);
+            WPF.Layer.Ensure(CoverageLayer, ColorIndices.Yellow);
 
             var record = new BlockTableRecord
             {
-                Name = BlockName
+                Name = $"{BlockName}{coverage}"
             };
 
             var circle = new Circle()
@@ -123,12 +120,12 @@ namespace LoopCAD.WPF
             // TODO: Add square
             var square = new Polyline(4)
             {
-                Layer = "HeadCoverage",
+                Layer = CoverageLayer,
                 Closed = true,
-                ColorIndex = ColorIndices.Yellow,
+                ColorIndex = ColorIndices.ByLayer,
             };
 
-            double radius = 6 * 12;
+            double radius = (coverage/2) * 12; // convert to inches
 
             square.AddVertexAt(0, new Point2d(-radius, radius), 0, 0, 0);
             square.AddVertexAt(1, new Point2d(radius, radius), 0, 0, 0);

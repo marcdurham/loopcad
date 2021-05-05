@@ -9,6 +9,12 @@ namespace LoopCAD.WPF
     {
         public static void Insert(int coverage)
         {
+            using (var transaction = ModelSpace.StartTransaction())
+            {
+                new Head(transaction).Define(coverage);
+                transaction.Commit();
+            }
+                
             // TODO: int number = HeadLabel.HighestNumber() + 1;
             //int number = 1;
             var jobData = JobData.Load();
@@ -20,7 +26,7 @@ namespace LoopCAD.WPF
                     OpenMode.ForRead);
 
                 var jigBlock = (BlockTableRecord)transaction.GetObject(
-                    table[$"Head{coverage}"],
+                    table[$"{Head.BlockName}{coverage}"],
                     OpenMode.ForRead);
 
                 var jig = new BlockJig();

@@ -49,9 +49,9 @@
 
         void GetValues()
         {
-            var form = new JobDataForm();
-            form.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
-            form.ShowDialog();
+            //var form = new JobDataForm();
+            //form.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterScreen;
+            //form.ShowDialog();
 
             var properties = typeof(JobData).GetProperties();
             foreach(var property in properties)
