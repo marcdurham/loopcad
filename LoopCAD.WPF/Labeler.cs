@@ -25,7 +25,7 @@ namespace LoopCAD.WPF
         {
             specs = labelSpecs;
 
-            LayerCreator.Ensure(specs.Layer, specs.LayerColorIndex);
+            Layer.Ensure(specs.Layer, specs.LayerColorIndex);
 
             //arialStyle = ArialStyle();
             labelBlockDefId = ExistingOrNewLabelDefId();

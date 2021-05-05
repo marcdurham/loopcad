@@ -56,6 +56,11 @@
             var properties = typeof(JobData).GetProperties();
             foreach(var property in properties)
             {
+                if (property.Name == nameof(HasJobDataDictionary))
+                {
+                    continue;
+                }
+
                 string key = SnakeCase.Convert(property.Name);
                 string value = NamedObjectDictionary.KeyValue("job_data", key);
                 property.SetValue(this, value);

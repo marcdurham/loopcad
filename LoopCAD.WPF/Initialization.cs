@@ -111,38 +111,37 @@ namespace LoopCAD.WPF
         public void InsertHeadCommand()
         {
             Editor().WriteMessage("\nInserting head...");
-
-            var options = new PromptPointOptions(
-                "Click location to insert head")
-            {
-                AllowArbitraryInput = true,
-            };
-
+            
+            ObjectId layerId = Layer.Ensure("HeadCoverage", ColorIndices.Yellow);
+            Layer.Show(layerId);
             object osmode = Application.GetSystemVariable("OSMODE");
             Application.SetSystemVariable("OSMODE", 65);
 
-            using (var transaction = ModelSpace.StartTransaction())
-            {
-                var table = (BlockTable)transaction.GetObject(
-                    Editor().Document.Database.BlockTableId, 
-                    OpenMode.ForRead);
+            HeadBuilder.Insert();
+            //using (var transaction = ModelSpace.StartTransaction())
+            //{
+            //    // TODO: Show coverage layer
+            //    var table = (BlockTable)transaction.GetObject(
+            //        Editor().Document.Database.BlockTableId, 
+            //        OpenMode.ForRead);
 
-                var jigBlock = (BlockTableRecord)transaction.GetObject(
-                    table["Head12"], 
-                    OpenMode.ForRead);
+            //    var jigBlock = (BlockTableRecord)transaction.GetObject(
+            //        table["Head12"], 
+            //        OpenMode.ForRead);
 
-                var jig = new BlockJig();
-                Point3d point;
-                PromptResult res = jig.DragMe(jigBlock.ObjectId, out point);
+            //    var jig = new BlockJig();
+            //    Point3d point;
+            //    PromptResult res = jig.DragMe(jigBlock.ObjectId, out point);
 
-                if (res.Status == PromptStatus.OK)
-                {
-                    HeadBuilder.Insert(point);
-                }
+            //    if (res.Status == PromptStatus.OK)
+            //    {
+            //        HeadBuilder.Insert(point);
+            //    }
 
-                transaction.Commit();
-            }
+            //    transaction.Commit();
+            //}
 
+            Layer.Hide(layerId);
             Application.SetSystemVariable("OSMODE", osmode);
         }
 

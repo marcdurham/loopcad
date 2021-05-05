@@ -1,48 +1,62 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices.Core;
+using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace LoopCAD.WPF
 {
     public class HeadBuilder
     {
-        public static void Insert(Point3d point)
+        public static void Insert()
         {
-            //char suffix = (char)((byte)RiserLabel.HighestSuffix() + 1);
-            //int number = RiserLabel.HighestNumber() + 1;
+            // TODO: int number = HeadLabel.HighestNumber() + 1;
             int number = 1;
+            var jobData = JobData.Load();
+            int coverage = 12;
 
-            //foreach (var ft in selectedFloorTags)
+            using (var transaction = ModelSpace.StartTransaction())
             {
+                var table = (BlockTable)transaction.GetObject(
+                    Editor().Document.Database.BlockTableId,
+                    OpenMode.ForRead);
+
+                var jigBlock = (BlockTableRecord)transaction.GetObject(
+                    table[$"Head{coverage}"],
+                    OpenMode.ForRead);
+
+                var jig = new BlockJig();
+                PromptResult res = jig.DragMe(jigBlock.ObjectId, out Point3d point);
+
                 // This point will be disposed, so clone it
-                var newPoint = new Point3d(
-                    x: point.X + 5,
-                    y: point.Y + 5,
+                var pointClone = new Point3d(
+                    x: point.X,
+                    y: point.Y,
                     z: point.Z);
 
-                Head.Insert(newPoint, model: "ABC-1000");
+                if (res.Status == PromptStatus.OK)
+                {
+                    new Head(transaction).InsertAt(pointClone, model: jobData?.HeadModelDefault ?? "", coverage: coverage);
+                }
 
                 var labeler = new Labeler(
-                     new LabelSpecs
-                     {
-                         Tag = "HEADNUMBER", //RiserLabel.TagName,
-                         BlockName = "HeadLabel", //RiserLabel.BlockName,
-                         Layer = "HeadLabels", //RiserLabel.LayerName,
-                         LayerColorIndex = ColorIndices.Red,
-                         TextHeight = 5.0,
-                         XOffset = 15.0,
-                     });
+                        new LabelSpecs
+                        {
+                            Tag = "HEADNUMBER", //RiserLabel.TagName,
+                            BlockName = "HeadLabel", //RiserLabel.BlockName,
+                            Layer = "HeadLabels", //RiserLabel.LayerName,
+                            LayerColorIndex = ColorIndices.Red,
+                            TextHeight = 5.0,
+                            XOffset = 15.0,
+                        });
 
-                labeler.CreateLabel($"H.{number}", position: newPoint);
+                labeler.CreateLabel($"H.{number}", position: pointClone);
 
-                // Number increments, but suffix is shared between the
-                // upper and lower riser, and used to match them.
-                ////number++;
+                transaction.Commit();
             }
+
+            ////number++;
         }
-        
+
         static Editor Editor()
         {
             return Application.DocumentManager.MdiActiveDocument.Editor;
