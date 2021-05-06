@@ -189,7 +189,7 @@ job_data : dialog
             {
                 key = "supply_pipe_type";
                 label = "Pipe Type: ";
-                list = "(get-supply-pipe-types)";
+                list = "Poly\nRehau PEX\nSpears Flameguard CPVPC\nCopper\nCPVC\nOther";
                 value = "Other";
                 width = 40;
                 fixed_width = true;
