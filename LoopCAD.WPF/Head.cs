@@ -52,8 +52,6 @@ namespace LoopCAD.WPF
                     }
                 }
             }
-
-           // transaction.Commit();
         }
 
         public BlockTableRecord Define(int coverage)
@@ -117,7 +115,6 @@ namespace LoopCAD.WPF
 
             record.AppendEntity(attribute);
 
-            // TODO: Add square
             var square = new Polyline(4)
             {
                 Layer = CoverageLayer,
@@ -134,7 +131,16 @@ namespace LoopCAD.WPF
 
             record.AppendEntity(square);
 
-            // TODO: Add coverage label
+            var text = new DBText
+            { 
+                 Layer = CoverageLayer,
+                 Height = 16.0,
+                 TextString = $"{coverage} X {coverage}",
+                 Justify = AttachmentPoint.TopCenter,
+                 AlignmentPoint = new Point3d(0, radius, 0)
+            };
+
+            record.AppendEntity(text);
 
             table.Add(record);
 
