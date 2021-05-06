@@ -136,7 +136,22 @@ namespace LoopCAD.WPF
             InsertHead(12);
         }
 
-        private static void InsertHead(int coverage)
+        static void InsertHead(int coverage)
+        {
+            Editor().WriteMessage("\nInserting head...");
+
+            ObjectId layerId = Layer.Ensure("HeadCoverage", ColorIndices.Yellow);
+            Layer.Show(layerId);
+            object osmode = Application.GetSystemVariable("OSMODE");
+            Application.SetSystemVariable("OSMODE", 65);
+
+            HeadBuilder.Insert(coverage);
+
+            Layer.Hide(layerId);
+            Application.SetSystemVariable("OSMODE", osmode);
+        }
+
+        static void InsertHeadSideWall(int coverage)
         {
             Editor().WriteMessage("\nInserting head...");
 

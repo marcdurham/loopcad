@@ -12,20 +12,24 @@ namespace LoopCAD.WPF
         readonly BlockTable table;
         readonly Transaction transaction;
 
-        public Head(Transaction transaction)
+        public int coverage { get; set; }
+
+        public Head(Transaction transaction, int coverage)
         {
             this.transaction = transaction;
+            this.coverage = coverage;
+
             db = HostApplicationServices.WorkingDatabase;
             table = transaction.GetObject(
                 db.BlockTableId,
                 OpenMode.ForWrite) as BlockTable;
         }
 
-        public void InsertAt(Point3d position, string model, int coverage)
+        public void InsertAt(Point3d position, string model)
         {
-            BlockTableRecord record = Define(coverage);
+            BlockTableRecord record = Define();
 
-            var blockRef = new BlockReference(position, Define(coverage).Id)
+            var blockRef = new BlockReference(position, Define().Id)
             {
                 Layer = Layer,
                 ColorIndex = ColorIndices.ByLayer
@@ -54,7 +58,7 @@ namespace LoopCAD.WPF
             }
         }
 
-        public BlockTableRecord Define(int coverage)
+        public BlockTableRecord Define()
         {
             BlockTableRecord record;
 
@@ -110,7 +114,7 @@ namespace LoopCAD.WPF
                 Position = new Point3d(10, 4, 0),
                 Height = 8.0,
                 ColorIndex = ColorIndices.ByLayer,
-                Layer = Layer
+                Layer = Layer,
             };
 
             record.AppendEntity(attribute);

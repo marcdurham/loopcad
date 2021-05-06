@@ -11,7 +11,7 @@ namespace LoopCAD.WPF
         {
             using (var transaction = ModelSpace.StartTransaction())
             {
-                new Head(transaction).Define(coverage);
+                new Head(transaction, coverage).Define();
                 transaction.Commit();
             }
                 
@@ -40,7 +40,7 @@ namespace LoopCAD.WPF
 
                 if (res.Status == PromptStatus.OK)
                 {
-                    new Head(transaction).InsertAt(pointClone, model: jobData?.HeadModelDefault ?? "", coverage: coverage);
+                    new Head(transaction, coverage).InsertAt(pointClone, model: jobData?.HeadModelDefault ?? "");
                 }
 
                 //var labeler = new Labeler(
