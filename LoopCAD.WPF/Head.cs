@@ -5,7 +5,7 @@ namespace LoopCAD.WPF
 {
     public class Head
     {
-        public const string BlockName = "TestHead";
+        public const string BlockName = "Head";
         public const string Layer = "Heads";
         public const string CoverageLayer = "HeadCoverage";
         readonly Database db;

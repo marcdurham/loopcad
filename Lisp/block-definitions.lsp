@@ -64,11 +64,11 @@
         head-block:model-x-offset    ; Label X Offset
         0                              ; Label Y Offset
     )
-    (define-head-coverage 12)
-    (define-head-coverage 14)
-    (define-head-coverage 16)
-    (define-head-coverage 18)
-    (define-head-coverage 20)
+    ;;(define-head-coverage 12)
+    ;;(define-head-coverage 14)
+    ;;(define-head-coverage 16)
+    ;;(define-head-coverage 18)
+    ;;(define-head-coverage 20)
     ; (define-sw-head-coverage 12 "U") ; Sprays Up
     ; (define-sw-head-coverage 14 "U")
     ; (define-sw-head-coverage 16 "U")
