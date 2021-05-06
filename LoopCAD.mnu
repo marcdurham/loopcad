@@ -3,7 +3,6 @@
 **LoopCADMain
 ID_LoopCADMain [_Toolbar("LoopCADMain", _Floating, _Show, 350, 150, 0)]
 ID_Load_LoopCAD [_Button("Load LoopCAD modules", LoadLoopCAD.bmp, LoadLoopCAD.bmp)]^C^C(load "LoopCAD.lsp")
-ID_Insert_SideWallHead [_Button("Insert side wall head", SideWallHead.bmp, SideWallHead.bmp)]^C^CSWHEAD
 ID_Draw_Pipe [_Button("Draw pipe", DrawPipe.bmp, DrawPipe.bmp)]^C^CPIPE
 ID_Draw_Elevation_Box [_Button("Insert elevation box", DrawElevationBox.bmp,DrawElevationBox.bmp)]^C^CELEVATION-BOX
 ID_Insert_Tee [_Button("Insert tee", InsertTee.bmp, InsertTee.bmp)]^C^CTEE
@@ -28,6 +27,16 @@ ID_Insert_Head14 [_Button("Insert 14 x 14 head", 14.bmp, 14.bmp)]^C^CH14
 ID_Insert_Head16 [_Button("Insert 16 x 16 head", 16.bmp, 16.bmp)]^C^CH16
 ID_Insert_Head18 [_Button("Insert 18 x 18 head", 18.bmp, 18.bmp)]^C^CH18
 ID_Insert_Head20 [_Button("Insert 20 x 20 head", 20.bmp, 20.bmp)]^C^CH20
+
+// Side Wall Heads
+**LoopCADSideWallHeads
+ID_LoopCADSideWallHeads [_Toolbar("LoopCADSideWallHeads", _Floating, _Show, 550, 150, 0)]
+ID_Insert_SideWallHead [_Button("Insert side wall head", SideWallHead.bmp, SideWallHead.bmp)]^C^CSW
+ID_Insert_SideWallHead12 [_Button("Insert 12 side wall head", 12.bmp, 12.bmp)]^C^CSW12
+ID_Insert_SideWallHead14 [_Button("Insert 14 side wall head", 14.bmp, 14.bmp)]^C^CSW14
+ID_Insert_SideWallHead16 [_Button("Insert 16 side wall head", 16.bmp, 16.bmp)]^C^CSW16
+ID_Insert_SideWallHead18 [_Button("Insert 18 side wall head", 18.bmp, 18.bmp)]^C^CSW18
+ID_Insert_SideWallHead20 [_Button("Insert 20 side wall head", 20.bmp, 20.bmp)]^C^CSW20
 
 ***HELPSTRINGS
 TBAR_LoopCADMain [LoopCADMain]

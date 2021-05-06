@@ -1,5 +1,6 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using System;
 
 namespace LoopCAD.WPF
 {
@@ -25,14 +26,15 @@ namespace LoopCAD.WPF
                 OpenMode.ForWrite) as BlockTable;
         }
 
-        public void InsertAt(Point3d position, string model)
+        public void InsertAt(Point3d position, string model, bool sideWall = false, double angle = 0.0)
         {
-            BlockTableRecord record = Define();
+            BlockTableRecord record = Define(sideWall);
 
-            var blockRef = new BlockReference(position, Define().Id)
+            var blockRef = new BlockReference(position, Define(sideWall).Id)
             {
                 Layer = Layer,
-                ColorIndex = ColorIndices.ByLayer
+                ColorIndex = ColorIndices.ByLayer,
+                Rotation = angle,
             };
 
             ModelSpace.From(transaction).AppendEntity(blockRef);
@@ -49,6 +51,7 @@ namespace LoopCAD.WPF
                         {
                             ar.SetAttributeFromBlock(def, blockRef.BlockTransform);
                             ar.TextString = $"{model}-{coverage}";
+                            ar.Rotation = 0;
 
                             blockRef.AttributeCollection.AppendAttribute(ar);
                             transaction.AddNewlyCreatedDBObject(ar, true);
@@ -58,64 +61,95 @@ namespace LoopCAD.WPF
             }
         }
 
-        public BlockTableRecord Define()
+        public BlockTableRecord Define(bool sideWall = false)
         {
             BlockTableRecord record;
+            string sw = sideWall ? "SW" : "";
 
-            if (!table.Has($"{BlockName}{coverage}"))
+            if (!table.Has($"{BlockName}{sw}{coverage}"))
             {
-                record = DefinitionFrom(table, coverage);
+                record = DefinitionFrom(table, coverage, sideWall);
                 transaction.AddNewlyCreatedDBObject(record, true);
             }
             else
             {
                 record = transaction.GetObject(
-                    table[$"{BlockName}{coverage}"], 
+                    table[$"{BlockName}{sw}{coverage}"], 
                     OpenMode.ForRead) as BlockTableRecord;
             }
 
             return record;
         }
 
-        BlockTableRecord DefinitionFrom(BlockTable table, int coverage)
+        BlockTableRecord DefinitionFrom(
+            BlockTable table, 
+            int coverage, 
+            bool sideWall = false)
         {
             WPF.Layer.Ensure(Layer, ColorIndices.Red);
             WPF.Layer.Ensure(CoverageLayer, ColorIndices.Yellow);
-
+            
+            string sw = sideWall ? "SW" : "";
+            
             var record = new BlockTableRecord
             {
-                Name = $"{BlockName}{coverage}"
+                Name = $"{BlockName}{sw}{coverage}"
             };
 
-            var circle = new Circle()
+            if (sideWall)
             {
-                Center = new Point3d(0, 0, 0),
-                Radius = 6.6, // inches
-                Layer = Layer,
-                ColorIndex = ColorIndices.ByLayer,
-            };
+                var triangle = new Polyline(3)
+                {
+                    Layer = Layer,
+                    Closed = true,
+                    ColorIndex = ColorIndices.ByLayer,
+                };
 
-            record.AppendEntity(circle);
+                double side = 12.0; // inches
 
-            var inner = new Circle()
+                triangle.AddVertexAt(0, new Point2d(0, 0), 0, 0, 0);
+                triangle.AddVertexAt(1, new Point2d(side, (side/2)), 0, 0, 0);
+                triangle.AddVertexAt(2, new Point2d(side, -(side / 2)), 0, 0, 0);
+
+                record.AppendEntity(triangle);
+            }
+            else
             {
-                Center = new Point3d(0, 0, 0),
-                Radius = 2.3, // inches
-                Layer = Layer,
-                ColorIndex = ColorIndices.ByLayer,
-            };
+                var circle = new Circle()
+                {
+                    Center = new Point3d(0, 0, 0),
+                    Radius = 6.6, // inches
+                    Layer = Layer,
+                    ColorIndex = ColorIndices.ByLayer,
+                };
 
-            record.AppendEntity(inner);
+                record.AppendEntity(circle);
+
+                var inner = new Circle()
+                {
+                    Center = new Point3d(0, 0, 0),
+                    Radius = 2.3, // inches
+                    Layer = Layer,
+                    ColorIndex = ColorIndices.ByLayer,
+                };
+
+                record.AppendEntity(inner);
+            }
 
             var attribute = new AttributeDefinition
             {
                 Tag = "MODEL",
                 TextString = "MODEL-123",
-                Position = new Point3d(10, 4, 0),
+                Position = new Point3d(12, 4, 0),
                 Height = 8.0,
                 ColorIndex = ColorIndices.ByLayer,
                 Layer = Layer,
             };
+
+            if(sideWall)
+            {
+                attribute.Position = new Point3d(12, 10, 0);
+            }    
 
             record.AppendEntity(attribute);
 
@@ -126,12 +160,23 @@ namespace LoopCAD.WPF
                 ColorIndex = ColorIndices.ByLayer,
             };
 
-            double radius = (coverage/2) * 12; // convert to inches
+            double coverageInches = coverage * 12;
+            double radius = coverageInches / 2;
 
-            square.AddVertexAt(0, new Point2d(-radius, radius), 0, 0, 0);
-            square.AddVertexAt(1, new Point2d(radius, radius), 0, 0, 0);
-            square.AddVertexAt(2, new Point2d(radius, -radius), 0, 0, 0);
-            square.AddVertexAt(3, new Point2d(-radius, -radius), 0, 0, 0);
+            if (sideWall)
+            {
+                square.AddVertexAt(0, new Point2d(0, radius), 0, 0, 0);
+                square.AddVertexAt(1, new Point2d(coverageInches, radius), 0, 0, 0);
+                square.AddVertexAt(2, new Point2d(coverageInches, -radius), 0, 0, 0);
+                square.AddVertexAt(3, new Point2d(0, -radius), 0, 0, 0);
+            }
+            else
+            {
+                square.AddVertexAt(0, new Point2d(-radius, radius), 0, 0, 0);
+                square.AddVertexAt(1, new Point2d(radius, radius), 0, 0, 0);
+                square.AddVertexAt(2, new Point2d(radius, -radius), 0, 0, 0);
+                square.AddVertexAt(3, new Point2d(-radius, -radius), 0, 0, 0);
+            }
 
             record.AppendEntity(square);
 
@@ -141,8 +186,15 @@ namespace LoopCAD.WPF
                  Height = 16.0,
                  TextString = $"{coverage} X {coverage}",
                  Justify = AttachmentPoint.TopCenter,
-                 AlignmentPoint = new Point3d(0, radius, 0)
+                 AlignmentPoint = new Point3d(0, radius, 0),
+                 ColorIndex = ColorIndices.ByLayer,
             };
+
+            if(sideWall)
+            {
+                text.Justify = AttachmentPoint.TopLeft;
+                text.AlignmentPoint = new Point3d(0, radius, 0);
+            }
 
             record.AppendEntity(text);
 

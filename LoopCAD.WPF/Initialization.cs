@@ -136,6 +136,36 @@ namespace LoopCAD.WPF
             InsertHead(12);
         }
 
+        [CommandMethod("SW12")]
+        public void InsertSideWallHead12Command()
+        {
+            InsertHeadSideWall(12);
+        }
+
+        [CommandMethod("SW14")]
+        public void InsertSideWallHead14Command()
+        {
+            InsertHeadSideWall(14);
+        }
+
+        [CommandMethod("SW16")]
+        public void InsertSideWallHead16Command()
+        {
+            InsertHeadSideWall(16);
+        }
+
+        [CommandMethod("SW18")]
+        public void InsertSideWallHead18Command()
+        {
+            InsertHeadSideWall(18);
+        }
+
+        [CommandMethod("SW20")]
+        public void InsertSideWallHead20Command()
+        {
+            InsertHeadSideWall(20);
+        }
+
         static void InsertHead(int coverage)
         {
             Editor().WriteMessage("\nInserting head...");
@@ -158,12 +188,32 @@ namespace LoopCAD.WPF
             ObjectId layerId = Layer.Ensure("HeadCoverage", ColorIndices.Yellow);
             Layer.Show(layerId);
             object osmode = Application.GetSystemVariable("OSMODE");
+            object orthomode = Application.GetSystemVariable("ORTHOMODE");
             Application.SetSystemVariable("OSMODE", 65);
+            Application.SetSystemVariable("ORTHOMODE", 1);
 
-            HeadBuilder.Insert(coverage);
+            var pointResult = Editor().GetPoint("Where to place head");
+            if(pointResult.Status != PromptStatus.OK)
+            {
+                return;
+            }
+
+            var options = new PromptAngleOptions("Angle of sidewall spray (press F8 to turn ORTHO off)")
+            {
+                BasePoint = pointResult.Value,
+                UseBasePoint = true
+            };
+
+            var angleResult = Editor().GetAngle(options);
+
+            if (angleResult.Status == PromptStatus.OK)
+            {
+                HeadBuilder.Insert(coverage, pointResult.Value, angleResult.Value);
+            }
 
             Layer.Hide(layerId);
             Application.SetSystemVariable("OSMODE", osmode);
+            Application.SetSystemVariable("ORTHOMODE", orthomode);
         }
 
         static Editor Editor()
