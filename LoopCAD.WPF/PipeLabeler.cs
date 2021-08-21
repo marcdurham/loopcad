@@ -1,5 +1,7 @@
-﻿using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
+using Autodesk.AutoCAD.Runtime;
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +25,7 @@ namespace LoopCAD.WPF
                  });
 
             int pipeNumber = 1;
-
+            Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("  LabelAllPipes starting...");
             var ids = new List<ObjectId>();
             using (var trans = ModelSpace.StartTransaction())
             {
@@ -35,16 +37,20 @@ namespace LoopCAD.WPF
 
             using (var trans = ModelSpace.StartTransaction())
             {
+                Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("  Finding labels...");
                 foreach (ObjectId objectId in ids)
                 {
                     if (IsLabel(trans, objectId))
                     {
+                        Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage($"    label found, erase block...");
                         var block = trans.GetObject(objectId, OpenMode.ForWrite) as BlockReference;
-                        if (block != null)
+                        var blkrefClass = RXObject.GetClass(typeof(BlockReference));
+                        if (block != null && objectId.ObjectClass == blkrefClass)
                         {
                             block.Erase(true);
                         }
 
+                        Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage($"    label found, erase DBTtext...");
                         var text = trans.GetObject(objectId, OpenMode.ForWrite) as DBText;
                         if (text != null)
                         {
@@ -53,6 +59,7 @@ namespace LoopCAD.WPF
                     }
                 }
 
+                Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage("  Finding pipes...");
                 foreach (ObjectId objectId in ids)
                 {
                     var vertices = new List<Point3d>();
@@ -60,6 +67,7 @@ namespace LoopCAD.WPF
                     {
                         var polyline = trans.GetObject(objectId, OpenMode.ForRead) as Polyline;
 
+                        Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage($"    Adding {polyline.NumberOfVertices} vertices...");
                         for (int i = 0; i < polyline.NumberOfVertices; i++)
                         {
                             vertices.Add(polyline.GetPoint3dAt(i));
@@ -68,6 +76,7 @@ namespace LoopCAD.WPF
                         pipeNumber++;
                     }
 
+                    Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage($"    Creating label: p{pipeNumber}...");
                     for (int i = 1; i < vertices.Count; i++)
                     {
                         pipeLabeler.CreateLabel(
@@ -91,8 +100,14 @@ namespace LoopCAD.WPF
 
         static bool IsLabel(Transaction trans, ObjectId objectId)
         {
+            if(objectId.IsNull || objectId.IsErased || !objectId.IsValid)
+            {
+                return false;
+            }
+
             var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-            if (block != null)
+            var blkrefClass = RXObject.GetClass(typeof(BlockReference));
+            if (block != null && objectId.ObjectClass == blkrefClass)
             {
                 return string.Equals(block.Layer, "PipeLabels", StringComparison.OrdinalIgnoreCase) &&
                     string.Equals(block.Name, "PipeLabel", StringComparison.OrdinalIgnoreCase);

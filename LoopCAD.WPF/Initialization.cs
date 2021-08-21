@@ -37,7 +37,7 @@ namespace LoopCAD.WPF
         [CommandMethod("LABEL-PIPES")]
         public void LabelPipesCommand()
         {
-            Editor().WriteMessage("\nLabeling pipes...");
+            Editor().WriteMessage("\nLabeling pipes... (v2021-08-20_1641");
 
             int pipes = PipeLabeler.LabelAllPipes();
 
