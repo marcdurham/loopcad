@@ -100,26 +100,32 @@ namespace LoopCAD.WPF
 
         static bool IsLabel(Transaction trans, ObjectId objectId)
         {
-            if(objectId.IsNull || objectId.IsErased || !objectId.IsValid)
+            try
             {
+                if (objectId.IsNull || objectId.IsErased || !objectId.IsValid)
+                {
+                    return false;
+                }
+
+                var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
+                var blkrefClass = RXObject.GetClass(typeof(BlockReference));
+                if (block != null && objectId.ObjectClass == blkrefClass)
+                {
+                    return string.Equals(block.Layer, "PipeLabels", StringComparison.OrdinalIgnoreCase);
+                }
+
+                var text = trans.GetObject(objectId, OpenMode.ForRead) as DBText;
+                if (text != null)
+                {
+                    return string.Equals(text.Layer, "Pipe Labels", StringComparison.OrdinalIgnoreCase);
+                }
+
                 return false;
             }
-
-            var block = trans.GetObject(objectId, OpenMode.ForRead) as BlockReference;
-            var blkrefClass = RXObject.GetClass(typeof(BlockReference));
-            if (block != null && objectId.ObjectClass == blkrefClass)
+            catch(System.Exception e)
             {
-                return string.Equals(block.Layer, "PipeLabels", StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(block.Name, "PipeLabel", StringComparison.OrdinalIgnoreCase);
+                throw new System.Exception("Cannot determine if an object is a label", e);
             }
-
-            var text = trans.GetObject(objectId, OpenMode.ForRead) as DBText;
-            if (text != null)
-            {
-                return string.Equals(text.Layer, "Pipe Labels", StringComparison.OrdinalIgnoreCase);
-            }
-
-            return false;
         }
 
         static Point3d Midpoint(Point3d a, Point3d b)
