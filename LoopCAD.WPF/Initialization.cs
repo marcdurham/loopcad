@@ -1,9 +1,9 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
-using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using System;
+using System.Reflection;
 
 namespace LoopCAD.WPF
 {
@@ -11,7 +11,8 @@ namespace LoopCAD.WPF
     {
         public void Initialize()
         {
-           
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            Editor().WriteMessage($"\nLoopCAD .NET module version {version} loaded.");
         }
 
         public void Terminate()
@@ -37,7 +38,7 @@ namespace LoopCAD.WPF
         [CommandMethod("LABEL-PIPES")]
         public void LabelPipesCommand()
         {
-            Editor().WriteMessage("\nLabeling pipes... (v2021-08-20_1641");
+            Editor().WriteMessage("\nLabeling pipes...");
 
             int pipes = PipeLabeler.LabelAllPipes();
 
