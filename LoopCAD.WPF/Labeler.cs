@@ -3,70 +3,67 @@ using Autodesk.AutoCAD.Geometry;
 
 namespace LoopCAD.WPF
 {
+    public class LabelSpecs
+    {
+        public string Tag { get; set; } = "NUMBER";
+        public string BlockName { get; set; } = "Label";
+        public string Layer { get; set; } = "Labels";
+        public short LayerColorIndex { get; set; } = ColorIndices.ByLayer;
+        public TextHorizontalMode HorizontalMode { get; set; }
+        public double TextHeight { get; set; } = 8.0;
+        public double XOffset { get; set; } = 10.0;
+        public double YOffset { get; set; } = -10.0;
+    }
+
     public class Labeler
     {
-        readonly Database db;
-        Transaction transaction;
-        BlockTable table;
-        ObjectId arialStyle;
-        string tag = "";
-        string blockName = "";
-        string layer = "";
+        static ObjectId labelBlockDefId = ObjectId.Null;
 
-        public Labeler(string tag, string blockName, string layer, short layerColorIndex)
+        readonly LabelSpecs specs = new LabelSpecs();
+
+        public Labeler(LabelSpecs labelSpecs) //string tag, string blockName, string layer, short layerColorIndex)
         {
-            db = HostApplicationServices.WorkingDatabase;
+            specs = labelSpecs;
 
-            this.tag = tag;
-            this.blockName = blockName;
-            this.layer = layer;
+            Layer.Ensure(specs.Layer, specs.LayerColorIndex);
 
-            arialStyle = ArialStyle();
-
-            LayerCreator.Ensure(layer, layerColorIndex);
+            //arialStyle = ArialStyle();
+            labelBlockDefId = ExistingOrNewLabelDefId();
         }
-
-        public double TextHeight { get; set; } = 4.75;
-        public double XOffset { get; set; } = 6;
-        public double YOffset { get; set; } = -6;
-        public TextHorizontalMode HorizontalMode { get; set; }
 
         public void CreateLabel(string text, Point3d position)
         {
-            using (var transaction = ModelSpace.StartTransaction())
-            using (var modelSpace = ModelSpace.From(transaction))
-            {
-                this.transaction = transaction;
-                NewNodeLabel(text, position);
-                transaction.Commit();
-            }
+            NewNodeLabel(text, position);
         }
 
         void NewNodeLabel(string text, Point3d position)
         {
-            using (table = transaction.GetObject(
+            using (var transaction = ModelSpace.StartTransaction())
+            using (var table = transaction.GetObject(
                 HostApplicationServices.WorkingDatabase.BlockTableId, 
                 OpenMode.ForWrite) as BlockTable)
             using (var modelSpace = transaction.GetObject(
                 table[BlockTableRecord.ModelSpace],
                 OpenMode.ForWrite) as BlockTableRecord)
             {
-                BlockTableRecord record = ExistingOrNewLabelDef();
-
-                using (var blockRef = new BlockReference(position, record.Id)
+                using(var labelBlockDef = transaction.GetObject(
+                    labelBlockDefId, 
+                    OpenMode.ForRead) as BlockTableRecord)
+                using (var blockRef = new BlockReference(position, labelBlockDefId)
                 {
-                    Layer = layer,
+                    Layer = specs.Layer,
                     ColorIndex = ColorIndices.ByLayer
                 })
                 {
                     modelSpace.AppendEntity(blockRef);
                     transaction.AddNewlyCreatedDBObject(blockRef, true);
 
-                    foreach (ObjectId id in record)
+                    foreach (ObjectId id in labelBlockDef)
                     {
                         using (var def = id.GetObject(OpenMode.ForRead) as AttributeDefinition)
                         {
-                            if ((def != null) && (!def.Constant) && def.Tag.ToUpper() == tag)
+                            if ((def != null) && (!def.Constant) 
+                                && def.Tag.ToUpper() == specs.Tag)
                             {
                                 using (var ar = new AttributeReference())
                                 {
@@ -79,50 +76,98 @@ namespace LoopCAD.WPF
                             }
                         }
                     }
+
+                    transaction.Commit();
                 }
             }
         }
 
-        BlockTableRecord ExistingOrNewLabelDef()
+        ObjectId ExistingOrNewLabelDefId()
         {
-            BlockTableRecord record;
+            using (var trans = ModelSpace.StartTransaction())
+            using (var tab = (BlockTable)trans.GetObject(
+                HostApplicationServices.WorkingDatabase.BlockTableId,
+                OpenMode.ForRead))
+            {
+                if (tab.Has(specs.BlockName))
+                {
+                    using (var existing = tab[specs.BlockName].GetObject(OpenMode.ForRead) as BlockTableRecord)
+                    {
+                        if (!PropertiesMatch(trans, existing))
+                        {
+                            existing.UpgradeOpen();
+                            existing.Erase(true);
+                            trans.Commit();
+                        }
+                        else
+                        {
+                            return existing.Id;
+                        }
+                    }
+                }
+            }
 
-            if (!table.Has(blockName))
+            using (var trans = ModelSpace.StartTransaction())
+            using (var tab = (BlockTable)trans.GetObject(
+                HostApplicationServices.WorkingDatabase.BlockTableId,
+                OpenMode.ForRead))
             {
-                record = LabelDefFrom(table);
-                transaction.AddNewlyCreatedDBObject(record, true);
+
+                BlockTableRecord record = NewLabelDefIdFrom();
+
+                tab.UpgradeOpen();
+                tab.Add(record);
+                trans.AddNewlyCreatedDBObject(record, true);
+
+                var attDef = NewAttributeDef();
+                record.AppendEntity(attDef);
+                trans.AddNewlyCreatedDBObject(attDef, true);
+
+                trans.Commit();
+                return record.Id;
             }
-            else
+        }
+
+        bool PropertiesMatch(Transaction transaction, BlockTableRecord record)
+        {
+            var attDef = AttributeReader.AttributeDefWithTagNamed(
+                transaction, 
+                record.Id, 
+                specs.Tag);
+
+            return attDef != null &&
+                attDef.Position.X == specs.XOffset &&
+                attDef.Position.Y == specs.YOffset &&
+                attDef.Height == specs.TextHeight &&
+                attDef.Layer == specs.Layer &&
+                attDef.ColorIndex == ColorIndices.ByLayer;
+        }
+
+        BlockTableRecord NewLabelDefIdFrom()
+        {
+            var record = new BlockTableRecord
             {
-                record = transaction.GetObject(table[blockName], OpenMode.ForRead) as BlockTableRecord;
-            }
+                Name = specs.BlockName
+            };
 
             return record;
         }
 
-        BlockTableRecord LabelDefFrom(BlockTable table)
+        AttributeDefinition NewAttributeDef()
         {
-            var record = new BlockTableRecord
-            {
-                Name = blockName
-            };
-
             var definition = new AttributeDefinition()
             {
-                Height = TextHeight,
-                TextStyleId = arialStyle,
-                Layer = layer,
+                Height = specs.TextHeight,
+                //TextStyleId = arialStyle,
+                Layer = specs.Layer,
                 ColorIndex = ColorIndices.ByLayer,
-                Tag = tag,
+                Tag = specs.Tag,
                 TextString = "X.99",
-                Position = new Point3d(XOffset, YOffset, 0),
-                HorizontalMode = HorizontalMode,
+                Position = new Point3d(specs.XOffset, specs.YOffset, 0),
+                HorizontalMode = specs.HorizontalMode,
             };
 
-            record.AppendEntity(definition);
-            table.Add(record);
-
-            return record;
+            return definition;
         }
 
         static ObjectId ArialStyle()

@@ -7,7 +7,7 @@
     <ProjectGuid>{F8AEE913-C04F-42D3-8160-31CE047E195C}</ProjectGuid>
     <OutputType>library</OutputType>
     <RootNamespace>LoopCAD.WPF</RootNamespace>
-    <AssemblyName>LoopCAD.WPF</AssemblyName>
+    <AssemblyName>LoopCAD</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -102,13 +102,33 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeReader.cs" />
+    <Compile Include="BlockJig.cs" />
     <Compile Include="ElevationBox.cs" />
     <Compile Include="FloorTag.cs" />
-    <Compile Include="LayerCreator.cs" />
+    <Compile Include="HeadSideWall.cs" />
+    <Compile Include="JobDataForm.xaml.cs">
+      <DependentUpon>JobDataForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Layer.cs" />
     <Compile Include="ModelSpace.cs" />
+    <Compile Include="HeadLabeler.cs" />
+    <Compile Include="DomesticTeeLabeler.cs" />
+    <Compile Include="JobData.cs" />
+    <Compile Include="NamedObjectDictionary.cs" />
+    <Compile Include="HeadBuilder.cs" />
+    <Compile Include="Head.cs" />
+    <Compile Include="SnakeCase.cs" />
+    <Compile Include="JobDataBlock.cs" />
+    <Compile Include="TeeLabeler.cs" />
+    <Compile Include="PipeLabeler.cs" />
     <Compile Include="PointExtensions.cs" />
     <Compile Include="Riser.cs" />
+    <Compile Include="RiserBuilder.cs" />
     <Compile Include="RiserLabel.cs" />
+    <Page Include="JobDataForm.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Generic.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

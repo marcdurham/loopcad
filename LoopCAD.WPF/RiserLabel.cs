@@ -20,7 +20,7 @@ namespace LoopCAD.WPF
 
                 foreach (var id in labelIds)
                 {
-                    string text = AttributeReader.TextString(transaction, id, BlockName, tag: TagName);
+                    string text = AttributeReader.TextString(transaction, id, tag: TagName);
                     var match = Regex.Match(text, @"R\.(\d+)\.[A-Z]");
                     if (match.Success)
                     {
@@ -70,7 +70,7 @@ namespace LoopCAD.WPF
 
                 foreach (var id in labelIds)
                 {
-                    string text = AttributeReader.TextString(transaction, id, BlockName, tag: TagName);
+                    string text = AttributeReader.TextString(transaction, id, tag: TagName);
                     texts.Add(text);
                 }
 

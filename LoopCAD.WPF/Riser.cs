@@ -1,7 +1,5 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
 
 namespace LoopCAD.WPF
 {
@@ -30,14 +28,14 @@ namespace LoopCAD.WPF
 
         void InsertAt(Point3d position)
         {
-            var blockRef = new BlockReference(position, Define().Id)
+            var labelBlockDef = new BlockReference(position, Define().Id)
             {
                 Layer = "Floor Connectors",
                 ColorIndex = ColorIndices.ByLayer
             };
 
-            ModelSpace.From(transaction).AppendEntity(blockRef);
-            transaction.AddNewlyCreatedDBObject(blockRef, true);
+            ModelSpace.From(transaction).AppendEntity(labelBlockDef);
+            transaction.AddNewlyCreatedDBObject(labelBlockDef, true);
 
             transaction.Commit();
         }
@@ -69,7 +67,7 @@ namespace LoopCAD.WPF
 
         BlockTableRecord DefinitionFrom(BlockTable table)
         {
-            LayerCreator.Ensure(Layer, ColorIndices.Cyan);
+            WPF.Layer.Ensure(Layer, ColorIndices.Cyan);
 
             var record = new BlockTableRecord
             {

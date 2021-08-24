@@ -3,15 +3,17 @@
 ;      by clicking a button, to pipe a system.
 ; (pipe-make) is used by the BREAK-PIPES command to re-draw the pipes.
 
-(defun pipe-draw (size / old-osmode old-orthomode line-width)
+(defun pipe-draw (size / old-osmode old-orthomode old-autosnap line-width)
     (setq old-osmode (getvar "OSMODE"))
     (setq old-orthomode (getvar "ORTHOMODE"))
+    (setq old-autosnap (getvar "AUTOSNAP"))
     (defun *error* (message)
       (princ)
       (princ message)
       (princ)
       (setvar "OSMODE" old-osmode)
       (setvar "ORTHOMODE" old-orthomode)
+      (setvar "AUTOSNAP" old-autosnap)
       (command "-COLOR" "BYLAYER")
       (command "-LAYER" "SET" "0" "")
     )
@@ -25,10 +27,11 @@
         )
     )
     
-  (setq line-width (/ 1.0 12.0))
+    (setq line-width (/ 1.0 12.0))
     (command "-LAYER" "SET" layer-pipe "")
     (command "-COLOR" (pipe-size-color global:pipe-size))
     (setvar "OSMODE" osmode-snap-ins-pts)
+    (setvar "AUTOSNAP" 16) ; Turn object snap AutoSnap features on
     (setvar "ORTHOMODE" 1)
     ;(command "-LAYER" "NEW" layer-pipe "")
     ;(command "-LAYER" "COLOR" "White" layer-pipe "")
@@ -40,14 +43,17 @@
     (command "PLINE" pause "Width" line-width line-width pause)
   
     (setvar "OSMODE" old-osmode)
+    (setvar "ORTHOMODE" old-orthomode)
+    (setvar "AUTOSNAP" old-autosnap)
     (command-s "-LAYER" "SET" "0" "")
     (setvar "LWDISPLAY" 1)
 )
 
 ; 64 = OSMODE: Snap to insertion points
-(setq osmode-snap-ins-pts 64)
-; Layer for pipes is "Pipe" not "Pipes"
-(setq layer-pipe "Pipe")
+; 1 = End Points
+(setq osmode-snap-ins-pts 65)
+; Layer for pipes is "Pipes" not "Pipe"
+(setq layer-pipe "Pipes")
 
 (setq pipe-width 2.0)
 

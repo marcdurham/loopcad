@@ -53,6 +53,7 @@
         "supply_pipe_type"
         "supply_pipe_size"
         "supply_pipe_internal_diameter"
+        "supply_pipe_c_factor"
         "supply_pipe_length"
         "supply_name"
         "domestic_flow_added"
@@ -89,6 +90,10 @@
         (set-dict-data "job_data" key value)
     )
     nil
+)
+
+(defun get-supply-pipe-types  ()
+  (list "one" "two too" "three twa")
 )
 
 ; Generic DICT-DATA functions
