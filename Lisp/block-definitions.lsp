@@ -6,7 +6,7 @@
 (setq head-label:prompt "Head number label")
 (setq head-label:label-color color-blue)
 (setq head-label:layer "HeadLabels")
-(setq head-label:x-offset 9.132)
+(setq head-label:x-offset 3.0)
 (setq head-label:y-offset 0.0)
 
 ; Tee Label Properties
@@ -64,11 +64,11 @@
         head-block:model-x-offset    ; Label X Offset
         0                              ; Label Y Offset
     )
-    (define-head-coverage 12)
-    (define-head-coverage 14)
-    (define-head-coverage 16)
-    (define-head-coverage 18)
-    (define-head-coverage 20)
+    ;;(define-head-coverage 12)
+    ;;(define-head-coverage 14)
+    ;;(define-head-coverage 16)
+    ;;(define-head-coverage 18)
+    ;;(define-head-coverage 20)
     ; (define-sw-head-coverage 12 "U") ; Sprays Up
     ; (define-sw-head-coverage 14 "U")
     ; (define-sw-head-coverage 16 "U")
@@ -668,36 +668,6 @@
     )
 )
 
-; Riser
-(defun define-riser ( / label-color layer )
-    (setq layer "Risers")
-    (entmake 
-        (list
-            (cons 0 "BLOCK")
-            (cons 2 "Riser") ; Block name
-        )
-    )
-    
-    ; Outer Circle
-    (entmake
-        (list
-            (cons 0 "CIRCLE")      
-            (cons 10 (list 0 0 0)) ; Center Point
-            ; Radius: 5.0 copied from old block so it looks the same
-            (cons 40 4.5)        ; Radius
-            (cons 62 color-cyan)  ; Color
-            (cons 8 layer)           ; Layer
-        )
-    )
-    
-    (entmake 
-        (list
-            (cons 0 "ENDBLK")
-        )
-    )
-    (princ)
-)
-
 ; Convert feet to inches
 (defun feet->inches (feet)
     (* feet 12)
@@ -710,10 +680,10 @@
     (setq headLayer (vla-Add temp:layers "Heads"))
     (setq headCoverageLayer (vla-Add temp:layers "HeadCoverage"))  
     (setq headPairsLayer (vla-Add temp:layers "HeadPairs"))  
-    (setq pipesLayer (vla-Add temp:layers "Pipe"))  
+    (setq pipesLayer (vla-Add temp:layers "Pipes"))  
     (setq pipesLayer (vla-Add temp:layers "Tees"))  
 
-    (command "-LAYER" "COLOR" "White" "Pipe" "")
+    (command "-LAYER" "COLOR" "White" "Pipes" "")
     (command "-LAYER" "COLOR" "Yellow" "HeadPairs" "")
     (command "-LAYER" "COLOR" "White" "Tee" "")
 ;)

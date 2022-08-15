@@ -47,7 +47,7 @@ job_data : dialog
             fixed_width = true;
             alignment = left;
             is_tab_stop = true;     
-            action = "(set-job-data $key $value)";        
+            action = "(set-job-data $key $value)";
         }
         
         : edit_box 
@@ -60,7 +60,7 @@ job_data : dialog
             width = 50;
             alignment = right;
             is_tab_stop = true; 
-            action = "(set-job-data $key $value)";        
+            action = "(set-job-data $key $value)";
         }
     }
             
@@ -189,7 +189,7 @@ job_data : dialog
             {
                 key = "supply_pipe_type";
                 label = "Pipe Type: ";
-                list = "Rehau PEX\nSpears Flameguard CPVPC\nCopper\nCPVC\nPoly\nOther";
+                list = "Poly\nRehau PEX\nSpears Flameguard CPVPC\nCopper\nCPVC\nOther";
                 value = "Other";
                 width = 40;
                 fixed_width = true;
@@ -201,7 +201,7 @@ job_data : dialog
             {
                 allow_accept = true;
                 key = "supply_pipe_length";
-                label = "Pipe Lenght (ft): ";
+                label = "Pipe Length (ft): ";
                 value = ""; 
                 width = 40;
                 fixed_width = true;
@@ -240,7 +240,20 @@ job_data : dialog
         : column
         {
             alignment = top;
-            
+
+            : edit_box 
+            {
+                allow_accept = true;
+                key = "supply_pipe_c_factor";
+                label = "Friction C-Factor: ";
+                value = ""; 
+                width = 40;
+                fixed_width = true;
+                alignment = left;
+                is_tab_stop = true;         
+                action = "(set-job-data $key $value)";
+            }
+
             : edit_box 
             {
                 allow_accept = true;
@@ -290,7 +303,7 @@ job_data : dialog
         {
             allow_accept = true;
             key = "water_flow_switch_make_model";
-            label = "Make && Model: ";
+            label = "Make n Model: ";
             value = ""; 
             width = 40;
             fixed_width = true;
@@ -326,20 +339,7 @@ job_data : dialog
             width = 40;
             fixed_width = true;
             alignment = left;
-            is_tab_stop = true;         
-            action = "(set-job-data $key $value)";
-        }
-        
-        : edit_box 
-        {
-            allow_accept = true;
-            key = "head_coverage_default";
-            label = "Head Coverage Default (ft): ";
-            value = ""; 
-            width = 40;
-            fixed_width = true;
-            alignment = left;
-            is_tab_stop = true;         
+            is_tab_stop = true;
             action = "(set-job-data $key $value)";
         }
     }

@@ -21,7 +21,7 @@
       (setvar "LWDISPLAY" 1)
       (setq *error* temperror)
     )
-    (setvar "INSUNITS" 2) ; 0 = not set, 1 = inches, 2 = feet
+    (setvar "INSUNITS" 1) ; 0 = not set, 1 = inches, 2 = feet
                           ; This line prevents inserted block refs from having a
                           ; different scale, being 12 times bigger than they should be.
     (setvar "OSMODE" osmode-snap-ins-pts)
@@ -32,7 +32,7 @@
     (setq model-default (load-job-data "head_model_default" "RFC43"))
     (setq model-code (strcat model-default "-" coverage))
   
-    (command-s "-INSERT" (strcat "Head" coverage) pause 1.0 1.0 0 "")
+    (command-s "-INSERT" (strcat "Head" coverage) pause 0.6 0.6 0 "")
   
     (setq block (vlax-ename->vla-object (entlast)))
     ; get the block attributes
@@ -67,7 +67,7 @@
     (setvar "LWDISPLAY" 1)
     (setq *error* temperror)
   )
-  (setvar "INSUNITS" 0) ; This line prevents inserted block refs from having a
+  (setvar "INSUNITS" 1) ; This line prevents inserted block refs from having a
                         ; different scale, being 12 times bigger than they should be.
   (setvar "OSMODE" osmode-snap-ins-pts)
   (command "-LAYER" "NEW" "Heads" "")

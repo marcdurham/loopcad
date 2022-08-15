@@ -10,7 +10,7 @@
         (command "-LAYER" "SET" "0" "")
     )
     
-    (setvar "INSUNITS" 2) ; 0 = not set, 1 = inches, 2 = feet
+    (setvar "INSUNITS" 1) ; 0 = not set, 1 = inches, 2 = feet
     (setvar "OSMODE" osmode-snap-ins-pts)
     (setvar "LWDISPLAY" 0)
     (command "-LAYER" "SET" "Tees" "")
@@ -32,7 +32,7 @@
         (command "-COLOR" "BYLAYER")
         (command "-LAYER" "SET" "0" "")
     )
-    (setvar "INSUNITS" 2) ; 0 = not set, 1 = inches, 2 = feet
+    (setvar "INSUNITS" 1) ; 0 = not set, 1 = inches, 2 = feet
     (setvar "OSMODE" osmode-snap-ins-pts)
     (command "-LAYER" "NEW" "DomesticTees" "")
     (command "-LAYER" "COLOR" "White" "Tee" "")
