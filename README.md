@@ -11,6 +11,15 @@ sprinkler system.
 - FLOOR-TAG
 - JOB-DATA
 
+# How to Install
+- Click the AutoCAD logo button (farthest upper left)
+- Click **Options**
+- Files tab
+- File Support Search Path
+- Add LoopCAD folder, ex: C:\LoopCAD
+- Add blocks folder, ex: C:\LoopCAD\Blocks
+
+
 # AutoCAD DXF Reference
 [https://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-reference_enu.pdf]
 
