@@ -19,6 +19,8 @@ sprinkler system.
 - Add LoopCAD folder, ex: C:\LoopCAD
 - Add blocks folder, ex: C:\LoopCAD\Blocks
 
+# AutoCAD Auto Start Help
+(https://knowledge.autodesk.com/support/autocad/learn-explore/caas/sfdcarticles/sfdcarticles/Automatically-load-AutoLISP-routines.html)
 
 # AutoCAD DXF Reference
 [https://images.autodesk.com/adsk/files/autocad_2012_pdf_dxf-reference_enu.pdf]

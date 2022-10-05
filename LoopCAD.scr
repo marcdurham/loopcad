@@ -3,7 +3,7 @@
 (if (or 
         (not (findfile "LoopCAD.mnu"))
         (not (findfile "LoopCAD.vbi"))
-        (not (findfile "LoopCAD.lsp"))
+        (not (findfile "combined.lsp"))
     )
     (alert "Cannot load LoopCAD files.\nPlease add the LoopCAD folder to the Menu path and the LoopCAD Blocks folder to the Blocks path.\nTools->Options->Paths/Files")
 )
