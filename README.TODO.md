@@ -1,0 +1,47 @@
+# Commands Converted to .NET
+- LABEL-NODES
+- LABEL-PIPES
+- RISER
+- SAVE-DXF
+- GET-JOB-DATA
+- H20
+- H18
+- H16
+- H14
+- H12
+- SW12
+- SW14
+- SW16
+- SW18
+- SW20
+
+# Commands Not Converted to .NET (In commands.lsp)
+- SET-HEAD-DATA
+- SET-HEAD-MODEL
+- SET-HEAD-COVERAGE
+- SET-HEAD-SLOPE
+- SET-HEAD-TEMP
+- HEAD
+	- HEAD-12
+	- HEAD-14
+	- HEAD-16
+	- HEAD-18
+	- HEAD-20
+- SWHEAD
+- PIPE 
+	- PIPE-12
+	- PIPE-34
+	- PIPE-75
+	- PIPE-1
+	- PIPE-112
+	- PIPE-15
+- ELEVATION-BOX
+- TEE 
+- DTEE
+- LABEL-NODES
+- LABEL-PIPES
+- BREAK-PIPES
+- PAIR 
+- RISER 
+- FLOOR-TAG
+- JOB
