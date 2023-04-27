@@ -24,8 +24,8 @@
 (defun C:LABEL-PIPES () (label-all-pipes))
 (defun C:BREAK-PIPES () (break-pipes-delete-old))
 (defun C:PAIR () (head-pair))
-(defun C:RISER () (riser-insert))
-(defun C:FLOOR-TAG () (floor-tag-insert))
+;In C# now;(defun C:RISER () (riser-insert))
+;In C# now;(defun C:FLOOR-TAG () (floor-tag-insert))
 (defun C:JOB () (job-data-dialog))
 
 (princ) ; exit quietly

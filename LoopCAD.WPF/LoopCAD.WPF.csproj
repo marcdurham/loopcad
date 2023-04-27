@@ -118,6 +118,7 @@
     <Compile Include="HeadBuilder.cs" />
     <Compile Include="Head.cs" />
     <Compile Include="ElevationBoxBuilder.cs" />
+    <Compile Include="FloorTagBuilder.cs" />
     <Compile Include="SnakeCase.cs" />
     <Compile Include="JobDataBlock.cs" />
     <Compile Include="TeeLabeler.cs" />

@@ -1,22 +1,22 @@
-﻿using Autodesk.AutoCAD.ApplicationServices.Core;
-using Autodesk.AutoCAD.DatabaseServices;
-using Autodesk.AutoCAD.EditorInput;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.Geometry;
 
 namespace LoopCAD.WPF
 {
     public class ElevationBoxBuilder
     {
+        private const string LayerName = "ElevationBox";
+
         public static void Start(Point3d firstCorner, Point3d otherCorner, double elevation)
         {
 
             using (var t = ModelSpace.StartTransaction())
             {
-                ObjectId layerId = Layer.Ensure("ElevationBox", ColorIndices.Magenta);
+                ObjectId layerId = Layer.Ensure(LayerName, ColorIndices.Magenta);
 
                 var rectangle = new Polyline(3)
                 {
-                    Layer = "ElevationBox",
+                    Layer = LayerName,
                     Closed = true,
                     ColorIndex = ColorIndices.ByLayer,
                 };
@@ -33,7 +33,7 @@ namespace LoopCAD.WPF
                 {
                     Contents = $"Elevation {elevation}",
                     Location = firstCorner,
-                    Layer = "ElevationBox",
+                    Layer = LayerName,
                     TextHeight = 10.0,
                     ColorIndex = ColorIndices.ByLayer,
                 };
@@ -43,11 +43,6 @@ namespace LoopCAD.WPF
 
                 t.Commit();
             }
-        }
-        
-        static Editor Editor()
-        {
-            return Application.DocumentManager.MdiActiveDocument.Editor;
         }
     }
 }

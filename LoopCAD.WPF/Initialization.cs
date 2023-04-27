@@ -25,31 +25,57 @@ namespace LoopCAD.WPF
         public void  ElevationBoxCommand()
         {
             Editor().WriteMessage("\nDrawing elevation box...");
+
             var firstCornerOptions = new PromptPointOptions(
               "Click first corner of elevation box")
             {
                 AllowArbitraryInput = true,
             };
 
-            PromptPointResult firstCornerResult = Editor().GetPoint(firstCornerOptions);
+            PromptPointResult first = Editor().GetPoint(firstCornerOptions);
 
-            PromptPointResult otherCornerResult = Editor()
-                .GetCorner("Click other corner of the elevation box", firstCornerResult.Value);
+            PromptPointResult other = Editor()
+                .GetCorner("Click other corner of the elevation box", first.Value);
 
-            PromptDoubleOptions elevationOptions = new PromptDoubleOptions("Enter elevation in feet")
+            PromptDoubleOptions elevation = new PromptDoubleOptions("Enter elevation in feet")
             {
                 DefaultValue = 100.0
             };
 
             PromptDoubleResult elevationResult = Editor()
-                .GetDouble(elevationOptions);
+                .GetDouble(elevation);
 
             ElevationBoxBuilder.Start(
-                firstCornerResult.Value,
-                otherCornerResult.Value,
+                first.Value,
+                other.Value,
                 elevationResult.Value);
            
-            Editor().WriteMessage("\nDone drawing elevation box!");
+            Editor().WriteMessage("\nDone drawing elevation box.");
+        }
+
+
+        [CommandMethod("FLOOR-TAG")]
+        public void InsertFloorTagCommand()
+        {
+            Editor().WriteMessage("\nInserting floor tag...");
+
+            var options = new PromptPointOptions(
+                "Click location to insert floor tag")
+            {
+                AllowArbitraryInput = true,
+            };
+
+            Object osmode = Application.GetSystemVariable("OSMODE");
+            Application.SetSystemVariable("OSMODE", 65);
+
+            var result = Editor().GetPoint(options);
+
+            if (result.Status == PromptStatus.OK)
+            {
+                FloorTagBuilder.Insert(result.Value);
+            }
+
+            Application.SetSystemVariable("OSMODE", osmode);
         }
 
         [CommandMethod("LABEL-NODES")]
