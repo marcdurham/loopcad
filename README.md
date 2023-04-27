@@ -9,15 +9,16 @@ sprinkler system.
 - DOMESTIC-TEE
 - ELEVATION-BOX
 - FLOOR-TAG
+- RISER
 - JOB-DATA
 
 # How to Install
 - Click the AutoCAD logo button (farthest upper left)
 - Click **Options**
-- Files tab
+- Click **Files** tab
 - File Support Search Path
-- Add LoopCAD folder, ex: C:\LoopCAD
-- Add blocks folder, ex: C:\LoopCAD\Blocks
+- Add LoopCAD folder, ex: `C:\LoopCAD`
+- Add blocks folder, ex: `C:\LoopCAD\Blocks`
 
 # AutoCAD Auto Start Help
 (https://knowledge.autodesk.com/support/autocad/learn-explore/caas/sfdcarticles/sfdcarticles/Automatically-load-AutoLISP-routines.html)
