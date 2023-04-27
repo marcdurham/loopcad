@@ -44,39 +44,11 @@ namespace LoopCAD.WPF
             PromptDoubleResult elevationResult = Editor()
                 .GetDouble(elevationOptions);
 
-            using (var t = ModelSpace.StartTransaction())
-            {
-                ObjectId layerId = Layer.Ensure("ElevationBox", ColorIndices.Magenta);
-
-                var rectangle = new Polyline(3)
-                {
-                    Layer = "ElevationBox",
-                    Closed = true,
-                    ColorIndex = ColorIndices.ByLayer,
-                };
-
-                rectangle.AddVertexAt(0, new Point2d(firstCornerResult.Value.X, firstCornerResult.Value.Y), 0, 0, 0);
-                rectangle.AddVertexAt(1, new Point2d(otherCornerResult.Value.X, firstCornerResult.Value.Y), 0, 0, 0);
-                rectangle.AddVertexAt(2, new Point2d(otherCornerResult.Value.X, otherCornerResult.Value.Y), 0, 0, 0);
-                rectangle.AddVertexAt(3, new Point2d(firstCornerResult.Value.X, otherCornerResult.Value.Y), 0, 0, 0);
-
-                ModelSpace.From(t).AppendEntity(rectangle);
-                t.AddNewlyCreatedDBObject(rectangle, true);
-
-                var mText = new MText()
-                {
-                    Contents = $"Elevation {elevationResult.Value}",
-                    Location = firstCornerResult.Value,
-                    Layer = "ElevationBox",
-                    TextHeight = 10.0,
-                    ColorIndex = ColorIndices.ByLayer,
-                };
-
-                ModelSpace.From(t).AppendEntity(mText);
-                t.AddNewlyCreatedDBObject(mText, true);
-
-                t.Commit();
-            }
+            ElevationBoxBuilder.Start(
+                firstCornerResult.Value,
+                otherCornerResult.Value,
+                elevationResult.Value);
+           
             Editor().WriteMessage("\nDone drawing elevation box!");
         }
 
