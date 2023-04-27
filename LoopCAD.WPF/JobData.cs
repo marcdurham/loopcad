@@ -9,6 +9,7 @@
         public string CalculatedByCompany { get; set; }
         public string SprinklerPipeType { get; set; }
         public string SprinklerFittingType { get; set; }
+        public string SupplyName { get; set; }
         public string SupplyStaticPressure { get; set; }
         public string SupplyResidualPressure { get; set; }
         public string SupplyAvailableFlow { get; set; }
@@ -18,13 +19,12 @@
         public string SupplyPipeInternalDiameter { get; set; }
         public string SupplyPipeCFactor { get; set; }
         public string SupplyPipeLength { get; set; }
-        public string SupplyName { get; set; }
-        public string DomesticFlowAdded { get; set; }
-        public string WaterFlowSwitchMakeModel { get; set; }
-        public string WaterFlowSwitchPressureLoss { get; set; }
         public string SupplyPipeFittingsSummary { get; set; }
         public string SupplyPipeFittingsEquivLength { get; set; }
         public string SupplyPipeAddPressureLoss { get; set; }
+        public string DomesticFlowAdded { get; set; }
+        public string WaterFlowSwitchMakeModel { get; set; }
+        public string WaterFlowSwitchPressureLoss { get; set; }
         public string HeadModelDefault { get; set; }
         public string HeadCoverageDefault { get; set; }
 

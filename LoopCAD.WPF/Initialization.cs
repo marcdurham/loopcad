@@ -167,12 +167,17 @@ namespace LoopCAD.WPF
             Editor().WriteMessage($"\nSupply Static Pressure: {data?.SupplyStaticPressure}");
             Editor().WriteMessage("\nDone.");
 
-            var form = new JobDataForm();
+            var form = new JobDataForm(data);
             form.JobData = data;
             form.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
             form.ShowDialog();
 
-
+            Editor().WriteMessage("\nChanges:");
+            Editor().WriteMessage($"\nJob Number: {data?.JobNumber}");
+            Editor().WriteMessage($"\nJob Name: {data?.JobName}");
+            Editor().WriteMessage($"\nSite Location: {data?.JobSiteAddress}");
+            Editor().WriteMessage($"\nSupply Static Pressure: {data?.SupplyStaticPressure}");
+            Editor().WriteMessage("\nDone.");
         }
 
         [CommandMethod("H20")]

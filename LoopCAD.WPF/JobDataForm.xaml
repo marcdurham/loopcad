@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LoopCAD.WPF"
         mc:Ignorable="d"
-        Title="Job Data" Height="647" Width="595" ResizeMode="CanResizeWithGrip">
+        
+        Title="Job Data" Height="660" Width="600" ResizeMode="CanResizeWithGrip">
     <Grid Loaded="Grid_Loaded" Margin="5,5,5,5">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -24,9 +25,32 @@
             <ColumnDefinition Width="288*"/>
             <ColumnDefinition Width="417*"/>
         </Grid.ColumnDefinitions>
-        <ComboBox Name="calculatedByCompanyBox" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Margin="5,0,5,0"/>
-        <Label x:Name="jobNumberLabel_Copy" Content="Calculated by Company:" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0"/>
-        <ComboBox x:Name="calculatedByCompanyBox_Copy" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" Margin="5,0,5,0"/>
+        <Label Content="Calculated by Company:" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0"/>
+        <ComboBox SelectedValue="{Binding CalculatedByCompany}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Margin="5,0,5,0"/>
+        <GroupBox Header="Job" Grid.Row="1" Grid.ColumnSpan="3">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="15*"/>
+                    <ColumnDefinition Width="29*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Job Number:" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding JobNumber}" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="jobNumberBox_TextChanged" Grid.Column="1" Margin="5,0,5,0"/>
+                <Label Content="Job Name:" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1"/>
+                <TextBox Text="{Binding JobName}" HorizontalAlignment="Stretch" TextWrapping="Wrap" TextChanged="jobNameBox_TextChanged" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="5,0,5,0" Grid.ColumnSpan="2"/>
+                <Label Content="Site Address:" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2"/>
+                <TextBox Text="{Binding JobSiteAddress}" HorizontalAlignment="Stretch" TextWrapping="Wrap" VerticalAlignment="Center" TextChanged="jobNameBox_TextChanged" Grid.Row="2" Grid.Column="1" Margin="5,0,5,0" Grid.ColumnSpan="2"/>
+            </Grid>
+        </GroupBox>
+        <Label Content="Sprinkler Pipe Type:" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Center"/>
+        <ComboBox SelectedValue="{Binding SprinklerPipeType}" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" Margin="5,0,5,0"/>
+        <Label Content="Sprinkler Fitting Type:" Grid.Row="3" VerticalAlignment="Center"/>
+        <ComboBox SelectedValue="{Binding SprinklerFittingType}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" Margin="5,0,5,0"/>
         <GroupBox Header="Water Supply Node" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Grid.Row="4">
             <Grid>
                 <Grid.RowDefinitions>
@@ -40,42 +64,20 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="171*"/>
                 </Grid.ColumnDefinitions>
-                <Label x:Name="jobNumberLabel_Copy4" Content="Node Name:" Margin="5,0,5,0" VerticalAlignment="Center" Height="26" HorizontalAlignment="Left"/>
-                <TextBox x:Name="jobNameBox_Copy1" Margin="5,0,5,0" TextWrapping="Wrap" Text="" TextChanged="jobNameBox_TextChanged" Grid.Column="1" VerticalAlignment="Center" Height="18"/>
-                <Label x:Name="jobNumberLabel_Copy2" Content="Elevation (ft):" Margin="5,0,5,0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <TextBox x:Name="jobNameBox_Copy2" Margin="5,0,5,0" TextWrapping="Wrap" Text="" TextChanged="jobNameBox_TextChanged" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
-                <Label x:Name="jobNumberLabel_Copy5" Content="Static Pressure (psi):" Margin="5,0,5,0" VerticalAlignment="Center" Height="26" Grid.Column="2" HorizontalAlignment="Left"/>
-                <TextBox x:Name="jobNameBox_Copy3" Margin="5,0,5,0" TextWrapping="Wrap" Text="" TextChanged="jobNameBox_TextChanged" Grid.Column="3" VerticalAlignment="Center" Height="18"/>
+                <Label Content="Node Name:" Margin="5,0,5,0" VerticalAlignment="Center" Height="26" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding SupplyName}" Margin="5,0,5,0" TextWrapping="Wrap" TextChanged="jobNameBox_TextChanged" Grid.Column="1" VerticalAlignment="Center" Height="18"/>
+                <Label Content="Elevation (ft):" Margin="5,0,5,0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding SupplyElevation}" Margin="5,0,5,0" TextWrapping="Wrap" TextChanged="jobNameBox_TextChanged" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
                 <Label Content="Available Flow (gpm):" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <Label Grid.Column="2" Content="Residual Pressure (psi):" HorizontalAlignment="Left" Margin="5,0,5,0" Grid.Row="2" VerticalAlignment="Center"/>
-                <TextBox Grid.Column="3" HorizontalAlignment="Stretch" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                <TextBox Text="{Binding SupplyAvailableFlow}" HorizontalAlignment="Stretch" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="1"/>
+                <Label Content="Static Pressure (psi):" Margin="5,0,5,0" VerticalAlignment="Center" Height="26" Grid.Column="2" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding SupplyStaticPressure}" Margin="5,0,5,0" TextWrapping="Wrap" TextChanged="jobNameBox_TextChanged" Grid.Column="3" VerticalAlignment="Center" Height="18"/>
+                <Label Content="Residual Pressure (psi):" HorizontalAlignment="Left" Margin="5,0,5,0" Grid.Row="2" VerticalAlignment="Center"  Grid.Column="2"/>
+                <TextBox Text="{Binding SupplyResidualPressure}" HorizontalAlignment="Stretch" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="3" />
             </Grid>
         </GroupBox>
-        <GroupBox Header="Job" Grid.Row="1" Grid.ColumnSpan="3">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="15*"/>
-                    <ColumnDefinition Width="29*"/>
-                </Grid.ColumnDefinitions>
-                <Label x:Name="jobNumberLabel" Content="Job Number:" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-                <TextBox  x:Name="jobNumberBox" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="" VerticalAlignment="Center" TextChanged="jobNumberBox_TextChanged" Grid.Column="1" Margin="5,0,5,0"/>
-                <Label Content="Job Name:" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1"/>
-                <TextBox x:Name="jobNameBox" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="" TextChanged="jobNameBox_TextChanged" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="5,0,5,0" Grid.ColumnSpan="2"/>
-                <TextBox x:Name="jobNameBox_Copy" HorizontalAlignment="Stretch" TextWrapping="Wrap" Text="" VerticalAlignment="Center" TextChanged="jobNameBox_TextChanged" Grid.Row="2" Grid.Column="1" Margin="5,0,5,0" Grid.ColumnSpan="2"/>
-                <Label x:Name="jobNumberLabel_Copy1" Content="Site Address:" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="2"/>
-            </Grid>
-        </GroupBox>
-        <Label Content="Sprinkler Pipe Type:" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Center"/>
-        <ComboBox x:Name="calculatedByCompanyBox_Copy1" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" Margin="5,0,5,0"/>
-        <Label Content="Sprinkler Fitting Type:" Grid.Row="3" VerticalAlignment="Center"/>
         <Label Content="Domestic Flow Added (gpm):" HorizontalAlignment="Stretch" Grid.Row="5" VerticalAlignment="Stretch"/>
+        <TextBox Text="{Binding DomesticFlowAdded}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,0,5,0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Center" SelectionOpacity="-7"/>
         <GroupBox Header="Supply to Manifold Pipe" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Grid.Row="6">
             <Grid>
                 <Grid.RowDefinitions>
@@ -91,21 +93,21 @@
                     <ColumnDefinition Width="171*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Pipe Type:" Margin="5,0,5,0" VerticalAlignment="Center" Height="26" HorizontalAlignment="Left"/>
+                <ComboBox SelectedValue="{Binding SupplyPipeType}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0"/>
                 <Label Content="Pipe Length (ft):" Margin="5,0,5,0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
-                <TextBox x:Name="jobNameBox_Copy22" Margin="5,0,5,0" TextWrapping="Wrap" Text="" TextChanged="jobNameBox_TextChanged" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
-                <Label Content="Friction C-Factor:" Margin="5,0,5,0" VerticalAlignment="Center" Height="26" Grid.Column="2" HorizontalAlignment="Left"/>
-                <TextBox x:Name="jobNameBox_Copy32" Margin="5,0,5,0" TextWrapping="Wrap" Text="" TextChanged="jobNameBox_TextChanged" Grid.Column="3" VerticalAlignment="Center" Height="18"/>
+                <TextBox Text="{Binding SupplyPipeLength}" Margin="5,0,5,0" TextWrapping="Wrap" TextChanged="jobNameBox_TextChanged" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>
                 <Label Content="Pipe Size (inches):" HorizontalAlignment="Left" Grid.Row="2" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <Label Grid.Column="2" Content="Fittings Equiv. Length (ft):" HorizontalAlignment="Left" Margin="5,0,5,0" Grid.Row="2" VerticalAlignment="Center"/>
-                <TextBox Grid.Column="3" HorizontalAlignment="Stretch" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                <TextBox Text="{Binding SupplyPipeSize}" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
                 <Label Content="Internal Diamter (inches):" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center" Margin="5,0,0,0"/>
-                <Label Grid.Column="2" Content="Fittings Summary:" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <Label Grid.Column="2" Content="Add Pressure Loss (psi):" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <TextBox Grid.Column="3" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,4,5,0"/>
-                <TextBox Grid.Column="3" HorizontalAlignment="Stretch" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                <TextBox Text="{Binding SupplyPipeInternalDiameter}" Grid.Column="1" HorizontalAlignment="Stretch" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                <Label Content="Friction C-Factor:" Margin="5,0,5,0" VerticalAlignment="Center" Height="26" Grid.Column="2" HorizontalAlignment="Left"/>
+                <TextBox Text="{Binding SupplyPipeCFactor}" Margin="5,0,5,0" TextWrapping="Wrap" TextChanged="jobNameBox_TextChanged" Grid.Column="3" VerticalAlignment="Center" Height="18"/>
+                <Label Content="Fittings Summary:" HorizontalAlignment="Left" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2" />
+                <TextBox Text="{Binding SupplyPipeFittingsSummary}" Grid.Column="3" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,4,5,0"/>
+                <Label Content="Fittings Equiv. Length (ft):" HorizontalAlignment="Left" Margin="5,0,5,0" Grid.Row="2" VerticalAlignment="Center" Grid.Column="2"/>
+                <TextBox Text="{Binding SupplyPipeFittingsEquivLength}" Grid.Column="3" HorizontalAlignment="Stretch" Grid.Row="2" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                <Label Content="Add Pressure Loss (psi):" HorizontalAlignment="Left" Grid.Row="3" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Column="2"/>
+                <TextBox Text="{Binding SupplyPipeAddPressureLoss}" Grid.Column="3" HorizontalAlignment="Stretch" Grid.Row="3" TextWrapping="Wrap" VerticalAlignment="Center" Margin="5,0,5,0"/>
             </Grid>
         </GroupBox>
         <GroupBox Header="Water Flow Switch" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" Grid.Row="7">
@@ -120,9 +122,9 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Make n Model:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <TextBox Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,4,5,0"/>
+                <TextBox Text="{Binding WaterFlowSwitchMakeModel}" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,4,5,0"/>
                 <Label Content="Pressure Loss (psi):" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0" Grid.Row="1"/>
-                <TextBox Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,4,5,0" Grid.Row="1"/>
+                <TextBox Text="{Binding WaterFlowSwitchPressureLoss}" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,4,5,0" Grid.Row="1"/>
 
             </Grid>
         </GroupBox>
@@ -136,7 +138,7 @@
                     <ColumnDefinition Width="145*"/>
                 </Grid.ColumnDefinitions>
                 <Label Content="Head Model Default:" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,5,0"/>
-                <TextBox Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,4,5,0"/>
+                <TextBox Text="{Binding HeadModelDefault}" Grid.Column="1" TextWrapping="Wrap" VerticalAlignment="Top" Margin="5,4,5,0"/>
             </Grid>
         </GroupBox>
         <Grid Grid.Row="9" Grid.ColumnSpan="3" VerticalAlignment="Stretch" Margin="0,20,0,0">
@@ -152,7 +154,5 @@
             <Button Grid.Column="2" Content="OK" HorizontalAlignment="Right" VerticalAlignment="Center" IsDefault="True" RenderTransformOrigin="2.16,3.83" Margin="0,0,10,0" Height="30" Width="50"/>
             <Button Grid.Column="3" Content="Cancel" HorizontalAlignment="Left" VerticalAlignment="Center" IsCancel="True" Margin="10,0,0,0" Width="50" Height="30"/>
         </Grid>
-        <TextBox Grid.Column="1" HorizontalAlignment="Stretch" Margin="5,0,5,0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Center" SelectionOpacity="-7"/>
-
     </Grid>
 </Window>

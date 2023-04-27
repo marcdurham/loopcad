@@ -1,16 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace LoopCAD.WPF
 {
@@ -19,17 +8,18 @@ namespace LoopCAD.WPF
     /// </summary>
     public partial class JobDataForm : Window
     {
-        public JobDataForm()
+        public JobDataForm(JobData data)
         {
             InitializeComponent();
+            DataContext = data;
         }
 
-        public JobData JobData { get; set; } = new JobData();
+        public JobData JobData { get; set; } = new JobData() { JobNumber = "EMPTY" };
 
         private void Grid_Loaded(object sender, RoutedEventArgs e)
         {
-            jobNumberBox.Text = JobData.JobNumber;
-            jobNameBox.Text = JobData.JobName;
+            //jobNumberBox.Text = JobData.JobNumber;
+            //jobNameBox.Text = JobData.JobName;
         }
 
         private void jobNameBox_TextChanged(object sender, TextChangedEventArgs e)
