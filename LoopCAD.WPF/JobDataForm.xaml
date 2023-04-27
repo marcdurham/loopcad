@@ -6,7 +6,11 @@
         xmlns:local="clr-namespace:LoopCAD.WPF"
         mc:Ignorable="d"
         Title="JobDataForm" Height="450" Width="800">
-    <Grid>
-        
+    <Grid Loaded="Grid_Loaded">
+        <Label Name="jobNumberLabel" Content="Job Number" HorizontalAlignment="Left" Margin="75,63,0,0" VerticalAlignment="Top"/>
+        <TextBox  Name="jobNumberBox" HorizontalAlignment="Left" Margin="185,71,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="120" TextChanged="jobNumberBox_TextChanged"/>
+        <Label Content="Job Name" HorizontalAlignment="Left" Margin="75,89,0,0" VerticalAlignment="Top"/>
+        <TextBox Name="jobNameBox" HorizontalAlignment="Left" Margin="185,97,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="231" TextChanged="jobNameBox_TextChanged"/>
+
     </Grid>
 </Window>

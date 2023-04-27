@@ -17,7 +17,7 @@
 (defun C:PIPE-1 () (pipe-draw "1"))
 (defun C:PIPE-112 () (pipe-draw "1-1/2"))
 (defun C:PIPE-15 () (pipe-draw "1-1/2"))
-(defun C:ELEVATION-BOX () (elevation-box-draw))
+;In C#;(defun C:ELEVATION-BOX () (elevation-box-draw))
 (defun C:TEE () (tee-insert))
 (defun C:DTEE () (domestic-tee-insert))
 (defun C:LABEL-NODES () (label-all-nodes))

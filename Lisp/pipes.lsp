@@ -27,7 +27,7 @@
         )
     )
     
-    (setq line-width (/ 1.0 12.0))
+    (setq line-width 2.0)
     (command "-LAYER" "SET" layer-pipe "")
     (command "-COLOR" (pipe-size-color global:pipe-size))
     (setvar "OSMODE" osmode-snap-ins-pts)

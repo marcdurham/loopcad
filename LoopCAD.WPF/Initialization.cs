@@ -1,6 +1,7 @@
 ﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
+using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using System;
 using System.Reflection;
@@ -18,6 +19,65 @@ namespace LoopCAD.WPF
         public void Terminate()
         {
             
+        }
+
+        [CommandMethod("ELEVATION-BOX")]
+        public void  ElevationBoxCommand()
+        {
+            Editor().WriteMessage("\nDrawing elevation box...");
+            var firstCornerOptions = new PromptPointOptions(
+              "Click first corner of elevation box")
+            {
+                AllowArbitraryInput = true,
+            };
+
+            PromptPointResult firstCornerResult = Editor().GetPoint(firstCornerOptions);
+
+            PromptPointResult otherCornerResult = Editor()
+                .GetCorner("Click other corner of the elevation box", firstCornerResult.Value);
+
+            PromptDoubleOptions elevationOptions = new PromptDoubleOptions("Enter elevation in feet")
+            {
+                DefaultValue = 100.0
+            };
+
+            PromptDoubleResult elevationResult = Editor()
+                .GetDouble(elevationOptions);
+
+            using (var t = ModelSpace.StartTransaction())
+            {
+                ObjectId layerId = Layer.Ensure("ElevationBox", ColorIndices.Magenta);
+
+                var rectangle = new Polyline(3)
+                {
+                    Layer = "ElevationBox",
+                    Closed = true,
+                    ColorIndex = ColorIndices.ByLayer,
+                };
+
+                rectangle.AddVertexAt(0, new Point2d(firstCornerResult.Value.X, firstCornerResult.Value.Y), 0, 0, 0);
+                rectangle.AddVertexAt(1, new Point2d(otherCornerResult.Value.X, firstCornerResult.Value.Y), 0, 0, 0);
+                rectangle.AddVertexAt(2, new Point2d(otherCornerResult.Value.X, otherCornerResult.Value.Y), 0, 0, 0);
+                rectangle.AddVertexAt(3, new Point2d(firstCornerResult.Value.X, otherCornerResult.Value.Y), 0, 0, 0);
+
+                ModelSpace.From(t).AppendEntity(rectangle);
+                t.AddNewlyCreatedDBObject(rectangle, true);
+
+                var mText = new MText()
+                {
+                    Contents = $"Elevation {elevationResult.Value}",
+                    Location = firstCornerResult.Value,
+                    Layer = "ElevationBox",
+                    TextHeight = 10.0,
+                    ColorIndex = ColorIndices.ByLayer,
+                };
+
+                ModelSpace.From(t).AppendEntity(mText);
+                t.AddNewlyCreatedDBObject(mText, true);
+
+                t.Commit();
+            }
+            Editor().WriteMessage("\nDone drawing elevation box!");
         }
 
         [CommandMethod("LABEL-NODES")]
@@ -103,8 +163,18 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nGetting job data...");
             var data = JobData.Load();
-            Editor().WriteMessage($"\nJob Number: {data.JobNumber}");
+            Editor().WriteMessage($"\nJob Number: {data?.JobNumber}");
+            Editor().WriteMessage($"\nJob Name: {data?.JobName}");
+            Editor().WriteMessage($"\nSite Location: {data?.JobSiteAddress}");
+            Editor().WriteMessage($"\nSupply Static Pressure: {data?.SupplyStaticPressure}");
             Editor().WriteMessage("\nDone.");
+
+            var form = new JobDataForm();
+            form.JobData = data;
+            form.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
+            form.ShowDialog();
+
+
         }
 
         [CommandMethod("H20")]
