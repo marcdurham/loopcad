@@ -105,6 +105,8 @@ namespace LoopCAD.WPF
 
         void InsertAt(Point3d position, string floorName, double elevationFt)
         {
+            ObjectId layerId = Layer.Ensure(LayerName, ColorIndices.Cyan);
+
             BlockTableRecord record = Define();
 
             var blockRef = new BlockReference(position, Define().Id)
