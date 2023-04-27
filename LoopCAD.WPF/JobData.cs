@@ -1,4 +1,6 @@
-﻿namespace LoopCAD.WPF
+﻿using System.Collections.Generic;
+
+namespace LoopCAD.WPF
 {
     public class JobData
     {
@@ -27,6 +29,10 @@
         public string WaterFlowSwitchPressureLoss { get; set; }
         public string HeadModelDefault { get; set; }
         public string HeadCoverageDefault { get; set; }
+        public List<string> CalculatedByCompanies { get; set; }
+        public List<string> SprinklerPipeTypes{ get; set; }
+        public List<string> SprinklerFittingTypes{ get; set; }
+        public List<string> SupplyPipeTypes{ get; set; }
 
         public static JobData Load()
         {
@@ -58,8 +64,10 @@
                 }
 
                 string key = SnakeCase.Convert(property.Name);
-                string value = NamedObjectDictionary.KeyValue("job_data", key);
-                property.SetValue(this, value);
+                if (NamedObjectDictionary.KeyValue("job_data", key, out string value))
+                {
+                    property.SetValue(this, value);
+                }
             }
         }
 
@@ -69,8 +77,10 @@
             foreach (var property in properties)
             {
                 string key = SnakeCase.Convert(property.Name);
-                string value = NamedObjectDictionary.KeyValue("job_data", key);
-                property.SetValue(this, value);
+                if (NamedObjectDictionary.KeyValue("job_data", key, out string value))
+                {
+                    property.SetValue(this, value);
+                }
             }
         }
     }

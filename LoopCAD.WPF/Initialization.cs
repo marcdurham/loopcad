@@ -4,6 +4,7 @@ using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.AutoCAD.Runtime;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace LoopCAD.WPF
@@ -161,11 +162,41 @@ namespace LoopCAD.WPF
         {
             Editor().WriteMessage("\nGetting job data...");
             var data = JobData.Load();
+            data.CalculatedByCompanies = new List<string>() { 
+                "X-Fire", 
+                "13dpex.com", 
+                "Testing Company", 
+                "Other Company" };
+            data.CalculatedByCompany = "Other Company";
+            
+            data.SprinklerPipeTypes = new List<string> {
+                "Rehau Brass",
+                "Rehau Plastic",
+                "Other"};
+            data.SprinklerPipeType = "Other";
+
+            data.SprinklerFittingTypes = new List<string>() {
+                "Rehau PEX",
+                "Copper",
+                "CPVC",
+                "Other"};
+            data.SprinklerFittingType = "CPVC";
+
+            data.SupplyPipeTypes = new List<string>() {
+                "Poly",
+                "Rehau PEX",
+                "Spears Flameguard CPVPC",
+                "Copper",
+                "CPVC",
+                "Other"
+            };
+            data.SupplyPipeType = "Spears Flameguard CPVPC";
+
             Editor().WriteMessage($"\nJob Number: {data?.JobNumber}");
             Editor().WriteMessage($"\nJob Name: {data?.JobName}");
             Editor().WriteMessage($"\nSite Location: {data?.JobSiteAddress}");
             Editor().WriteMessage($"\nSupply Static Pressure: {data?.SupplyStaticPressure}");
-            Editor().WriteMessage("\nDone.");
+            Editor().WriteMessage($"\nDone.");
 
             var form = new JobDataForm(data);
             form.JobData = data;

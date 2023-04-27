@@ -5,7 +5,7 @@ namespace LoopCAD.WPF
 {
     public class NamedObjectDictionary
     {
-        public static string KeyValue(string dictionaryName, string key)
+        public static bool KeyValue(string dictionaryName, string key, out string value)
         {
             using (var transaction = ModelSpace.StartTransaction())
             using (var db = HostApplicationServices.WorkingDatabase)
@@ -25,6 +25,8 @@ namespace LoopCAD.WPF
 
                 if (!dictionary.Contains(key))
                 {
+                    value = null;
+                    return false;
                     throw new Exception(
                         $"Key '{key}' does not exist in the dictionary '{dictionaryName}'");
                 }
@@ -33,7 +35,7 @@ namespace LoopCAD.WPF
                     dictionary.GetAt(key),
                     OpenMode.ForRead);
 
-                string value = string.Empty;
+                value = string.Empty;
                 foreach (TypedValue typedValue in xRecord.Data.AsArray())
                 {
                     if (typedValue.TypeCode == 1)
@@ -42,7 +44,7 @@ namespace LoopCAD.WPF
                     }
                 }
 
-                return value;
+                return true;
             }
         }
 
