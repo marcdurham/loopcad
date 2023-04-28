@@ -11,6 +11,9 @@ namespace LoopCAD.WPF
 {
     public class Initialization : IExtensionApplication
     {
+        private const int SnapModeEndPoint = 1;
+        private const int SnapModeInsertion = 64;
+
         public void Initialize()
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
@@ -67,7 +70,7 @@ namespace LoopCAD.WPF
             };
 
             Object osmode = Application.GetSystemVariable("OSMODE");
-            Application.SetSystemVariable("OSMODE", 65);
+            Application.SetSystemVariable("OSMODE", SnapModeEndPoint | SnapModeInsertion);
 
             var result = Editor().GetPoint(options);
 
@@ -116,7 +119,7 @@ namespace LoopCAD.WPF
             };
 
             Object osmode = Application.GetSystemVariable("OSMODE");
-            Application.SetSystemVariable("OSMODE", 65);
+            Application.SetSystemVariable("OSMODE", SnapModeEndPoint | SnapModeInsertion);
 
             var result = Editor().GetPoint(options);
 
@@ -282,12 +285,47 @@ namespace LoopCAD.WPF
             ObjectId layerId = Layer.Ensure("HeadCoverage", ColorIndices.Yellow);
             Layer.Show(layerId);
             object osmode = Application.GetSystemVariable("OSMODE");
-            Application.SetSystemVariable("OSMODE", 65);
+            Application.SetSystemVariable("OSMODE", SnapModeEndPoint | SnapModeInsertion);
 
             HeadBuilder.Insert(coverage);
 
             Layer.Hide(layerId);
             Application.SetSystemVariable("OSMODE", osmode);
+        }
+
+        public static void ChangeGridAndSnap(bool enabled)
+        {
+            // http://docs.autodesk.com/ACD/2011/ENU/filesMDG/WS1a9193826455f5ff2566ffd511ff6f8c7ca-42b1.htm
+            // Get the current database
+            Document acDoc = Application.DocumentManager.MdiActiveDocument;
+            Database acCurDb = acDoc.Database;
+            // Start a transaction
+            using (Transaction transaction = acCurDb.TransactionManager.StartTransaction())
+            {
+                // Open the active viewport
+                ViewportTableRecord acVportTblRec;
+                acVportTblRec = transaction.GetObject(
+                    acDoc.Editor.ActiveViewportId,
+                    OpenMode.ForWrite) as ViewportTableRecord;
+
+                
+                // Turn on the grid for the active viewport
+                //acVportTblRec.GridEnabled = true;
+                // Adjust the spacing of the grid to 1, 1
+                //acVportTblRec.GridIncrements = new Point2d(1, 1);
+                // Turn on the snap mode for the active viewport
+                acVportTblRec.SnapEnabled = enabled;
+                // Adjust the snap spacing to 0.5, 0.5
+                //acVportTblRec.SnapIncrements = new Point2d(0.5, 0.5);
+                // Change the snap base point to 1, 1
+                //acVportTblRec.SnapBase = new Point2d(1, 1);
+                // Change the snap rotation angle to 30 degrees (0.524 radians)
+                //acVportTblRec.SnapAngle = 0.524;
+                // Update the display of the tiled viewport
+                acDoc.Editor.UpdateTiledViewportsFromDatabase();
+                // Commit the changes and dispose of the transaction
+                transaction.Commit();
+            }
         }
 
         static void InsertHeadSideWall(int coverage)
@@ -297,10 +335,14 @@ namespace LoopCAD.WPF
             ObjectId layerId = Layer.Ensure("HeadCoverage", ColorIndices.Yellow);
             Layer.Show(layerId);
             object osmode = Application.GetSystemVariable("OSMODE");
-            object orthomode = Application.GetSystemVariable("ORTHOMODE");
-            Application.SetSystemVariable("OSMODE", 65);
-            Application.SetSystemVariable("ORTHOMODE", 1);
-
+            //object orthomode = Application.GetSystemVariable("ORTHOMODE");
+            bool orthomode = Application.DocumentManager.MdiActiveDocument.Database.Orthomode;
+            Application.SetSystemVariable("OSMODE", SnapModeEndPoint);
+            //Application.SetSystemVariable("ORTHOMODE", 1);
+            Application.DocumentManager.MdiActiveDocument.Database.Orthomode = true;
+            
+            ///ChangeGridAndSnap(enabled);
+           
             var pointResult = Editor().GetPoint("Where to place head");
             if(pointResult.Status != PromptStatus.OK)
             {
@@ -310,7 +352,7 @@ namespace LoopCAD.WPF
             var options = new PromptAngleOptions("Angle of sidewall spray (press F8 to turn ORTHO off)")
             {
                 BasePoint = pointResult.Value,
-                UseBasePoint = true
+                UseBasePoint = true,
             };
 
             var angleResult = Editor().GetAngle(options);
@@ -322,7 +364,8 @@ namespace LoopCAD.WPF
 
             Layer.Hide(layerId);
             Application.SetSystemVariable("OSMODE", osmode);
-            Application.SetSystemVariable("ORTHOMODE", orthomode);
+            //Application.SetSystemVariable("ORTHOMODE", orthomode);
+            Application.DocumentManager.MdiActiveDocument.Database.Orthomode = orthomode;
         }
 
         static Editor Editor()
