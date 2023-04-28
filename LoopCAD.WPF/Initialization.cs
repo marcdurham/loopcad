@@ -194,7 +194,7 @@ namespace LoopCAD.WPF
             Editor().WriteMessage($"\nDone.");
 
             var form = new JobDataForm(data);
-            //form.JobData = data;
+
             form.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
 
             Editor().WriteMessage("\nChanges:");
@@ -203,13 +203,15 @@ namespace LoopCAD.WPF
             Editor().WriteMessage($"\nSite Location: {data?.JobSiteAddress}");
             Editor().WriteMessage($"\nSupply Static Pressure: {data?.SupplyStaticPressure}");
 
-            if(form.ShowDialog() ?? false)
+            Application.ShowModalWindow(Application.MainWindow.Handle, form, false);
+            
+            if (form.DialogResult ?? false)
             {
                 Editor().WriteMessage("\nSaving changes to job data....");
                 data.Save();
                 Editor().WriteMessage("\nDone saving.");
             }
-
+            form.Close();
             Editor().WriteMessage("\nDone.");
         }
 

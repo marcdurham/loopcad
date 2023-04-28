@@ -28,7 +28,7 @@
         <Label Content="Calculated by Company:" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0"/>
         <ComboBox 
             ItemsSource="{Binding CalculatedByCompanies}"
-            SelectedValue="{Binding CalculatedByCompany}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Margin="5,0,5,0" />
+            SelectedItem="{Binding CalculatedByCompany}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Margin="5,0,5,0" />
 
         <GroupBox Header="Job" Grid.Row="1" Grid.ColumnSpan="3">
             <Grid>
@@ -53,12 +53,12 @@
         <Label Content="Sprinkler Pipe Type:" HorizontalAlignment="Stretch" Grid.Row="2" VerticalAlignment="Center"/>
         <ComboBox  
             ItemsSource="{Binding SprinklerPipeTypes}"
-            SelectedValue="{Binding SprinklerPipeType}" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" Margin="5,0,5,0" SelectedIndex="0"/>
+            SelectedItem="{Binding SprinklerPipeType}" VerticalAlignment="Center" Grid.Column="1" Grid.Row="3" Margin="5,0,5,0" SelectedIndex="0"/>
 
         <Label Content="Sprinkler Fitting Type:" Grid.Row="3" VerticalAlignment="Center"/>
         <ComboBox 
             ItemsSource="{Binding SprinklerFittingTypes}"
-            SelectedValue="{Binding SprinklerFittingType}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" Margin="5,0,5,0" SelectedIndex="0"/>
+            SelectedItem="{Binding SprinklerFittingType}" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Column="1" Grid.Row="2" Margin="5,0,5,0" SelectedIndex="0"/>
 
         <GroupBox Header="Water Supply Node" Grid.ColumnSpan="3" HorizontalAlignment="Stretch" Grid.Row="4">
             <Grid>
@@ -104,7 +104,7 @@
                 <Label Content="Pipe Type:" Margin="5,0,5,0" VerticalAlignment="Center" Height="26" HorizontalAlignment="Left"/>
                 <ComboBox 
                     ItemsSource="{Binding SupplyPipeTypes}"
-                    SelectedValue="{Binding SupplyPipeType}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0" SelectedIndex="0"/>
+                    SelectedItem="{Binding SupplyPipeType}" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="5,0,5,0" SelectedIndex="0"/>
 
                 <Label Content="Pipe Length (ft):" Margin="5,0,5,0" Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Left"/>
                 <TextBox Text="{Binding SupplyPipeLength}" Margin="5,0,5,0" TextWrapping="Wrap" TextChanged="jobNameBox_TextChanged" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center"/>

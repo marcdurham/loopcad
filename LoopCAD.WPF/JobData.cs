@@ -1,5 +1,6 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace LoopCAD.WPF
 {
@@ -51,7 +52,7 @@ namespace LoopCAD.WPF
                 data = JobDataBlock.Load();
             }
 
-            return data;
+            return data ?? new JobData();
         } 
         
         public void Save()
@@ -59,10 +60,12 @@ namespace LoopCAD.WPF
             HasJobDataDictionary = NamedObjectDictionary
                 .HasDictionaryNamed("job_data");
 
-            if (HasJobDataDictionary)
+            if (!HasJobDataDictionary)
             {
-                SetValues();
+                NamedObjectDictionary.CreateDictionary("job_data");
             }
+ 
+            SetValues();
         }
 
         void GetValues()
@@ -76,9 +79,19 @@ namespace LoopCAD.WPF
                 }
 
                 string key = SnakeCase.Convert(property.Name);
-                if (NamedObjectDictionary.KeyValue("job_data", key, out string value))
+                if (NamedObjectDictionary.KeyValue("job_data", key, out string value)
+                    && (property.PropertyType == typeof(string)
+                     || property.PropertyType == typeof(int)
+                     || property.PropertyType == typeof(double)))
                 {
-                    property.SetValue(this, value);
+                    if(property.PropertyType == typeof(string))
+                        property.SetValue(this, value);
+                    else if (property.PropertyType == typeof(int))
+                        property.SetValue(this, int.Parse(value));
+                    else if (property.PropertyType == typeof(double))
+                        property.SetValue(this, double.Parse(value));
+
+                    Debug.WriteLine($"Loading XRecord Key: {key} Value: {value} (Property: {property.Name})");
                 }
             }
         }
@@ -92,6 +105,7 @@ namespace LoopCAD.WPF
                 if (NamedObjectDictionary.KeyValue("job_data", key, out string _))
                 {
                     string v = property.GetValue(this) as string;
+                    Debug.WriteLine($"Writing XRecord Key: {key} Value: {v} (Property: {property.Name})");
                     NamedObjectDictionary.SetKeyValue("job_data", key, v);
                 }
             }
