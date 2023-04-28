@@ -92,7 +92,7 @@ namespace LoopCAD.WPF
                 if (NamedObjectDictionary.KeyValue("job_data", key, out string _))
                 {
                     string v = property.GetValue(this) as string;
-                    NamedObjectDictionary.SetKeyValue("job_data", key, new ResultBuffer(new TypedValue(typeCode: 1, value: v)));
+                    NamedObjectDictionary.SetKeyValue("job_data", key, v);
                 }
             }
         }

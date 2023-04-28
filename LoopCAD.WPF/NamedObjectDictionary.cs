@@ -49,11 +49,12 @@ namespace LoopCAD.WPF
             }
         }
 
-        public static void SetKeyValue(string dictName, string key, ResultBuffer resbuf)
+        public static void SetKeyValue(string dictName, string key, string value)
         {
             using (var transaction = ModelSpace.StartTransaction())
             using (var db = HostApplicationServices.WorkingDatabase)
             {
+
                 DBDictionary dbDictionary =(DBDictionary)
                     transaction.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
 
@@ -70,6 +71,7 @@ namespace LoopCAD.WPF
                     transaction.AddNewlyCreatedDBObject(dictionary, true);
                 }
                 Xrecord xRec = new Xrecord();
+                var resbuf = new ResultBuffer(new TypedValue(typeCode: 1, value: value));
                 xRec.Data = resbuf;
                 dictionary.SetAt(key, xRec);
                 transaction.AddNewlyCreatedDBObject(xRec, true);
