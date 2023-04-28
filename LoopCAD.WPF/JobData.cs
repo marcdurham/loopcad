@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Autodesk.AutoCAD.DatabaseServices;
+using System.Collections.Generic;
 
 namespace LoopCAD.WPF
 {
@@ -51,6 +52,17 @@ namespace LoopCAD.WPF
             }
 
             return data;
+        } 
+        
+        public void Save()
+        {
+            HasJobDataDictionary = NamedObjectDictionary
+                .HasDictionaryNamed("job_data");
+
+            if (HasJobDataDictionary)
+            {
+                SetValues();
+            }
         }
 
         void GetValues()
@@ -77,9 +89,10 @@ namespace LoopCAD.WPF
             foreach (var property in properties)
             {
                 string key = SnakeCase.Convert(property.Name);
-                if (NamedObjectDictionary.KeyValue("job_data", key, out string value))
+                if (NamedObjectDictionary.KeyValue("job_data", key, out string _))
                 {
-                    property.SetValue(this, value);
+                    string v = property.GetValue(this) as string;
+                    NamedObjectDictionary.SetKeyValue("job_data", key, new ResultBuffer(new TypedValue(typeCode: 1, value: v)));
                 }
             }
         }

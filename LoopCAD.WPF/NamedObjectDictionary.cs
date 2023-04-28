@@ -1,4 +1,5 @@
-﻿using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
 using System;
 
 namespace LoopCAD.WPF
@@ -48,14 +49,41 @@ namespace LoopCAD.WPF
             }
         }
 
-        /*
-        public static void SetKeyValue(string dictionaryName, string key, string value)
+        public static void SetKeyValue(string dictName, string key, ResultBuffer resbuf)
+        {
+            using (var transaction = ModelSpace.StartTransaction())
+            using (var db = HostApplicationServices.WorkingDatabase)
+            {
+                DBDictionary dbDictionary =(DBDictionary)
+                    transaction.GetObject(db.NamedObjectsDictionaryId, OpenMode.ForRead);
+
+                DBDictionary dictionary;
+                if (dbDictionary.Contains(dictName))
+                {
+                    dictionary = (DBDictionary)transaction.GetObject(dbDictionary.GetAt(dictName), OpenMode.ForWrite);
+                }
+                else
+                {
+                    dictionary = new DBDictionary();
+                    dbDictionary.UpgradeOpen();
+                    dbDictionary.SetAt(dictName, dictionary);
+                    transaction.AddNewlyCreatedDBObject(dictionary, true);
+                }
+                Xrecord xRec = new Xrecord();
+                xRec.Data = resbuf;
+                dictionary.SetAt(key, xRec);
+                transaction.AddNewlyCreatedDBObject(xRec, true);
+                transaction.Commit();
+            }
+        }
+
+        public static void OLDSetKeyValue(string dictionaryName, string key, string value)
         {
             using (var transaction = ModelSpace.StartTransaction())
             using (var db = HostApplicationServices.WorkingDatabase)
             using (var namedObjectDict = (DBDictionary)transaction.GetObject(
                     db.NamedObjectsDictionaryId,
-                    OpenMode.ForRead))
+                    OpenMode.ForWrite))
             {
                 if (!namedObjectDict.Contains(dictionaryName))
                 {
@@ -69,23 +97,32 @@ namespace LoopCAD.WPF
 
                 if (!dictionary.Contains(key))
                 {
-                    dictionary.
+                    throw new Exception($"Dictionary cannot write value, does not contain key: {key}");
                 }
 
-                var xRecord = (Xrecord)transaction.GetObject(
-                    dictionary.GetAt(key),
-                    OpenMode.ForRead);
+                ////////dictionary.get
+                ////////var xRecord = new Xrecord();
+                ////////xRecord.Data = new ResultBuffer(new TypedValue(typeCode: 1, value: "VALUE"));
+                
+                
+                //xRecord.Data.Add(new TypedValue(typeCode: 1, value: value));
+                
+                ////////////var _ = dictionary.SetAt(key, xRecord);
 
-                //string value = string.Empty;
-                foreach (TypedValue typedValue in xRecord.Data.AsArray())
-                {
-                    if (typedValue.TypeCode == 1)
-                    {
-                        value = typedValue.Value as string;
-                    }
-                }
+
+                //var xRecord = (Xrecord)transaction.GetObject(
+                //    dictionary.GetAt(key),
+                //    OpenMode.ForRead);
+
+                //foreach (TypedValue typedValue in xRecord.Data.AsArray())
+                //{
+                //    if (typedValue.TypeCode == 1)
+                //    {
+                //        value = typedValue.Value as string;
+                //    }
+                //}
             }
-        }*/
+        }
 
         public static bool HasDictionaryNamed(string dictionaryName)
         {

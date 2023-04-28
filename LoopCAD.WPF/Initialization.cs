@@ -165,22 +165,18 @@ namespace LoopCAD.WPF
             data.CalculatedByCompanies = new List<string>() { 
                 "X-Fire", 
                 "13dpex.com", 
-                "Testing Company", 
-                "Other Company" };
-            data.CalculatedByCompany = "Other Company";
-            
+                "Other" };
+               
             data.SprinklerPipeTypes = new List<string> {
                 "Rehau Brass",
                 "Rehau Plastic",
                 "Other"};
-            data.SprinklerPipeType = "Other";
 
             data.SprinklerFittingTypes = new List<string>() {
                 "Rehau PEX",
                 "Copper",
                 "CPVC",
                 "Other"};
-            data.SprinklerFittingType = "CPVC";
 
             data.SupplyPipeTypes = new List<string>() {
                 "Poly",
@@ -190,7 +186,6 @@ namespace LoopCAD.WPF
                 "CPVC",
                 "Other"
             };
-            data.SupplyPipeType = "Spears Flameguard CPVPC";
 
             Editor().WriteMessage($"\nJob Number: {data?.JobNumber}");
             Editor().WriteMessage($"\nJob Name: {data?.JobName}");
@@ -199,15 +194,22 @@ namespace LoopCAD.WPF
             Editor().WriteMessage($"\nDone.");
 
             var form = new JobDataForm(data);
-            form.JobData = data;
+            //form.JobData = data;
             form.WindowStartupLocation = System.Windows.WindowStartupLocation.CenterOwner;
-            form.ShowDialog();
 
             Editor().WriteMessage("\nChanges:");
             Editor().WriteMessage($"\nJob Number: {data?.JobNumber}");
             Editor().WriteMessage($"\nJob Name: {data?.JobName}");
             Editor().WriteMessage($"\nSite Location: {data?.JobSiteAddress}");
             Editor().WriteMessage($"\nSupply Static Pressure: {data?.SupplyStaticPressure}");
+
+            if(form.ShowDialog() ?? false)
+            {
+                Editor().WriteMessage("\nSaving changes to job data....");
+                data.Save();
+                Editor().WriteMessage("\nDone saving.");
+            }
+
             Editor().WriteMessage("\nDone.");
         }
 
