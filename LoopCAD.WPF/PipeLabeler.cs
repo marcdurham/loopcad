@@ -76,8 +76,8 @@ namespace LoopCAD.WPF
                         pipeNumber++;
                     }
 
-                    Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage($"    Creating label: p{pipeNumber}...");
-                    for (int i = 1; i < vertices.Count; i++)
+                    Application.DocumentManager.MdiActiveDocument.Editor.WriteMessage($"    Creating label: P{pipeNumber}...");
+                    for (int i = 1; i < vertices.Count && vertices.Count > 1; i++)
                     {
                         pipeLabeler.CreateLabel(
                             text: $"P{pipeNumber}",
