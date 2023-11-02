@@ -25,6 +25,13 @@ namespace LoopCAD.WPF
             
         }
 
+
+        [CommandMethod("LOOP-CAD-VERSION")]
+        public void LoopCadVersion()
+        {
+            Editor().WriteMessage("\nLoopCAD Version 1.0.11 (2023-11-01)");
+        }
+
         [CommandMethod("ELEVATION-BOX")]
         public void  ElevationBoxCommand()
         {
